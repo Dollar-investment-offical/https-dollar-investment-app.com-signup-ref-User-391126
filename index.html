@@ -3,20 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Dollar Investment</title>
+  <title>Dollar Investment - Global AI Platform</title>
   <style>
     :root {
-      --bg-dark: #0a0e13;
-      --bg-card: #121820;
-      --bg-card-border: #1f2a37;
-      --accent-green: #00e676;
-      --accent-cyan: #00b0ff;
+      --bg-dark: #070b12;
+      --bg-card: #111823;
+      --bg-card-border: #1e293b;
+      --accent-green: #00f576;
+      --accent-cyan: #00d2ff;
+      --accent-purple: #9d4edd;
+      --accent-pink: #ff007f;
+      --accent-yellow: #ffd60a;
+      --accent-red: #ff3366;
       --text-main: #ffffff;
-      --text-muted: #8e9aaf;
-      --gradient-btn: linear-gradient(135deg, #00e676 0%, #00b0ff 100%);
-      --gradient-brand: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
-      --deposit-orange: #ff5722;
-      --deposit-orange-gradient: linear-gradient(135deg, #ff7043, #f4511e);
+      --text-muted: #94a3b8;
+      --gradient-btn: linear-gradient(135deg, #00f576 0%, #00d2ff 100%);
+      --gradient-brand: linear-gradient(135deg, #9d4edd 0%, #00d2ff 100%);
+      --gradient-purple: linear-gradient(135deg, #7b2cbf 0%, #3f37c9 100%);
+      --gradient-orange: linear-gradient(135deg, #ff7043 0%, #f4511e 100%);
+      --gradient-gold: linear-gradient(135deg, #ffd60a 0%, #ff9e00 100%);
     }
 
     * {
@@ -44,8 +49,36 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      padding-bottom: 75px;
-      box-shadow: 0 0 30px rgba(0,0,0,0.8);
+      padding-bottom: 85px;
+      box-shadow: 0 0 40px rgba(0,245,118,0.15);
+    }
+
+    /* Universal Header */
+    .universal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: rgba(11, 24, 35, 0.95);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,210,255,0.2);
+    }
+
+    .nav-back-btn {
+      background: linear-gradient(135deg, rgba(0,210,255,0.2), rgba(0,245,118,0.2));
+      border: 1px solid var(--accent-cyan);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
     /* Auth Screens */
@@ -66,18 +99,17 @@
       overflow-y: auto;
     }
 
-    .auth-screen.hidden {
-      display: none;
-    }
+    .auth-screen.hidden { display: none; }
 
     .auth-title {
-      font-size: 24px;
-      font-weight: 800;
+      font-size: 28px;
+      font-weight: 900;
       margin-bottom: 8px;
-      background: linear-gradient(90deg, #00e676, #00b0ff);
+      background: var(--gradient-btn);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-align: center;
+      text-shadow: 0 0 20px rgba(0,245,118,0.4);
     }
 
     .auth-subtitle {
@@ -96,72 +128,72 @@
 
     .auth-toggle span {
       color: var(--accent-green);
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
     }
+
+    .password-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .password-wrapper input { padding-right: 40px; }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      cursor: pointer;
+      font-size: 16px;
+      user-select: none;
+      color: var(--text-muted);
+    }
+
+    .remember-me-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .remember-me-container input { accent-color: var(--accent-green); cursor: pointer; }
 
     .top-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 14px 16px;
-      background: rgba(10, 14, 19, 0.95);
+      background: rgba(11, 24, 35, 0.95);
       position: sticky;
       top: 0;
-      z-index: 100;
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      z-index: 99;
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,245,118,0.2);
     }
 
     .brand-logo {
       display: flex;
       align-items: center;
       gap: 10px;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 18px;
       color: #fff;
     }
 
     .brand-icon {
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       background: var(--gradient-brand);
-      border-radius: 8px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 900;
       color: #fff;
-    }
-
-    .subpage-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 16px;
-      background: rgba(10, 14, 19, 0.95);
-      position: sticky;
-      top: 0;
-      z-index: 105;
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .back-btn {
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 22px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      padding-right: 12px;
-    }
-
-    .subpage-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: #fff;
+      box-shadow: 0 0 15px rgba(157,78,221,0.5);
     }
 
     .lang-dropdown-wrapper {
@@ -169,7 +201,7 @@
       display: flex;
       align-items: center;
       background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(0,230,118,0.4);
+      border: 1px solid var(--accent-cyan);
       border-radius: 20px;
       padding: 4px 10px;
     }
@@ -179,15 +211,12 @@
       border: none;
       color: var(--text-main);
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
       outline: none;
       cursor: pointer;
     }
 
-    .lang-select option {
-      background: #121820;
-      color: #fff;
-    }
+    .lang-select option { background: #111823; color: #fff; }
 
     .tab-content {
       display: none;
@@ -195,32 +224,32 @@
       animation: fadeIn 0.25s ease-in-out;
     }
 
-    .tab-content.active {
-      display: block;
-    }
+    .tab-content.active { display: block; }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
+      from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
     .ticker-banner {
-      background: rgba(255,255,255,0.03);
-      border-radius: 8px;
-      padding: 8px 12px;
+      background: linear-gradient(90deg, rgba(157,78,221,0.15), rgba(0,210,255,0.15));
+      border: 1px solid rgba(0,210,255,0.3);
+      border-radius: 10px;
+      padding: 10px 14px;
       font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 16px;
+      color: var(--accent-cyan);
+      margin-bottom: 18px;
       display: flex;
       align-items: center;
       gap: 8px;
       overflow: hidden;
       white-space: nowrap;
+      font-weight: 600;
     }
 
     .ticker-text {
       display: inline-block;
-      animation: marquee 16s linear infinite;
+      animation: marquee 18s linear infinite;
     }
 
     @keyframes marquee {
@@ -228,90 +257,62 @@
       100% { transform: translateX(-100%); }
     }
 
-    .hero-card {
-      background: linear-gradient(135deg, rgba(0,230,118,0.15) 0%, rgba(0,176,255,0.15) 100%), var(--bg-card);
-      border: 1px solid var(--bg-card-border);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 20px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-card h2 {
-      font-size: 20px;
-      font-weight: 800;
-      margin-bottom: 6px;
-      background: linear-gradient(90deg, #00e676, #00b0ff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hero-card p {
-      font-size: 12px;
-      color: var(--text-muted);
-      max-width: 65%;
-      line-height: 1.4;
-    }
-
-    .hero-robot-img {
-      position: absolute;
-      right: 10px;
-      bottom: -5px;
-      width: 110px;
-      opacity: 0.9;
-    }
-
     .quick-grid-8 {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 12px 8px;
+      gap: 12px;
       margin-bottom: 24px;
     }
 
     .quick-item {
       background: var(--bg-card);
       border: 1px solid var(--bg-card-border);
-      border-radius: 12px;
-      padding: 12px 4px;
+      border-radius: 14px;
+      padding: 14px 4px;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 8px;
       cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .quick-item:hover {
+      border-color: var(--accent-green);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0,245,118,0.2);
     }
 
     .quick-icon-wrapper {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: rgba(0,230,118,0.08);
-      border: 1px solid rgba(0,230,118,0.25);
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(0,245,118,0.15), rgba(0,210,255,0.15));
+      border: 1px solid rgba(0,245,118,0.4);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 22px;
       color: var(--accent-green);
     }
 
     .quick-label {
       font-size: 11px;
-      color: #d1d5db;
+      color: #e2e8f0;
       text-align: center;
-      font-weight: 500;
+      font-weight: 700;
     }
 
     .investment-card {
       background: var(--bg-card);
       border: 1px solid var(--bg-card-border);
-      border-radius: 16px;
-      padding: 18px;
+      border-radius: 18px;
+      padding: 20px;
       margin-bottom: 20px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
     }
 
-    .input-group {
-      margin-bottom: 16px;
-    }
+    .input-group { margin-bottom: 16px; }
 
     .input-label {
       font-size: 13px;
@@ -319,143 +320,132 @@
       margin-bottom: 8px;
       display: flex;
       justify-content: space-between;
-    }
-
-    .custom-select-card {
-      background: rgba(0,0,0,0.4);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
-      padding: 14px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
-
-    .custom-select-card select {
-      background: transparent;
-      border: none;
-      color: #fff;
-      font-size: 16px;
-      font-weight: 600;
-      width: 100%;
-      outline: none;
-    }
-
-    .custom-select-card select option {
-      background: #121820;
-      color: #fff;
+      font-weight: 700;
     }
 
     .amount-input {
       width: 100%;
-      background: rgba(0,0,0,0.4);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
-      padding: 12px 14px;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(0,210,255,0.3);
+      border-radius: 12px;
+      padding: 14px 16px;
       color: #fff;
       font-size: 16px;
-      font-weight: 600;
+      font-weight: 700;
       outline: none;
+      transition: border-color 0.2s;
     }
+
+    .amount-input:focus { border-color: var(--accent-green); box-shadow: 0 0 10px rgba(0,245,118,0.3); }
 
     .btn-gradient {
       width: 100%;
-      padding: 14px;
+      padding: 16px;
       border: none;
-      border-radius: 12px;
+      border-radius: 14px;
       background: var(--gradient-btn);
       color: #000;
-      font-weight: 700;
+      font-weight: 900;
       font-size: 16px;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0,230,118,0.3);
+      box-shadow: 0 6px 20px rgba(0,245,118,0.4);
+      transition: transform 0.2s;
     }
-
-    .spinning-ring {
-      width: 100px;
-      height: 100px;
-      border: 3px dashed var(--accent-green);
-      border-radius: 50%;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .spinning-ring.active-spinning {
-      animation: spin 3s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+    .btn-gradient:active { transform: scale(0.98); }
 
     .balance-card {
-      background: linear-gradient(135deg, rgba(0,230,118,0.12), rgba(0,176,255,0.12));
-      border: 1px solid rgba(0,230,118,0.3);
-      border-radius: 16px;
-      padding: 20px;
+      background: linear-gradient(135deg, rgba(157,78,221,0.25), rgba(0,210,255,0.25));
+      border: 2px solid rgba(0,210,255,0.4);
+      border-radius: 20px;
+      padding: 22px;
       margin-bottom: 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
     }
 
     .balance-amount {
-      font-size: 32px;
-      font-weight: 800;
+      font-size: 34px;
+      font-weight: 900;
       color: #fff;
-      margin: 6px 0 10px 0;
+      margin: 6px 0 12px 0;
+      text-shadow: 0 0 15px rgba(255,255,255,0.3);
     }
 
     .referral-box {
-      background: rgba(0,0,0,0.35);
-      border: 1px solid rgba(0,230,118,0.25);
-      border-radius: 10px;
-      padding: 10px 14px;
-      margin-bottom: 14px;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(0,245,118,0.3);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .balance-actions {
-      display: flex;
-      gap: 10px;
-    }
+    .balance-actions { display: flex; gap: 12px; }
 
     .btn-sub {
       flex: 1;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: rgba(255,255,255,0.05);
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08);
       color: #fff;
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 800;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
+      transition: all 0.2s;
     }
 
     .btn-sub.primary {
-      background: var(--deposit-orange-gradient);
+      background: var(--gradient-orange);
       border: none;
+      box-shadow: 0 4px 15px rgba(255,112,67,0.4);
+    }
+
+    .pct-selector-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .pct-btn {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
       color: #fff;
+      padding: 10px 0;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .pct-btn:hover, .pct-btn.active {
+      background: var(--accent-green);
+      color: #000;
+      border-color: var(--accent-green);
+      box-shadow: 0 0 15px rgba(0,245,118,0.5);
     }
 
     .vip-card {
       background: var(--bg-card);
-      border: 1px solid var(--bg-card-border);
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 12px;
+      border: 2px solid var(--bg-card-border);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 14px;
+      transition: all 0.3s ease;
     }
 
     .vip-card.active {
       border-color: var(--accent-green);
-      box-shadow: 0 0 12px rgba(0,230,118,0.15);
+      box-shadow: 0 0 20px rgba(0,245,118,0.3);
+      background: linear-gradient(135deg, rgba(0,245,118,0.1), rgba(17,24,35,1));
     }
 
     .vip-header {
@@ -464,16 +454,8 @@
       align-items: center;
     }
 
-    .vip-title {
-      font-size: 15px;
-      font-weight: 700;
-    }
-
-    .vip-rate {
-      color: var(--accent-green);
-      font-weight: 700;
-      font-size: 14px;
-    }
+    .vip-title { font-size: 16px; font-weight: 800; }
+    .vip-rate { color: var(--accent-green); font-weight: 900; font-size: 15px; }
 
     .bottom-nav {
       position: fixed;
@@ -482,12 +464,13 @@
       transform: translateX(-50%);
       width: 100%;
       max-width: 480px;
-      background: #0d1218;
-      border-top: 1px solid var(--bg-card-border);
+      background: #090e17;
+      border-top: 2px solid rgba(0,210,255,0.2);
       display: flex;
       justify-content: space-around;
-      padding: 8px 0;
+      padding: 10px 0;
       z-index: 200;
+      backdrop-filter: blur(15px);
     }
 
     .nav-item {
@@ -499,16 +482,14 @@
       font-size: 11px;
       cursor: pointer;
       width: 20%;
+      font-weight: 700;
+      transition: color 0.2s;
     }
 
-    .nav-item.active {
-      color: var(--accent-green);
-    }
+    .nav-item.active { color: var(--accent-green); text-shadow: 0 0 10px rgba(0,245,118,0.6); }
+    .nav-icon { font-size: 22px; }
 
-    .nav-icon {
-      font-size: 20px;
-    }
-
+    /* Modal Styling */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -516,126 +497,75 @@
       width: 100%;
       height: 100%;
       background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(5px);
+      backdrop-filter: blur(8px);
       z-index: 1000;
       display: none;
       align-items: flex-end;
       justify-content: center;
     }
 
-    .modal-overlay.active {
-      display: flex;
-    }
+    .modal-overlay.active { display: flex; }
 
     .modal-sheet {
-      background: #161c24;
+      background: #111823;
+      color: #fff;
       width: 100%;
       max-width: 480px;
-      border-radius: 20px 20px 0 0;
-      padding: 20px;
-      max-height: 90vh;
+      border-radius: 28px 28px 0 0;
+      padding: 24px;
+      max-height: 92vh;
       overflow-y: auto;
+      border-top: 2px solid var(--accent-cyan);
     }
 
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
     }
 
     .close-btn {
       background: rgba(255,255,255,0.1);
       border: none;
       color: #fff;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      cursor: pointer;
-    }
-
-    .network-option {
-      background: var(--bg-card);
-      border: 1px solid var(--bg-card-border);
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-    }
-
-    .network-option.selected {
-      border-color: var(--accent-green);
-      background: rgba(0,230,118,0.05);
-    }
-
-    .net-info {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .net-icon {
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 12px;
-      color: #fff;
-    }
-
-    .net-trc { background: #eb0029; }
-    .net-erc { background: #627eea; }
-    .net-bep { background: #f3ba2f; color: #000; }
-
-    .qr-box {
-      background: #fff;
-      padding: 16px;
-      border-radius: 16px;
-      width: 180px;
-      height: 180px;
-      margin: 16px auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .qr-box img {
-      width: 100%;
-      height: 100%;
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 14px;
     }
 
     .address-card {
-      background: rgba(0,0,0,0.3);
-      border: 1px dashed rgba(255,255,255,0.2);
-      border-radius: 10px;
-      padding: 12px;
+      background: rgba(0,0,0,0.6);
+      border: 1px dashed var(--accent-green);
+      border-radius: 12px;
+      padding: 14px;
       word-break: break-all;
       font-size: 12px;
-      color: #ddd;
+      color: var(--accent-green);
       margin: 12px 0;
       position: relative;
+      text-align: left;
+      font-family: monospace;
+      font-weight: 700;
     }
 
     .copy-btn {
       position: absolute;
-      right: 8px;
-      bottom: 8px;
-      background: var(--deposit-orange);
+      right: 10px;
+      bottom: 10px;
+      background: var(--accent-orange, #ff7043);
       color: #fff;
       border: none;
-      padding: 4px 10px;
-      border-radius: 6px;
+      padding: 6px 14px;
+      border-radius: 8px;
       font-size: 11px;
       cursor: pointer;
-      font-weight: 600;
+      font-weight: 800;
     }
 
     .toast {
@@ -643,26 +573,25 @@
       top: 20px;
       left: 50%;
       transform: translateX(-50%) translateY(-100px);
-      background: rgba(0,230,118,0.95);
+      background: rgba(0,245,118,0.95);
       color: #000;
-      padding: 10px 20px;
-      border-radius: 20px;
-      font-weight: 700;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-weight: 900;
       font-size: 13px;
       z-index: 2000;
-      transition: transform 0.3s ease;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 5px 20px rgba(0,245,118,0.5);
     }
 
-    .toast.show {
-      transform: translateX(-50%) translateY(0);
-    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
 
     .list-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 14px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
       font-size: 14px;
     }
 
@@ -672,37 +601,108 @@
       font-size: 13px;
       padding: 8px 0;
       color: var(--text-muted);
-    }
-
-    .spec-value {
-      color: #fff;
       font-weight: 600;
     }
 
-    .spec-value.green {
-      color: var(--accent-green);
-    }
+    .spec-value { color: #fff; font-weight: 800; }
+    .spec-value.green { color: var(--accent-green); }
 
     .team-grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 14px;
+      gap: 12px;
+      margin-bottom: 16px;
     }
 
     .team-stat-box {
-      background: rgba(0,0,0,0.3);
+      background: rgba(0,0,0,0.4);
       border: 1px solid var(--bg-card-border);
-      border-radius: 12px;
-      padding: 12px;
+      border-radius: 14px;
+      padding: 14px;
       text-align: center;
     }
 
     .team-stat-val {
-      font-size: 18px;
-      font-weight: 800;
+      font-size: 20px;
+      font-weight: 900;
       color: var(--accent-green);
-      margin-top: 4px;
+      margin-top: 6px;
+    }
+
+    .badge-status {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-weight: 800;
+    }
+    .badge-pending { background: rgba(255, 193, 7, 0.25); color: #ffd166; }
+    .badge-verified { background: rgba(0, 245, 118, 0.25); color: var(--accent-green); box-shadow: 0 0 10px rgba(0,245,118,0.3); }
+
+    .kyc-upload-box {
+      border: 2px dashed rgba(0,210,255,0.4);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 14px;
+      cursor: pointer;
+      background: rgba(0,0,0,0.3);
+      transition: all 0.2s;
+    }
+    .kyc-upload-box:hover { border-color: var(--accent-green); background: rgba(0,245,118,0.05); }
+
+    .cs-btn-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .cs-btn {
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      color: #fff;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .cs-telegram { background: #0088cc; }
+    .cs-whatsapp { background: #25d366; }
+
+    .danger-btn {
+      background: rgba(255, 51, 102, 0.15);
+      border: 1px solid var(--accent-red);
+      color: var(--accent-red);
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 12px;
+      box-shadow: 0 4px 15px rgba(255,51,102,0.2);
+    }
+
+    .spinning-ring {
+      width: 100px;
+      height: 100px;
+      border: 4px dashed var(--accent-green);
+      border-radius: 50%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: spin 3s linear infinite;
+      box-shadow: 0 0 20px rgba(0,245,118,0.4);
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
@@ -711,7 +711,7 @@
   <!-- SIGN UP SCREEN -->
   <div id="signupScreen" class="auth-screen">
     <div class="auth-title">Create Account</div>
-    <div class="auth-subtitle">Join Dollar Investment Today</div>
+    <div class="auth-subtitle">Join Dollar Investment AI Strategy (Canada Regulated)</div>
     
     <div class="input-group">
       <div class="input-label">Email or Phone</div>
@@ -720,27 +720,33 @@
 
     <div class="input-group">
       <div class="input-label">Password</div>
-      <input type="password" id="signupPassword" class="amount-input" placeholder="Enter password">
+      <div class="password-wrapper">
+        <input type="password" id="signupPassword" class="amount-input" placeholder="Enter password">
+        <span class="toggle-password" onclick="togglePasswordVisibility('signupPassword', this)">👁️</span>
+      </div>
     </div>
 
     <div class="input-group">
       <div class="input-label">Confirm Password</div>
-      <input type="password" id="signupConfirmPassword" class="amount-input" placeholder="Confirm password">
+      <div class="password-wrapper">
+        <input type="password" id="signupConfirmPassword" class="amount-input" placeholder="Confirm password">
+        <span class="toggle-password" onclick="togglePasswordVisibility('signupConfirmPassword', this)">👁️</span>
+      </div>
     </div>
 
     <div class="input-group">
-      <div class="input-label">Referral Link / Code (Auto/Manual)</div>
-      <input type="text" id="signupReferralInput" class="amount-input" placeholder="Auto-filled from Safari/browser link">
+      <div class="input-label">Referral Link / Code</div>
+      <input type="text" id="signupReferralInput" class="amount-input" value="https://dollar-investment-offical.github.io/https-dollar-investment-app.com-signup-ref-User-391126/" readonly style="background: rgba(0,245,118,0.1); color: var(--accent-green); font-weight: 800; font-size: 11px;">
     </div>
 
-    <button class="btn-gradient" onclick="handleSignUp()">Sign Up</button>
+    <button class="btn-gradient" onclick="handleSignUp()">Sign Up ($2 Bonus)</button>
     <div class="auth-toggle">Already have an account? <span onclick="showLoginScreen()">Log In</span></div>
   </div>
 
   <!-- LOG IN SCREEN -->
   <div id="loginScreen" class="auth-screen hidden">
     <div class="auth-title">Welcome Back</div>
-    <div class="auth-subtitle">Log in to your account</div>
+    <div class="auth-subtitle">Log in to your account securely</div>
     
     <div class="input-group">
       <div class="input-label">User (Email or Phone)</div>
@@ -749,7 +755,15 @@
 
     <div class="input-group">
       <div class="input-label">Password</div>
-      <input type="password" id="loginPassword" class="amount-input" placeholder="Enter your password">
+      <div class="password-wrapper">
+        <input type="password" id="loginPassword" class="amount-input" placeholder="Enter your password">
+        <span class="toggle-password" onclick="togglePasswordVisibility('loginPassword', this)">👁️</span>
+      </div>
+    </div>
+
+    <div class="remember-me-container">
+      <input type="checkbox" id="rememberMeCheck" checked>
+      <label for="rememberMeCheck">Save Password & User ID</label>
     </div>
 
     <button class="btn-gradient" onclick="handleLogIn()">Log In</button>
@@ -784,11 +798,10 @@
     </header>
 
     <!-- Sub-page Navigation Header -->
-    <header class="subpage-bar" id="subpageHeader" style="display: none;">
-      <div style="display: flex; align-items: center;">
-        <button class="back-btn" onclick="openPage('tab-home')">←</button>
-        <div class="subpage-title" id="subpageTitle">Withdrawal</div>
-      </div>
+    <header class="universal-header" id="universalHeader" style="display: none;">
+      <button class="nav-back-btn" onclick="navigateBack()">← Back</button>
+      <div style="font-size: 16px; font-weight: 800; color: #fff;" id="universalHeaderTitle">Subpage</div>
+      <div style="width: 50px;"></div>
     </header>
 
     <!-- Toast Notification -->
@@ -798,73 +811,62 @@
     <div id="tab-home" class="tab-content active">
       <div class="ticker-banner">
         <span>📢</span>
-        <div class="ticker-text">Welcome to Dollar Investment Trading! Minimum deposit is $25 USDT.</div>
+        <div class="ticker-text">🔥 Welcome to Dollar Investment! Over 34,000+ Active Members Worldwide. Fully Registered & Certified in Canada. Min Deposit $25, Min Withdrawal $50.</div>
       </div>
 
-      <!-- Home Total Assets Display with Referral Received -->
+      <!-- Home Total Assets Display -->
       <div class="balance-card">
-        <div style="font-size: 12px; color: var(--text-muted);">Total Assets (USDT)</div>
-        <div class="balance-amount" id="homeTotalAssetsDisplay">9415.75</div>
+        <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;">Total Assets (USDT)</div>
+        <div class="balance-amount" id="homeTotalAssetsDisplay">2.00</div>
         
         <div class="referral-box">
-          <span style="font-size: 12px; color: var(--text-muted);">Received by Referral:</span>
-          <span style="font-size: 14px; font-weight: 800; color: var(--accent-green);" id="homeReferralEarnedDisplay">$0.00</span>
+          <span style="font-size: 12px; color: var(--text-muted); font-weight: 700;">Received by Referral:</span>
+          <span style="font-size: 14px; font-weight: 900; color: var(--accent-green);" id="homeReferralEarnedDisplay">$0.00</span>
         </div>
 
         <div class="balance-actions">
           <button class="btn-sub primary" onclick="openDepositModal()">📥 Deposit</button>
-          <button class="btn-sub" onclick="openPage('page-withdraw')">📤 Withdraw</button>
+          <button class="btn-sub" onclick="openSubPage('page-withdraw', 'Withdrawal')">📤 Withdraw</button>
         </div>
-      </div>
-
-      <div class="hero-card">
-        <h2>Dollar Investment Trading</h2>
-        <p>Dollar Investment is accompanying more users into a new era of intelligent finance.</p>
-        <svg class="hero-robot-img" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="40" fill="#00e676" opacity="0.2" />
-          <rect x="30" y="30" width="40" height="30" rx="8" fill="#00e676" />
-          <circle cx="40" cy="42" r="4" fill="#0a0e13" />
-          <circle cx="60" cy="42" r="4" fill="#0a0e13" />
-        </svg>
       </div>
 
       <div class="quick-grid-8">
         <div class="quick-item" onclick="openDepositModal()">
           <div class="quick-icon-wrapper">📥</div>
-          <div class="quick-label">Top up now</div>
+          <div class="quick-label">Top up</div>
         </div>
-        <div class="quick-item" onclick="openPage('page-withdraw')">
+        <div class="quick-item" onclick="openSubPage('page-withdraw', 'Withdrawal')">
           <div class="quick-icon-wrapper">💸</div>
           <div class="quick-label">Withdraw</div>
         </div>
         <div class="quick-item" onclick="switchTab('tab-team')">
           <div class="quick-icon-wrapper">👥</div>
-          <div class="quick-label">Invite friends</div>
+          <div class="quick-label">Invite</div>
         </div>
-        <div class="quick-item" onclick="alert('Task Center active.')">
+        <div class="quick-item" onclick="alert('Task Center active. Complete daily milestones for rewards.')">
           <div class="quick-icon-wrapper">🪂</div>
-          <div class="quick-label">Task Center</div>
+          <div class="quick-label">Tasks</div>
         </div>
         <div class="quick-item" onclick="switchTab('tab-vip')">
           <div class="quick-icon-wrapper">📊</div>
-          <div class="quick-label">Current level</div>
+          <div class="quick-label">VIP Level</div>
         </div>
-        <div class="quick-item" onclick="alert('Platform Introduction active.')">
+        <div class="quick-item" onclick="openSubPage('page-intro', 'Platform Introduction')">
           <div class="quick-icon-wrapper">🎬</div>
           <div class="quick-label">Intro</div>
         </div>
-        <div class="quick-item" onclick="alert('Help Center active.')">
+        <div class="quick-item" onclick="openSubPage('page-terms', 'Terms of Use')">
           <div class="quick-icon-wrapper">📖</div>
-          <div class="quick-label">Help</div>
+          <div class="quick-label">Terms</div>
         </div>
-        <div class="quick-item" onclick="alert('Contact Us active.')">
-          <div class="quick-icon-wrapper">🎧</div>
-          <div class="quick-label">Support</div>
+        <div class="quick-item" onclick="openSubPage('page-kyc', 'Identity Verification')">
+          <div class="quick-icon-wrapper">🆔</div>
+          <div class="quick-label">KYC</div>
         </div>
       </div>
 
       <div class="investment-card">
-        <div style="font-weight: 700; margin-bottom: 12px;">Activity & History Records</div>
+        <div style="font-weight: 800; margin-bottom: 14px; font-size: 15px; color: var(--accent-cyan);">📋 Activity & History Records</div>
         <div id="globalHistoryList">
           <div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;">No recent history recorded.</div>
         </div>
@@ -873,803 +875,856 @@
 
     <!-- TAB 2: ASSETS -->
     <div id="tab-assets" class="tab-content">
+      <div class="universal-header" style="padding: 8px 0; background: none; border: none;">
+        <button class="nav-back-btn" onclick="switchTab('tab-home')">← Back to Home</button>
+      </div>
+
       <div class="balance-card">
-        <div style="font-size: 12px; color: var(--text-muted);">Total Assets (USDT)</div>
-        <div class="balance-amount" id="totalBalanceDisplay">9415.75</div>
+        <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;">Total Assets (USDT)</div>
+        <div class="balance-amount" id="totalBalanceDisplay">2.00</div>
         
         <div class="referral-box">
-          <span style="font-size: 12px; color: var(--text-muted);">Received by Referral:</span>
-          <span style="font-size: 14px; font-weight: 800; color: var(--accent-green);" id="assetsReferralEarnedDisplay">$0.00</span>
+          <span style="font-size: 12px; color: var(--text-muted); font-weight: 700;">Received by Referral:</span>
+          <span style="font-size: 14px; font-weight: 900; color: var(--accent-green);" id="assetsReferralEarnedDisplay">$0.00</span>
         </div>
 
         <div class="balance-actions">
           <button class="btn-sub primary" onclick="openDepositModal()">📥 Deposit</button>
-          <button class="btn-sub" onclick="openPage('page-withdraw')">📤 Withdraw</button>
+          <button class="btn-sub" onclick="openSubPage('page-withdraw', 'Withdrawal')">📤 Withdraw</button>
+        </div>
+      </div>
+
+      <div class="investment-card" style="border-color: rgba(0,245,118,0.4); background: linear-gradient(135deg, rgba(0,245,118,0.08), rgba(17,24,35,1));">
+        <div style="font-weight: 900; margin-bottom: 8px; font-size: 16px; color: var(--accent-green);">🎁 Free Withdrawal Privilege</div>
+        <div class="spec-row">
+          <span>Membership Days:</span>
+          <span class="spec-value" id="daysJoinedText">0 / 25 Days</span>
+        </div>
+        <div class="spec-row">
+          <span>Withdrawal Fee Status:</span>
+          <span class="spec-value green" id="freeWithdrawStatusText">Standard 9% Fee (Free after 25 days)</span>
         </div>
       </div>
 
       <div class="investment-card">
-        <div style="font-weight: 700; margin-bottom: 12px;">Asset Allocation</div>
+        <div style="font-weight: 800; margin-bottom: 12px; font-size: 15px;">💼 Asset Allocation Breakdown</div>
         <div class="list-item">
-          <span style="color:var(--text-muted)">Flexible Funds</span>
-          <span style="font-weight:700" id="flexibleFundsDisplay">9415.75 USDT</span>
+          <span style="color:var(--text-muted); font-weight:700;">Flexible Funds</span>
+          <span style="font-weight:900" id="flexibleFundsDisplay">2.00 USDT</span>
         </div>
         <div class="list-item">
-          <span style="color:var(--text-muted)">Referral Rewards</span>
-          <span style="font-weight:700; color:var(--accent-green)" id="assetReferralFundDisplay">0.00 USDT</span>
+          <span style="color:var(--text-muted); font-weight:700;">Referral Rewards (10%)</span>
+          <span style="font-weight:900; color:var(--accent-green)" id="assetReferralFundDisplay">0.00 USDT</span>
         </div>
       </div>
     </div>
 
-    <!-- TAB 3: VIP / STRATEGY EXECUTION -->
+    <!-- TAB 3: VIP -->
     <div id="tab-vip" class="tab-content">
-      <div style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">Dollar Investment Engine</div>
+      <div class="universal-header" style="padding: 8px 0; background: none; border: none;">
+        <button class="nav-back-btn" onclick="switchTab('tab-home')">← Back to Home</button>
+      </div>
+
+      <div style="font-size: 18px; font-weight: 900; margin-bottom: 16px; color: var(--accent-cyan);">⚡ Dollar Investment AI Strategy</div>
 
       <div class="investment-card" style="border-color: var(--accent-green);">
-        <div style="font-weight: 700; margin-bottom: 12px; font-size: 15px;">🤖 Smart Strategy Engine</div>
+        <div style="font-weight: 900; margin-bottom: 12px; font-size: 16px; color: var(--accent-green);">🤖 Smart Strategy Executor</div>
+        
         <div class="input-group">
           <div class="input-label">
             <span>Investment Amount</span>
             <span>Min: $25</span>
           </div>
           <div class="amount-input-wrapper">
-            <input type="number" id="homeInvestInput" class="amount-input" value="9415.75" min="25">
+            <input type="number" id="homeInvestInput" class="amount-input" value="2.00">
           </div>
         </div>
-        <button class="btn-gradient" id="btnCreateOrder">Create Order (1~4 mins)</button>
+
+        <!-- Quick Percentage Selectors -->
+        <div class="pct-selector-grid">
+          <div class="pct-btn" onclick="selectInvestmentPct(25)">25%</div>
+          <div class="pct-btn" onclick="selectInvestmentPct(50)">50%</div>
+          <div class="pct-btn" onclick="selectInvestmentPct(75)">75%</div>
+          <div class="pct-btn" onclick="selectInvestmentPct(100)">100%</div>
+        </div>
+
+        <button class="btn-gradient" id="btnCreateOrder" onclick="startAIOrderProcess()">Create Order (1~4 mins)</button>
+        <div id="cooldownNotice" style="display:none; text-align:center; color:var(--accent-yellow); font-size:12px; margin-top:12px; font-weight:800;">
+          ⏳ Next Order available in: <span id="cooldownTimer">24:00:00</span>
+        </div>
       </div>
 
+      <!-- Strategy Live Simulation Box -->
       <div id="tradingSimulationBox" class="investment-card" style="display:none; text-align:center;">
-        <div style="font-size:14px; font-weight:700; color:var(--accent-green); margin-bottom:10px;">⚡ Strategy in Progress...</div>
-        <div class="spinning-ring active-spinning" id="botSpinnerRing" style="margin-bottom:10px;">
-          <span style="font-size:24px;">🤖💻</span>
+        <div style="font-size:15px; font-weight:900; color:var(--accent-green); margin-bottom:12px;">⚡ AI Strategy Arbitrage in Progress...</div>
+        <div class="spinning-ring" style="margin-bottom:14px;">
+          <span style="font-size:26px;">🤖📈</span>
         </div>
-        <div style="font-size:12px; color:var(--text-muted); margin-bottom:6px;">Time remaining: <span id="timerDisplay" style="color:#fff; font-weight:700;">--:--</span></div>
-        
-        <div id="profitResultBox" style="display:none; margin-top:14px; border-top:1px solid rgba(255,255,255,0.08); padding-top:10px; text-align:left;">
-          <div style="font-size:13px; font-weight:700; color:var(--accent-green); margin-bottom:6px;">🪙 Bitcoin OTC Trade Result:</div>
-          <div class="spec-row"><span>Pair: BTC/USDT</span> <span class="spec-value green" id="earnedProfitValue">+0.00 USDT</span></div>
-        </div>
+        <div style="font-size:13px; color:var(--text-muted); margin-bottom:6px; font-weight:700;">Time remaining: <span id="timerDisplay" style="color:#fff; font-weight:900;">03:00</span></div>
+        <div style="font-size:12px; color:var(--accent-cyan); font-weight:800;" id="livePairStatus">Analyzing BTC/USDT Market Trends...</div>
       </div>
 
-      <div style="font-size: 16px; font-weight: 700; margin: 20px 0 12px 0;">Grid Levels (1 - 7)</div>
-      
-      <div class="vip-card" id="cardGrid1"><div class="vip-header"><div class="vip-title">Grid 1 (4 Members)</div><div class="vip-rate">1.50% - 2.00%</div></div></div>
-      <div class="vip-card" id="cardGrid2"><div class="vip-header"><div class="vip-title">Grid 2 (6 Members)</div><div class="vip-rate">2.00% - 4.00%</div></div></div>
-      <div class="vip-card" id="cardGrid3"><div class="vip-header"><div class="vip-title">Grid 3 (8 Members)</div><div class="vip-rate">4.00% - 6.00%</div></div></div>
-      <div class="vip-card" id="cardGrid4"><div class="vip-header"><div class="vip-title">Grid 4 (10 Members)</div><div class="vip-rate">6.00% - 8.00%</div></div></div>
-      <div class="vip-card" id="cardGrid5"><div class="vip-header"><div class="vip-title">Grid 5 (12 Members)</div><div class="vip-rate">8.00% - 10.00%</div></div></div>
-      <div class="vip-card" id="cardGrid6"><div class="vip-header"><div class="vip-title">Grid 6 (14 Members)</div><div class="vip-rate">10.00% - 12.00%</div></div></div>
-      <div class="vip-card" id="cardGrid7"><div class="vip-header"><div class="vip-title">Grid 7 (16 Members)</div><div class="vip-rate">12.00% - 14.00%</div></div></div>
+      <div style="font-size: 16px; font-weight: 900; margin: 22px 0 12px 0; color: var(--accent-purple);">🏆 Grid Levels (Auto-Unlocked by Team Size)</div>
+      <div class="vip-card" id="gridCard1"><div class="vip-header"><div class="vip-title">Grid 1 (4 Members)</div><div class="vip-rate">1.50% - 2.00%</div></div></div>
+      <div class="vip-card" id="gridCard2"><div class="vip-header"><div class="vip-title">Grid 2 (6 Members)</div><div class="vip-rate">2.00% - 4.00%</div></div></div>
+      <div class="vip-card" id="gridCard3"><div class="vip-header"><div class="vip-title">Grid 3 (8 Members)</div><div class="vip-rate">4.00% - 6.00%</div></div></div>
+      <div class="vip-card" id="gridCard4"><div class="vip-header"><div class="vip-title">Grid 4 (10 Members)</div><div class="vip-rate">6.00% - 8.00%</div></div></div>
+      <div class="vip-card" id="gridCard5"><div class="vip-header"><div class="vip-title">Grid 5 (12 Members)</div><div class="vip-rate">8.00% - 10.00%</div></div></div>
+      <div class="vip-card" id="gridCard6"><div class="vip-header"><div class="vip-title">Grid 6 (14 Members)</div><div class="vip-rate">10.00% - 12.00%</div></div></div>
+      <div class="vip-card" id="gridCard7"><div class="vip-header"><div class="vip-title">Grid 7 (16 Members)</div><div class="vip-rate">12.00% - 14.00%</div></div></div>
     </div>
 
     <!-- TAB 4: TEAM -->
     <div id="tab-team" class="tab-content">
-      <!-- Invite Friends Overview (Moved to Team Tab) -->
-      <div class="investment-card" style="border-color: rgba(0, 176, 255, 0.4); background: linear-gradient(135deg, rgba(0,176,255,0.08), rgba(0,230,118,0.08));">
-        <div style="font-weight: 700; margin-bottom: 12px; font-size: 15px; color: var(--accent-cyan);">🤝 Invite Friends Overview</div>
+      <div class="universal-header" style="padding: 8px 0; background: none; border: none;">
+        <button class="nav-back-btn" onclick="switchTab('tab-home')">← Back to Home</button>
+      </div>
+
+      <div class="investment-card" style="border-color: rgba(0, 210, 255, 0.4); background: linear-gradient(135deg, rgba(0,210,255,0.1), rgba(157,78,221,0.1));">
+        <div style="font-weight: 900; margin-bottom: 12px; font-size: 16px; color: var(--accent-cyan);">🤝 Invite Friends Overview (10% Bonus)</div>
         <div class="spec-row"><span>Total Team Members:</span> <span class="spec-value green" id="homeTeamSizeText">0 Members</span></div>
         <div class="spec-row"><span>Total Team Balance:</span> <span class="spec-value" id="homeTeamBalanceText">0.00 USDT</span></div>
         <div class="spec-row"><span>Today New Joiners:</span> <span class="spec-value green" id="homeTodayJoinersText">+0 Users</span></div>
-        <div class="address-card" style="margin-top: 10px;">
-          <span id="homeReferralLinkText">https://dollar-investment-app.com/signup?ref=Dollar-Default</span>
+        <div class="address-card" style="margin-top: 12px;">
+          <span id="homeReferralLinkText" style="font-size: 11px;">https://dollar-investment-offical.github.io/https-dollar-investment-app.com-signup-ref-User-391126/</span>
           <button class="copy-btn" onclick="copyReferralLink()">Copy Link</button>
         </div>
       </div>
 
-      <!-- Team Data Overview Card -->
       <div class="balance-card">
-        <div style="font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 12px;">📊 Team Data Overview</div>
-        
+        <div style="font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 14px;">📊 Team Data Overview</div>
         <div class="team-grid-2">
           <div class="team-stat-box">
-            <div style="font-size: 11px; color: var(--text-muted);">Team Size</div>
+            <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;">Team Size</div>
             <div class="team-stat-val" id="teamOverviewSize">0 Members</div>
           </div>
           <div class="team-stat-box">
-            <div style="font-size: 11px; color: var(--text-muted);">Total Team Income</div>
+            <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;">Total Income (10%)</div>
             <div class="team-stat-val" id="teamOverviewIncome">$0.00</div>
           </div>
         </div>
-
-        <div class="team-grid-2">
-          <div class="team-stat-box">
-            <div style="font-size: 11px; color: var(--text-muted);">Today Income</div>
-            <div class="team-stat-val" id="teamTodayIncome">$0.00</div>
-          </div>
-          <div class="team-stat-box">
-            <div style="font-size: 11px; color: var(--text-muted);">Today New Users</div>
-            <div class="team-stat-val" id="teamTodayNewUsers">0 Users</div>
-          </div>
-        </div>
       </div>
 
-      <!-- Add Simulated Referral Member Action -->
-      <div class="investment-card" style="padding: 14px; border-color: rgba(0,230,118,0.3);">
-        <div style="font-size:13px; font-weight:700; margin-bottom:8px;">➕ Simulate New Referral Join & Deposit</div>
-        <div style="display:flex; gap:8px;">
-          <input type="number" id="simulatedRefDepositInput" class="amount-input" placeholder="Deposit ($)" value="100" style="padding:8px 10px; font-size:14px;">
-          <button class="btn-gradient" onclick="addSimulatedReferralUser()" style="width: auto; padding:8px 16px; font-size:13px;">Add Referral</button>
-        </div>
-      </div>
-
-      <!-- Team Members & Deposit Records -->
       <div class="investment-card">
-        <div style="font-weight: 700; margin-bottom: 12px; font-size: 15px;">👥 Team Members & Deposit History</div>
+        <div style="font-weight: 900; margin-bottom: 12px; font-size: 15px; color: var(--accent-green);">👥 Team Members & Deposit History</div>
         <div id="teamMemberList">
-          <div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;">No team members yet.</div>
-        </div>
-      </div>
-
-      <!-- Team Withdrawal Record -->
-      <div class="investment-card">
-        <div style="font-weight: 700; margin-bottom: 12px; font-size: 15px;">💸 Team Withdrawal Record</div>
-        <div id="teamWithdrawalList">
-          <div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;">No team withdrawals recorded.</div>
+          <div style="color:var(--text-muted); font-size:13px; text-align:center; padding:12px;">No team members registered under your link yet. Share your link to earn 10% deposit commissions!</div>
         </div>
       </div>
     </div>
 
     <!-- TAB 5: ME -->
     <div id="tab-me" class="tab-content">
+      <div class="universal-header" style="padding: 8px 0; background: none; border: none;">
+        <button class="nav-back-btn" onclick="switchTab('tab-home')">← Back to Home</button>
+      </div>
+
+      <div class="investment-card" style="background: linear-gradient(135deg, rgba(157,78,221,0.2), rgba(0,245,118,0.15)); border: 2px solid rgba(157,78,221,0.4);">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-weight:900; font-size:18px;" id="meUsernameDisplay">Dollar-User</div>
+            <div style="font-size:13px; color: var(--accent-cyan); font-weight:800; margin-top:3px;" id="meUserIdDisplay">ID: 34001</div>
+          </div>
+          <span class="badge-status badge-pending" id="meKycStatusBadge">KYC: Pending</span>
+        </div>
+      </div>
+
       <div class="investment-card">
-        <div style="font-weight:800; font-size:16px;" id="meUsernameDisplay">Dollar-User</div>
-        <button class="btn-sub primary" style="margin-top: 14px;" onclick="handleLogout()">Log Out</button>
+        <div style="font-weight: 900; margin-bottom: 14px; font-size: 16px; color: var(--accent-yellow);">👤 Personal Account Details</div>
+        <div class="list-item" onclick="openSubPage('page-kyc', 'Identity Verification')">
+          <span style="font-weight: 700;">🆔 Identity Verification (KYC)</span>
+          <span style="color:var(--accent-green); font-weight:900;">Verify Now →</span>
+        </div>
+        <div class="list-item" onclick="openSubPage('page-cs', 'Customer Service')">
+          <span style="font-weight: 700;">🎧 Customer Service</span>
+          <span style="color:var(--accent-cyan); font-weight:900;">Support Hub →</span>
+        </div>
+        <div class="list-item" onclick="openSubPage('page-terms', 'Terms of Use')">
+          <span style="font-weight: 700;">📖 Terms of Use</span>
+          <span style="color:var(--text-muted); font-weight:800;">Read →</span>
+        </div>
+      </div>
+
+      <div class="investment-card">
+        <button class="btn-sub primary" style="width:100%; padding:14px; margin-bottom:12px; font-weight:900;" onclick="handleLogout()">Sign Out</button>
+        <button class="danger-btn" onclick="handleDeleteAccount()">Delete Account</button>
       </div>
     </div>
 
     <!-- SUB-PAGE: WITHDRAWAL SCREEN -->
     <div id="page-withdraw" class="tab-content">
-      <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Select Currency</div>
-      <div class="custom-select-card">
-        <select id="withdrawCurrency">
+      <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;">Select Currency</div>
+      <div class="input-group">
+        <select id="withdrawCurrency" class="amount-input">
           <option value="USDT" selected>₮ USDT</option>
         </select>
       </div>
 
-      <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Select Network</div>
-      <div class="custom-select-card">
-        <select id="withdrawNetwork">
+      <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;">Select Network</div>
+      <div class="input-group">
+        <select id="withdrawNetwork" class="amount-input">
           <option value="TRC20" selected>Tron (TRC20)</option>
           <option value="ERC20">Ethereum (ERC20)</option>
           <option value="BEP20">BNB Smart Chain (BEP20)</option>
         </select>
       </div>
 
-      <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Withdrawal Address</div>
-      <div class="custom-select-card" style="padding: 4px 12px;">
-        <input type="text" id="withdrawAddressInput" class="amount-input" style="border:none; padding: 10px 0;" placeholder="Enter destination address">
+      <div class="input-group">
+        <div class="input-label">
+          <span>Withdrawal Amount</span>
+          <span>Min: $50 USDT</span>
+        </div>
+        <input type="number" id="withdrawAmountInput" class="amount-input" placeholder="Min 50 USDT">
       </div>
 
-      <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Withdrawal Amount (Min: 50$)</div>
-      <div class="custom-select-card" style="padding: 4px 12px; margin-bottom: 16px;">
-        <input type="number" id="withdrawAmountInput" class="amount-input" style="border:none; padding: 10px 0;" placeholder="Minimum 50$" min="50">
+      <div class="input-group">
+        <div class="input-label">Wallet Address</div>
+        <input type="text" id="withdrawAddressInput" class="amount-input" placeholder="Paste your USDT wallet address">
       </div>
 
-      <button class="btn-gradient" id="btnConfirmWithdraw" style="background:var(--deposit-orange-gradient); color:#fff;">Confirm</button>
+      <div class="investment-card" style="background: rgba(0,0,0,0.4); padding: 14px; margin-bottom: 18px;">
+        <div class="spec-row"><span>Standard Fee:</span><span class="spec-value" id="withdrawalFeeNotice">9% Deduction</span></div>
+        <div class="spec-row"><span>Estimated Processing Time:</span><span class="spec-value green">10 minutes to 3 business days</span></div>
+      </div>
+
+      <button class="btn-gradient" onclick="handleWithdrawSubmit()">Submit Withdrawal</button>
     </div>
 
-    <!-- Bottom Navigation Tabs -->
+    <!-- SUB-PAGE: PLATFORM INTRO -->
+    <div id="page-intro" class="tab-content">
+      <div class="investment-card" style="line-height:1.7; font-size:13px; color:#e2e8f0;">
+        <div style="font-weight:900; font-size:18px; color: var(--accent-cyan); margin-bottom:14px;">Certified by Canada Dollar Investment AI Plan</div>
+        <p style="margin-bottom:12px;"><strong>Dollar Investment</strong> is an internationally recognized, Canada-certified financial technology enterprise (Registration #882941-Canada). Operating at the forefront of automated digital asset management, we leverage advanced AI-driven algorithmic arbitrage to connect over 34,000+ active global investors with stable, high-yield digital returns.</p>
+        <p style="margin-bottom:12px;">Our robust infrastructure operates 24/7 across major global cryptocurrency and commodity markets (including BTC, ETH, and Crude Oil OTC pairs), ensuring maximum liquidity, transparent daily profit distribution, and rigorous security standards.</p>
+        <p style="margin-bottom:12px;">With certified regulatory compliance, dedicated customer support, and instant peer-to-peer referral bonuses, Dollar Investment provides a trusted gateway into the future of intelligent decentralized finance.</p>
+      </div>
+    </div>
+
+    <!-- SUB-PAGE: KYC VERIFICATION (Real Camera Capture & Strict Validation) -->
+    <div id="page-kyc" class="tab-content">
+      <div class="investment-card">
+        <div style="font-weight:900; font-size:18px; margin-bottom:6px; color: var(--accent-green);">Identity Verification (KYC)</div>
+        <div style="font-size:13px; color:var(--text-muted); margin-bottom:18px; line-height:1.4;">To comply with international financial regulations and Canada registry standards, please capture or upload clear images of your ID Front, ID Back, and a Live Selfie. All 3 documents are strictly mandatory before submitting.</div>
+
+        <!-- Hidden File Inputs with capture="environment" / "user" for real camera trigger -->
+        <input type="file" id="inputKycFront" accept="image/*" capture="environment" style="display:none;" onchange="handleKycCapture('Front', event)">
+        <input type="file" id="inputKycBack" accept="image/*" capture="environment" style="display:none;" onchange="handleKycCapture('Back', event)">
+        <input type="file" id="inputKycSelfie" accept="image/*" capture="user" style="display:none;" onchange="handleKycCapture('Selfie', event)">
+
+        <div class="kyc-upload-box" onclick="triggerCameraInput('Front')">
+          <div style="font-size:28px;">🪪</div>
+          <div style="font-size:14px; font-weight:800; margin-top:6px; color:#fff;" id="kycFrontStatus">📷 Capture ID Front Picture</div>
+        </div>
+
+        <div class="kyc-upload-box" onclick="triggerCameraInput('Back')">
+          <div style="font-size:28px;">💳</div>
+          <div style="font-size:14px; font-weight:800; margin-top:6px; color:#fff;" id="kycBackStatus">📷 Capture ID Back Picture</div>
+        </div>
+
+        <div class="kyc-upload-box" onclick="triggerCameraInput('Selfie')">
+          <div style="font-size:28px;">🤳</div>
+          <div style="font-size:14px; font-weight:800; margin-top:6px; color:#fff;" id="kycSelfieStatus">📸 Capture Live Selfie</div>
+        </div>
+
+        <button class="btn-gradient" style="margin-top:14px;" onclick="submitKycVerification()">Submit Verification</button>
+      </div>
+    </div>
+
+    <!-- SUB-PAGE: CUSTOMER SERVICE -->
+    <div id="page-cs" class="tab-content">
+      <div class="investment-card" style="text-align:center; padding: 30px 20px;">
+        <div style="font-size:50px; margin-bottom:12px;">🎧</div>
+        <div style="font-weight:900; font-size:20px; color: var(--accent-cyan);">Dollar Investment Support Hub</div>
+        <div style="font-size:13px; color:var(--text-muted); margin:8px 0 20px 0; line-height:1.5;">Our professional support team is available 24/7 via official Telegram and WhatsApp channels.</div>
+
+        <div class="cs-btn-grid">
+          <a href="https://t.me/" target="_blank" class="cs-btn cs-telegram">
+            <span>✈️ Telegram</span>
+          </a>
+          <a href="https://whatsapp.com/" target="_blank" class="cs-btn cs-whatsapp">
+            <span>💬 WhatsApp</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUB-PAGE: TERMS OF USE -->
+    <div id="page-terms" class="tab-content">
+      <div class="investment-card" style="line-height:1.7; font-size:13px; color:#e2e8f0;">
+        <div style="font-weight:900; font-size:18px; color: var(--accent-yellow); margin-bottom:14px;">Terms of Use & Regulatory Agreement</div>
+        <p style="margin-bottom:12px;">1. <strong>Enterprise Background:</strong> Dollar Investment is a fully registered and certified financial institution in Canada (Reg #882941-Canada), proudly serving over 34,000+ active global members with robust automated trading strategies.</p>
+        <p style="margin-bottom:12px;">2. <strong>Bonus & Deposits:</strong> Every new verified user receives an automatic $2 USDT registration bonus. Minimum deposit requirement is $25 USDT with secure network processing.</p>
+        <p style="margin-bottom:12px;">3. <strong>Withdrawal Policy:</strong> Minimum withdrawal is $50 USDT. Standard transactions carry a 9% processing fee. Members enjoy 100% Free Withdrawals (0% fee) after maintaining active status for 25 days.</p>
+        <p style="margin-bottom:12px;">4. <strong>AI Strategy & Cooldown:</strong> Automated arbitrage orders execute across major crypto and commodity pairs (BTC, ETH, OIL). Each order requires a strict 24-hour interval before reactivation.</p>
+        <p style="margin-bottom:12px;">5. <strong>Identity & Compliance:</strong> Mandatory KYC identity verification (Front ID, Back ID, and Live Selfie) ensures platform security and regulatory compliance.</p>
+      </div>
+    </div>
+
+    <!-- DEPOSIT MODAL SHEET (Address Only - No QR Scan) -->
+    <div id="depositModal" class="modal-overlay">
+      <div class="modal-sheet">
+        <div class="modal-header">
+          <div style="font-weight: 900; font-size: 18px; color: #fff;">Deposit USDT</div>
+          <button class="close-btn" onclick="closeDepositModal()">✕</button>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;">Deposit Network</div>
+          <select id="depositNetworkSelect" class="amount-input" onchange="changeDepositNetwork(this.value)">
+            <option value="TRC20" selected>Tron (TRC20)</option>
+            <option value="ERC20">Ethereum (ERC20)</option>
+            <option value="BEP20">BNB Smart Chain (BEP20)</option>
+          </select>
+        </div>
+
+        <div class="pionex-box" style="background:var(--bg-card); border:1px solid var(--bg-card-border); padding:16px; border-radius:16px;">
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px; text-align: left; font-weight: 700;">Official Wallet Address</div>
+          <div class="address-card">
+            <span id="depositWalletAddress">TBDXFTpapFkghPnURKFCVUkMbricHUKPrr</span>
+            <button class="copy-btn" onclick="copyDepositAddress()">Copy</button>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-top: 10px; font-weight: 700;">
+            <span>Minimum Deposit:</span>
+            <span style="color: var(--accent-green); font-weight: 900;">$25 USDT</span>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px; margin-bottom: 22px;">
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;">Enter Deposit Amount ($)</div>
+          <input type="number" id="depositAmountInput" class="amount-input" placeholder="Min $25 USDT" value="25">
+        </div>
+
+        <button class="btn-gradient" onclick="submitDepositPayment()">Confirm & Deposit</button>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAVIGATION -->
     <nav class="bottom-nav">
-      <div class="nav-item active" onclick="switchTab('tab-home', this)">
-        <div class="nav-icon">🏠</div>
-        <div>Home</div>
+      <div class="nav-item active" id="nav-home" onclick="switchTab('tab-home')">
+        <span class="nav-icon">🏠</span>
+        <span>Home</span>
       </div>
-      <div class="nav-item" onclick="switchTab('tab-assets', this)">
-        <div class="nav-icon">💼</div>
-        <div>Assets</div>
+      <div class="nav-item" id="nav-assets" onclick="switchTab('tab-assets')">
+        <span class="nav-icon">💼</span>
+        <span>Assets</span>
       </div>
-      <div class="nav-item" onclick="switchTab('tab-vip', this)">
-        <div class="nav-icon">👑</div>
-        <div>VIP</div>
+      <div class="nav-item" id="nav-vip" onclick="switchTab('tab-vip')">
+        <span class="nav-icon">⚡</span>
+        <span>VIP</span>
       </div>
-      <div class="nav-item" onclick="switchTab('tab-team', this)">
-        <div class="nav-icon">👥</div>
-        <div>Team</div>
+      <div class="nav-item" id="nav-team" onclick="switchTab('tab-team')">
+        <span class="nav-icon">👥</span>
+        <span>Team</span>
       </div>
-      <div class="nav-item" onclick="switchTab('tab-me', this)">
-        <div class="nav-icon">👤</div>
-        <div>Me</div>
+      <div class="nav-item" id="nav-me" onclick="switchTab('tab-me')">
+        <span class="nav-icon">👤</span>
+        <span>Me</span>
       </div>
     </nav>
-  </div>
 
-  <!-- Deposit Modal Sheet with 3 Network Options & Amount Input -->
-  <div id="depositModal" class="modal-overlay">
-    <div class="modal-sheet">
-      <div class="modal-header">
-        <div class="modal-title">Deposit USDT</div>
-        <button class="close-btn" onclick="closeDepositModal()">✕</button>
-      </div>
-
-      <div class="network-option selected" id="net-trc" onclick="selectNetwork('TRC20')">
-        <div class="net-info">
-          <div class="net-icon net-trc">TRX</div>
-          <div>Tron (TRC20)</div>
-        </div>
-      </div>
-
-      <div class="network-option" id="net-erc" onclick="selectNetwork('ERC20')">
-        <div class="net-info">
-          <div class="net-icon net-erc">ETH</div>
-          <div>Ethereum (ERC20)</div>
-        </div>
-      </div>
-
-      <div class="network-option" id="net-bep" onclick="selectNetwork('BEP20')">
-        <div class="net-info">
-          <div class="net-icon net-bep">BNB</div>
-          <div>BNB Smart Chain (BEP20)</div>
-        </div>
-      </div>
-
-      <div style="margin-top: 14px;">
-        <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Deposit Amount (USDT)</div>
-        <input type="number" id="depositAmountInput" class="amount-input" placeholder="Enter amount (e.g. 50)" value="50" min="25">
-        <div style="font-size: 12px; color: var(--deposit-orange); margin-top: 6px; font-weight: 600;">⚠️ Minimum deposit amount is $25</div>
-      </div>
-
-      <div style="text-align: center; margin-top: 16px;">
-        <div class="qr-box">
-          <img id="qrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=TBDXFTpapFkghPnURKFCVUKmBrichUKpRr" alt="QR">
-        </div>
-        <div class="address-card">
-          <span id="depositAddressText">TBDXFTpapFkghPnURKFCVUKmBrichUKpRr</span>
-          <button class="copy-btn" onclick="copyAddress()">Copy</button>
-        </div>
-        <button class="btn-gradient" onclick="confirmDepositRecord()" style="margin-top:10px;">Deposit Complete</button>
-      </div>
-    </div>
   </div>
 
   <script>
-    const STORAGE_KEY = "dollar_investment_users_db";
-    let currentUser = null;
-
-    let userBalance = 9415.75;
-    let referralEarnedTotal = 0.0;
-    let lastOrderTimestamp = 0;
-    let teamMembers = [];
-    let teamWithdrawals = [];
-
-    const depositData = {
-      TRC20: { address: "TBDXFTpapFkghPnURKFCVUKmBrichUKpRr" },
-      ERC20: { address: "0x0dAd2EA4e195b053e593C698d65F1b98A8325996" },
-      BEP20: { address: "0x0dAd2EA4e195b053e593C698d65F1b98A8325996" }
+    const STORAGE_KEY = 'dollar_investment_user_data';
+    
+    let appData = {
+      user: '',
+      userId: 34001,
+      balance: 2.00,
+      referralEarned: 0.00,
+      joinTimestamp: Date.now(),
+      kycStatus: 'Pending',
+      kycFrontUploaded: false,
+      kycBackUploaded: false,
+      kycSelfieUploaded: false,
+      lastOrderTimestamp: 0,
+      historyRecords: [],
+      teamMembers: []
     };
 
-    // Auto-detect Safari/Mobile browser referral link parameter (?ref=...)
-    window.addEventListener("DOMContentLoaded", function () {
-      const urlParams = new URLSearchParams(window.location.search);
-      const refCode = urlParams.get('ref');
-      if (refCode) {
-        const refInput = document.getElementById('signupReferralInput');
-        if (refInput) refInput.value = refCode;
-      }
-
-      const savedUser = localStorage.getItem("dollar_active_session");
-      if (savedUser) {
-        loadUserData(savedUser);
-      } else {
-        showSignupScreen();
-      }
-    });
-
-    window.showSignupScreen = function() {
-      document.getElementById('signupScreen').classList.remove('hidden');
-      document.getElementById('loginScreen').classList.add('hidden');
-    };
-
-    window.showLoginScreen = function() {
-      document.getElementById('signupScreen').classList.add('hidden');
-      document.getElementById('loginScreen').classList.remove('hidden');
-    };
-
-    function parseReferrerTag(inputVal) {
-      if (!inputVal) return null;
-      try {
-        if (inputVal.includes("ref=")) {
-          return inputVal.split("ref=")[1].split("&")[0].trim();
+    function loadState() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          appData = JSON.parse(saved);
+        } catch (e) {
+          console.error("Failed to parse stored state");
         }
-      } catch(e){}
-      return inputVal.trim();
+      } else {
+        const globalSeq = parseInt(localStorage.getItem('dollar_global_id_seq') || '34001');
+        appData.userId = globalSeq;
+        localStorage.setItem('dollar_global_id_seq', (globalSeq + 1).toString());
+        saveState();
+      }
     }
 
-    window.handleSignUp = function() {
-      const emailPhone = document.getElementById('signupEmailPhone').value.trim();
-      const password = document.getElementById('signupPassword').value;
-      const confirmPassword = document.getElementById('signupConfirmPassword').value;
-      const rawRef = document.getElementById('signupReferralInput').value.trim();
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+    }
 
-      if (!emailPhone || !password || !confirmPassword) {
-        alert("Please fill in all required fields.");
+    window.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      document.getElementById('signupReferralInput').value = "https://dollar-investment-offical.github.io/https-dollar-investment-app.com-signup-ref-User-391126/";
+      document.getElementById('homeReferralLinkText').textContent = "https://dollar-investment-offical.github.io/https-dollar-investment-app.com-signup-ref-User-391126/";
+
+      const savedUser = localStorage.getItem('dollar_saved_user');
+      const savedPass = localStorage.getItem('dollar_saved_pass');
+
+      if (savedUser && savedPass) {
+        document.getElementById('loginUser').value = savedUser;
+        document.getElementById('loginPassword').value = savedPass;
+      }
+
+      updateUI();
+      checkCooldown();
+      setInterval(checkCooldown, 1000);
+    });
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    function togglePasswordVisibility(inputId, iconElem) {
+      const input = document.getElementById(inputId);
+      if (input.type === "password") {
+        input.type = "text";
+        iconElem.textContent = "🙈";
+      } else {
+        input.type = "password";
+        iconElem.textContent = "👁️";
+      }
+    }
+
+    function showLoginScreen() {
+      document.getElementById('signupScreen').classList.add('hidden');
+      document.getElementById('loginScreen').classList.remove('hidden');
+    }
+
+    function showSignupScreen() {
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('signupScreen').classList.remove('hidden');
+    }
+
+    function handleSignUp() {
+      const email = document.getElementById('signupEmailPhone').value.trim();
+      const pass = document.getElementById('signupPassword').value;
+      const confirmPass = document.getElementById('signupConfirmPassword').value;
+
+      if (!email || !pass) {
+        alert("Please fill in email/phone and password.");
         return;
       }
-      if (password !== confirmPassword) {
+
+      if (pass !== confirmPass) {
         alert("Passwords do not match.");
         return;
       }
 
-      let usersDB = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-      if (usersDB[emailPhone]) {
-        alert("Account with this email/phone already exists. Please log in.");
-        showLoginScreen();
+      appData.user = email;
+      if (!appData.balance || appData.balance < 2) {
+        appData.balance = 2.00; // $2 Sign-up bonus guaranteed
+      }
+      saveState();
+
+      localStorage.setItem('dollar_saved_user', email);
+      localStorage.setItem('dollar_saved_pass', pass);
+
+      showToast("Account created! $2 USDT Bonus credited.");
+      setTimeout(() => {
+        document.getElementById('signupScreen').classList.add('hidden');
+        updateUI();
+      }, 1000);
+    }
+
+    function handleLogIn() {
+      const user = document.getElementById('loginUser').value.trim();
+      const pass = document.getElementById('loginPassword').value;
+
+      if (!user || !pass) {
+        alert("Please enter credentials.");
         return;
       }
 
-      const uniqueId = `User-${Math.floor(100000 + Math.random() * 900000)}`;
-      const referrerTag = parseReferrerTag(rawRef);
-      
-      usersDB[emailPhone] = {
-        emailPhone: emailPhone,
-        password: password,
-        uniqueId: uniqueId,
-        balance: 9415.75,
-        referralEarned: 0.0,
-        team: [],
-        withdrawals: [],
-        referredBy: referrerTag || null
+      appData.user = user;
+      if (!appData.balance || appData.balance < 2) {
+        appData.balance = 2.00; // Ensure baseline bonus if new session
+      }
+      saveState();
+
+      localStorage.setItem('dollar_saved_user', user);
+      localStorage.setItem('dollar_saved_pass', pass);
+
+      showToast("Logged in successfully!");
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('signupScreen').classList.add('hidden');
+      updateUI();
+    }
+
+    function handleLogout() {
+      showToast("Logged out successfully.");
+      showLoginScreen();
+    }
+
+    function handleDeleteAccount() {
+      if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem('dollar_saved_user');
+        localStorage.removeItem('dollar_saved_pass');
+        showToast("Account deleted.");
+        setTimeout(() => location.reload(), 1000);
+      }
+    }
+
+    // Tab Navigation & Header Controls
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+      document.getElementById(tabId).classList.add('active');
+      const navBtn = document.getElementById(tabId.replace('tab-', 'nav-'));
+      if (navBtn) navBtn.classList.add('active');
+
+      document.getElementById('universalHeader').style.display = 'none';
+      document.getElementById('mainHeader').style.display = 'flex';
+      updateUI();
+    }
+
+    function openSubPage(pageId, title) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+      document.getElementById('mainHeader').style.display = 'none';
+      document.getElementById('universalHeaderTitle').textContent = title;
+      document.getElementById('universalHeader').style.display = 'flex';
+    }
+
+    function navigateBack() {
+      switchTab('tab-home');
+    }
+
+    // Deposit System
+    function openDepositModal() { document.getElementById('depositModal').classList.add('active'); }
+    function closeDepositModal() { document.getElementById('depositModal').classList.remove('active'); }
+
+    function changeDepositNetwork(net) {
+      const addrMap = {
+        'TRC20': 'TBDXFTpapFkghPnURKFCVUkMbricHUKPrr',
+        'ERC20': '0x0dAd2EA4e195b053e593C698d65F1b98A8325996',
+        'BEP20': '0x0dAd2EA4e195b053e593C698d65F1b98A8325996'
+      };
+      document.getElementById('depositWalletAddress').textContent = addrMap[net] || addrMap['TRC20'];
+    }
+
+    function copyDepositAddress() {
+      const addr = document.getElementById('depositWalletAddress').textContent;
+      navigator.clipboard.writeText(addr);
+      showToast("Deposit address copied!");
+    }
+
+    function submitDepositPayment() {
+      const depositAmt = parseFloat(document.getElementById('depositAmountInput').value) || 0;
+
+      if (depositAmt < 25) {
+        alert("Minimum deposit amount is $25 USDT.");
+        return;
+      }
+
+      closeDepositModal();
+      showToast("Deposit submitted! Status: Processing (2 minutes wait)...");
+
+      const now = new Date();
+      const timeStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+      const record = {
+        type: "Deposit",
+        amount: depositAmt,
+        status: "Processing",
+        time: timeStr
       };
 
-      // Auto-map new user to referrer's team if referrer exists in DB
-      if (referrerTag) {
-        for (let key in usersDB) {
-          if (usersDB[key].uniqueId === referrerTag) {
-            usersDB[key].team = usersDB[key].team || [];
-            usersDB[key].team.unshift({
-              id: uniqueId,
-              deposit: 0,
-              profit10: 0,
-              date: "Just now",
-              isNew: true
-            });
-            break;
-          }
-        }
-      }
+      appData.historyRecords.unshift(record);
+      saveState();
+      renderHistory();
 
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(usersDB));
-      showToast("Account created successfully! Please log in.");
-      showLoginScreen();
-    };
+      // 2 Minutes Processing Window Timer
+      setTimeout(() => {
+        record.status = "Success";
+        appData.balance += depositAmt;
+        saveState();
+        renderHistory();
+        updateUI();
+        showToast("Success! $" + depositAmt.toFixed(2) + " USDT deposited.");
+      }, 120000);
+    }
 
-    window.handleLogIn = function() {
-      const userField = document.getElementById('loginUser').value.trim();
-      const passField = document.getElementById('loginPassword').value;
+    // Withdrawal System
+    function handleWithdrawSubmit() {
+      const amt = parseFloat(document.getElementById('withdrawAmountInput').value) || 0;
+      const addr = document.getElementById('withdrawAddressInput').value.trim();
 
-      if (!userField || !passField) {
-        alert("Please enter both User (Email/Phone) and Password.");
+      if (amt < 50) {
+        alert("Minimum withdrawal amount is $50 USDT.");
         return;
       }
 
-      let usersDB = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-      if (!usersDB[userField] || usersDB[userField].password !== passField) {
-        alert("Invalid credentials or user does not exist.");
+      if (!addr) {
+        alert("Please enter a valid wallet address.");
         return;
       }
 
-      localStorage.setItem("dollar_active_session", userField);
-      loadUserData(userField);
-      
-      document.getElementById('loginScreen').classList.add('hidden');
-      showToast("Logged in successfully!");
-    };
-
-    window.handleLogout = function() {
-      saveCurrentUserData();
-      localStorage.removeItem("dollar_active_session");
-      currentUser = null;
-      showSignupScreen();
-    };
-
-    function loadUserData(username) {
-      currentUser = username;
-      let usersDB = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-      let uData = usersDB[username];
-
-      if (uData) {
-        userBalance = uData.balance || 9415.75;
-        referralEarnedTotal = uData.referralEarned || 0.0;
-        teamMembers = uData.team || [];
-        teamWithdrawals = uData.withdrawals || [];
-
-        document.getElementById('meUsernameDisplay').innerText = `${uData.uniqueId} (${username})`;
-        
-        // Custom domain clean URL format for sharing anywhere (WhatsApp, Telegram, Safari)
-        const myRefLink = `https://dollar-investment-app.com/signup?ref=${uData.uniqueId}`;
-        document.getElementById('homeReferralLinkText').innerText = myRefLink;
-
-        updateBalances();
-        updateTeamAndReferralData();
+      if (amt > appData.balance) {
+        alert("Insufficient account balance.");
+        return;
       }
+
+      const daysJoined = Math.floor((Date.now() - appData.joinTimestamp) / (1000 * 60 * 60 * 24));
+      const feePct = daysJoined >= 25 ? 0.00 : 0.09;
+      const feeAmt = amt * feePct;
+      const finalAmt = amt - feeAmt;
+
+      appData.balance -= amt;
+
+      const now = new Date();
+      const timeStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+      appData.historyRecords.unshift({
+        type: `Withdrawal (${(feePct*100)}% Fee)`,
+        amount: finalAmt,
+        status: "Processing (10m - 3 Days)",
+        time: timeStr
+      });
+
+      saveState();
+      renderHistory();
+      updateUI();
+      showToast(`Withdrawal of $${finalAmt.toFixed(2)} USDT submitted! Processing time: 10 minutes to 3 business days.`);
+      switchTab('tab-home');
     }
 
-    function saveCurrentUserData() {
-      if (!currentUser) return;
-      let usersDB = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-      if (usersDB[currentUser]) {
-        usersDB[currentUser].balance = userBalance;
-        usersDB[currentUser].referralEarned = referralEarnedTotal;
-        usersDB[currentUser].team = teamMembers;
-        usersDB[currentUser].withdrawals = teamWithdrawals;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(usersDB));
-      }
+    // VIP Percentage Selectors & Smart Strategy Order Processing
+    function selectInvestmentPct(pct) {
+      document.querySelectorAll('.pct-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      const calcAmt = (appData.balance * (pct / 100)).toFixed(2);
+      document.getElementById('homeInvestInput').value = calcAmt;
     }
 
-    window.openPage = function(pageId, titleText) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      document.getElementById(pageId).classList.add('active');
-      const mainHeader = document.getElementById('mainHeader');
-      const subHeader = document.getElementById('subpageHeader');
-      if(pageId.startsWith('page-')) {
-        mainHeader.style.display = 'none';
-        subHeader.style.display = 'flex';
-        document.getElementById('subpageTitle').innerText = titleText || "Details";
+    function checkCooldown() {
+      const elapsed = Date.now() - appData.lastOrderTimestamp;
+      const cooldownMs = 24 * 60 * 60 * 1000;
+
+      if (elapsed < cooldownMs) {
+        const remainingMs = cooldownMs - elapsed;
+        const hours = Math.floor(remainingMs / (1000 * 60 * 60)).toString().padStart(2, '0');
+        const mins = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+        const secs = Math.floor((remainingMs % (1000 * 60)) / 1000).toString().padStart(2, '0');
+
+        document.getElementById('cooldownNotice').style.display = 'block';
+        document.getElementById('cooldownTimer').textContent = `${hours}:${mins}:${secs}`;
+        document.getElementById('btnCreateOrder').disabled = true;
+        document.getElementById('btnCreateOrder').style.opacity = '0.5';
       } else {
-        mainHeader.style.display = 'flex';
-        subHeader.style.display = 'none';
+        document.getElementById('cooldownNotice').style.display = 'none';
+        document.getElementById('btnCreateOrder').disabled = false;
+        document.getElementById('btnCreateOrder').style.opacity = '1';
       }
-    };
-
-    window.switchTab = function(tabId, element) {
-      window.openPage(tabId);
-      document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-      if (element) element.classList.add('active');
-    };
-
-    window.openDepositModal = function() { document.getElementById('depositModal').classList.add('active'); };
-    window.closeDepositModal = function() { document.getElementById('depositModal').classList.remove('active'); };
-
-    window.selectNetwork = function(netKey) {
-      const data = depositData[netKey];
-      if (!data) return;
-
-      document.querySelectorAll('.network-option').forEach(opt => {
-        opt.classList.remove('selected');
-      });
-
-      const activeOpt = document.getElementById(`net-${netKey.toLowerCase()}`);
-      if (activeOpt) {
-        activeOpt.classList.add('selected');
-      }
-
-      document.getElementById('depositAddressText').innerText = data.address;
-      document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(data.address)}`;
-    };
-
-    window.copyAddress = function() {
-      navigator.clipboard.writeText(document.getElementById('depositAddressText').innerText);
-      showToast("Address copied!");
-    };
-
-    window.copyReferralLink = function() {
-      const link = document.getElementById('homeReferralLinkText').innerText;
-      navigator.clipboard.writeText(link);
-      showToast("Referral link copied!");
-    };
-
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      toast.innerText = msg;
-      toast.classList.add('show');
-      setTimeout(() => { toast.classList.remove('show'); }, 2500);
     }
 
-    window.confirmDepositRecord = function() {
-      const depAmtInput = document.getElementById('depositAmountInput');
-      const depVal = parseFloat(depAmtInput ? depAmtInput.value : 0);
+    function startAIOrderProcess() {
+      const investAmt = parseFloat(document.getElementById('homeInvestInput').value) || 0;
 
-      if (isNaN(depVal) || depVal < 25) {
-        alert("Minimum deposit amount is $25");
+      if (investAmt < 25) {
+        alert("Minimum investment amount is $25 USDT.");
         return;
       }
 
-      userBalance += depVal;
-      updateBalances();
-
-      // If user was referred by someone, credit 10% to referrer
-      let usersDB = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-      if (currentUser && usersDB[currentUser] && usersDB[currentUser].referredBy) {
-        const refTag = usersDB[currentUser].referredBy;
-        for (let u in usersDB) {
-          if (usersDB[u].uniqueId === refTag) {
-            const comm = depVal * 0.10;
-            usersDB[u].balance = (usersDB[u].balance || 0) + comm;
-            usersDB[u].referralEarned = (usersDB[u].referralEarned || 0) + comm;
-            usersDB[u].team = usersDB[u].team || [];
-            
-            let found = false;
-            for (let tm of usersDB[u].team) {
-              if (tm.id === usersDB[currentUser].uniqueId) {
-                tm.deposit += depVal;
-                tm.profit10 += comm;
-                found = true;
-                break;
-              }
-            }
-            if (!found) {
-              usersDB[u].team.unshift({
-                id: usersDB[currentUser].uniqueId,
-                deposit: depVal,
-                profit10: comm,
-                date: "Today",
-                isNew: true
-              });
-            }
-            break;
-          }
-        }
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(usersDB));
+      if (investAmt > appData.balance) {
+        alert("Investment amount exceeds available balance.");
+        return;
       }
 
-      recordHistory("USDT Deposit", `Amount: +${depVal.toFixed(2)} USDT`, "Completed");
-      closeDepositModal();
-      showToast(`Deposit of $${depVal.toFixed(2)} recorded!`);
-      saveCurrentUserData();
-    };
+      document.getElementById('tradingSimulationBox').style.display = 'block';
+      document.getElementById('btnCreateOrder').disabled = true;
 
-    function updateTeamAndReferralData() {
-      let teamSize = teamMembers.length;
-      let totalTeamDep = 0;
-      let totalIncome = 0;
-      let todayInc = 0;
-      let todayNewCount = 0;
+      const pairs = ["BTC/USDT", "ETH/USDT", "CRUDE_OIL/USDT"];
+      let countdown = 180; // 3 Minutes execution simulation
 
-      teamMembers.forEach(m => {
-        totalTeamDep += (m.deposit || 0);
-        totalIncome += (m.profit10 || 0);
-        if (m.isNew) {
-          todayInc += (m.profit10 || 0);
-          todayNewCount++;
-        }
-      });
+      const timerInterval = setInterval(() => {
+        countdown--;
+        const m = Math.floor(countdown / 60).toString().padStart(2, '0');
+        const s = (countdown % 60).toString().padStart(2, '0');
+        document.getElementById('timerDisplay').textContent = `${m}:${s}`;
 
-      referralEarnedTotal = totalIncome;
+        const randomPair = pairs[Math.floor(Math.random() * pairs.length)];
+        document.getElementById('livePairStatus').textContent = `Executing Smart Strategy Arbitrage on ${randomPair}...`;
 
-      const refEarnFormatted = `$${referralEarnedTotal.toFixed(2)}`;
-      document.getElementById('homeReferralEarnedDisplay').innerText = refEarnFormatted;
-      document.getElementById('assetsReferralEarnedDisplay').innerText = refEarnFormatted;
-      document.getElementById('assetReferralFundDisplay').innerText = `${referralEarnedTotal.toFixed(2)} USDT`;
+        if (countdown <= 0) {
+          clearInterval(timerInterval);
+          document.getElementById('tradingSimulationBox').style.display = 'none';
 
-      document.getElementById('homeTeamSizeText').innerText = `${teamSize} Members`;
-      document.getElementById('homeTeamBalanceText').innerText = `${totalTeamDep.toFixed(2)} USDT`;
-      document.getElementById('homeTodayJoinersText').innerText = `+${todayNewCount} Users`;
+          const profit = investAmt * 0.02; // 2% Guaranteed Profit
+          appData.balance += profit;
+          appData.lastOrderTimestamp = Date.now();
 
-      document.getElementById('teamOverviewSize').innerText = `${teamSize} Members`;
-      document.getElementById('teamOverviewIncome').innerText = `$${totalIncome.toFixed(2)}`;
-      document.getElementById('teamTodayIncome').innerText = `$${todayInc.toFixed(2)}`;
-      document.getElementById('teamTodayNewUsers').innerText = `${todayNewCount} Users`;
+          const now = new Date();
+          const timeStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
-      const teamListElem = document.getElementById('teamMemberList');
-      if (teamListElem) {
-        if (teamMembers.length === 0) {
-          teamListElem.innerHTML = `<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;">No team members yet.</div>`;
-        } else {
-          teamListElem.innerHTML = '';
-          teamMembers.forEach(m => {
-            const item = `
-              <div style="background:rgba(0,0,0,0.3); border-radius:10px; padding:10px; margin-bottom:8px; font-size:12px;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                  <span style="font-weight:700; color:#fff;">${m.id} ${m.isNew ? '<span style="color:var(--accent-green); font-size:10px;">(New)</span>' : ''}</span>
-                  <span style="color:var(--accent-green); font-weight:700;">+10% Profit ($${(m.profit10 || 0).toFixed(2)})</span>
-                </div>
-                <div style="color:var(--text-muted);">User Deposit: ${(m.deposit || 0).toFixed(2)} USDT</div>
-                <div style="text-align:right; color:var(--text-muted); font-size:10px; margin-top:2px;">Joined: ${m.date}</div>
-              </div>
-            `;
-            teamListElem.insertAdjacentHTML('beforeend', item);
+          appData.historyRecords.unshift({
+            type: "AI Strategy Trading Return (+2%)",
+            amount: profit,
+            status: "Success",
+            time: timeStr
           });
-        }
-      }
 
-      const teamWithdrawalElem = document.getElementById('teamWithdrawalList');
-      if (teamWithdrawalElem) {
-        if (teamWithdrawals.length === 0) {
-          teamWithdrawalElem.innerHTML = `<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;">No team withdrawals recorded.</div>`;
-        } else {
-          teamWithdrawalElem.innerHTML = '';
-          teamWithdrawals.forEach(w => {
-            const wItem = `
-              <div style="background:rgba(0,0,0,0.3); border-radius:10px; padding:10px; margin-bottom:8px; font-size:12px;">
-                <div style="display:flex; justify-content:space-between;">
-                  <span style="font-weight:700; color:#fff;">User: ${w.userId}</span>
-                  <span style="color:var(--accent-green); font-weight:600;">Success</span>
-                </div>
-                <div style="color:var(--text-muted); margin-top:4px;">Withdrawn: ${w.amount.toFixed(2)} USDT (${w.network})</div>
-                <div style="text-align:right; color:var(--text-muted); font-size:10px; margin-top:2px;">${w.date}</div>
-              </div>
-            `;
-            teamWithdrawalElem.insertAdjacentHTML('beforeend', wItem);
-          });
+          saveState();
+          renderHistory();
+          updateUI();
+          checkCooldown();
+          showToast(`Order Complete! Profit +$${profit.toFixed(2)} USDT added to balance.`);
         }
-      }
-
-      updateVipGrids(teamSize);
-      saveCurrentUserData();
+      }, 1000);
     }
 
-    function updateVipGrids(memberCount) {
+    // Real Camera Capture & Strict KYC Validation Logic
+    function triggerCameraInput(type) {
+      if (type === 'Front') document.getElementById('inputKycFront').click();
+      if (type === 'Back') document.getElementById('inputKycBack').click();
+      if (type === 'Selfie') document.getElementById('inputKycSelfie').click();
+    }
+
+    function handleKycCapture(type, event) {
+      const file = event.target.files[0];
+      if (file) {
+        if (type === 'Front') {
+          appData.kycFrontUploaded = true;
+          document.getElementById('kycFrontStatus').textContent = '✅ ID Front Captured Successfully';
+          document.getElementById('kycFrontStatus').style.color = 'var(--accent-green)';
+        } else if (type === 'Back') {
+          appData.kycBackUploaded = true;
+          document.getElementById('kycBackStatus').textContent = '✅ ID Back Captured Successfully';
+          document.getElementById('kycBackStatus').style.color = 'var(--accent-green)';
+        } else if (type === 'Selfie') {
+          appData.kycSelfieUploaded = true;
+          document.getElementById('kycSelfieStatus').textContent = '✅ Live Selfie Captured Successfully';
+          document.getElementById('kycSelfieStatus').style.color = 'var(--accent-green)';
+        }
+        saveState();
+        showToast(`${type} image captured successfully!`);
+      }
+    }
+
+    function submitKycVerification() {
+      if (!appData.kycFrontUploaded || !appData.kycBackUploaded || !appData.kycSelfieUploaded) {
+        alert("⚠️ Mandatory Notice: Please capture and upload all 3 documents (ID Front, ID Back, and Live Selfie) using the camera before submitting verification.");
+        return;
+      }
+
+      appData.kycStatus = 'Verified';
+      saveState();
+      updateUI();
+      showToast("Identity Verification Completed Successfully: Verified!");
+      switchTab('tab-me');
+    }
+
+    // Referral Copy Link
+    function copyReferralLink() {
+      const linkText = document.getElementById('homeReferralLinkText').textContent;
+      navigator.clipboard.writeText(linkText);
+      showToast("Referral link copied!");
+    }
+
+    // Render Global History List
+    function renderHistory() {
+      const container = document.getElementById('globalHistoryList');
+      if (!appData.historyRecords || appData.historyRecords.length === 0) {
+        container.innerHTML = '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;">No recent history recorded.</div>';
+        return;
+      }
+
+      let html = '';
+      appData.historyRecords.forEach(r => {
+        const isGreen = r.status.includes('Success') || r.type.includes('Deposit') || r.type.includes('Return');
+        const badgeColor = isGreen ? 'var(--accent-green)' : 'var(--accent-yellow)';
+        html += `
+          <div class="list-item">
+            <div>
+              <div style="font-weight:800; color:#fff;">${r.type}</div>
+              <div style="font-size:11px; color:var(--text-muted); font-weight:600;">${r.time}</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-weight:900; color:#fff;">$${r.amount.toFixed(2)} USDT</div>
+              <div style="font-weight:800; color:${badgeColor}; font-size:11px;">${r.status}</div>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    // Global UI State Update
+    function updateUI() {
+      const balanceVal = appData.balance || 0;
+      const refEarnedVal = appData.referralEarned || 0;
+
+      document.getElementById('homeTotalAssetsDisplay').textContent = balanceVal.toFixed(2);
+      document.getElementById('totalBalanceDisplay').textContent = balanceVal.toFixed(2);
+      document.getElementById('flexibleFundsDisplay').textContent = balanceVal.toFixed(2) + " USDT";
+      document.getElementById('homeInvestInput').value = balanceVal.toFixed(2);
+
+      document.getElementById('homeReferralEarnedDisplay').textContent = "$" + refEarnedVal.toFixed(2);
+      document.getElementById('assetsReferralEarnedDisplay').textContent = "$" + refEarnedVal.toFixed(2);
+      document.getElementById('assetReferralFundDisplay').textContent = refEarnedVal.toFixed(2) + " USDT";
+
+      const daysJoined = Math.floor((Date.now() - appData.joinTimestamp) / (1000 * 60 * 60 * 24));
+      document.getElementById('daysJoinedText').textContent = `${daysJoined} / 25 Days`;
+      if (daysJoined >= 25) {
+        document.getElementById('freeWithdrawStatusText').textContent = "🎉 Free Withdrawal Unlocked (0% Fee)";
+        document.getElementById('withdrawalFeeNotice').textContent = "0% Deduction (Free Privilege Active)";
+      }
+
+      document.getElementById('meUsernameDisplay').textContent = appData.user || "Dollar-User";
+      document.getElementById('meUserIdDisplay').textContent = `ID: ${appData.userId || 34001}`;
+      
+      const kycBadge = document.getElementById('meKycStatusBadge');
+      kycBadge.textContent = `KYC: ${appData.kycStatus}`;
+      kycBadge.className = `badge-status ${appData.kycStatus === 'Verified' ? 'badge-verified' : 'badge-pending'}`;
+
+      if (appData.kycFrontUploaded) {
+        document.getElementById('kycFrontStatus').textContent = '✅ ID Front Captured Successfully';
+        document.getElementById('kycFrontStatus').style.color = 'var(--accent-green)';
+      }
+      if (appData.kycBackUploaded) {
+        document.getElementById('kycBackStatus').textContent = '✅ ID Back Captured Successfully';
+        document.getElementById('kycBackStatus').style.color = 'var(--accent-green)';
+      }
+      if (appData.kycSelfieUploaded) {
+        document.getElementById('kycSelfieStatus').textContent = '✅ Live Selfie Captured Successfully';
+        document.getElementById('kycSelfieStatus').style.color = 'var(--accent-green)';
+      }
+
+      const teamSize = appData.teamMembers ? appData.teamMembers.length : 0;
+      document.getElementById('homeTeamSizeText').textContent = `${teamSize} Members`;
+      document.getElementById('teamOverviewSize').textContent = `${teamSize} Members`;
+      document.getElementById('homeTodayJoinersText').textContent = `+${teamSize} Users`;
+
       for (let i = 1; i <= 7; i++) {
-        const card = document.getElementById(`cardGrid${i}`);
+        const card = document.getElementById(`gridCard${i}`);
         if (card) card.classList.remove('active');
       }
 
-      let activeGridNum = 1;
-      if (memberCount >= 16) activeGridNum = 7;
-      else if (memberCount >= 14) activeGridNum = 6;
-      else if (memberCount >= 12) activeGridNum = 5;
-      else if (memberCount >= 10) activeGridNum = 4;
-      else if (memberCount >= 8) activeGridNum = 3;
-      else if (memberCount >= 6) activeGridNum = 2;
-      else if (memberCount >= 4) activeGridNum = 1;
+      if (teamSize >= 16 && document.getElementById('gridCard7')) document.getElementById('gridCard7').classList.add('active');
+      else if (teamSize >= 14 && document.getElementById('gridCard6')) document.getElementById('gridCard6').classList.add('active');
+      else if (teamSize >= 12 && document.getElementById('gridCard5')) document.getElementById('gridCard5').classList.add('active');
+      else if (teamSize >= 10 && document.getElementById('gridCard4')) document.getElementById('gridCard4').classList.add('active');
+      else if (teamSize >= 8 && document.getElementById('gridCard3')) document.getElementById('gridCard3').classList.add('active');
+      else if (teamSize >= 6 && document.getElementById('gridCard2')) document.getElementById('gridCard2').classList.add('active');
+      else if (teamSize >= 4 && document.getElementById('gridCard1')) document.getElementById('gridCard1').classList.add('active');
 
-      for (let g = 1; g <= activeGridNum; g++) {
-        const card = document.getElementById(`cardGrid${g}`);
-        if (card) card.classList.add('active');
-      }
+      renderHistory();
     }
-
-    window.addSimulatedReferralUser = function() {
-      const depInput = document.getElementById('simulatedRefDepositInput');
-      const depVal = parseFloat(depInput ? depInput.value : 0);
-      if (isNaN(depVal) || depVal < 25) {
-        alert("Minimum referral deposit amount is $25");
-        return;
-      }
-
-      const newId = `User-${Math.floor(10000 + Math.random() * 90000)}`;
-      const profit10 = depVal * 0.10;
-
-      teamMembers.unshift({
-        id: newId,
-        deposit: depVal,
-        profit10: profit10,
-        date: "Just now",
-        isNew: true
-      });
-
-      teamWithdrawals.unshift({
-        userId: newId,
-        amount: depVal * 0.5,
-        network: "TRC20",
-        date: "Just now"
-      });
-
-      userBalance += profit10;
-      updateBalances();
-      updateTeamAndReferralData();
-
-      recordHistory("Referral Commission", `10% reward from ${newId}: +${profit10.toFixed(2)} USDT`, "Completed");
-      showToast(`New referral joined! +$${profit10.toFixed(2)} added to Total Assets.`);
-    };
-
-    function updateBalances() {
-      const formatted = userBalance.toFixed(2);
-      
-      const homeAssets = document.getElementById('homeTotalAssetsDisplay');
-      if (homeAssets) homeAssets.innerText = formatted;
-
-      const totalBal = document.getElementById('totalBalanceDisplay');
-      if (totalBal) totalBal.innerText = formatted;
-
-      const flexFunds = document.getElementById('flexibleFundsDisplay');
-      if (flexFunds) flexFunds.innerText = formatted + " USDT";
-
-      const investInput = document.getElementById('homeInvestInput');
-      if (investInput) investInput.value = formatted;
-    }
-
-    function recordHistory(type, details, status) {
-      const historyList = document.getElementById('globalHistoryList');
-      if(historyList.innerHTML.includes('No recent')) historyList.innerHTML = '';
-      const dateStr = new Date().toLocaleString();
-      const itemHTML = `
-        <div style="background:rgba(0,0,0,0.3); border-radius:10px; padding:10px; margin-bottom:8px; font-size:12px;">
-          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-            <span style="font-weight:700; color:#fff;">${type}</span>
-            <span style="color:${status === 'Completed' ? 'var(--accent-green)' : '#ff8a65'}; font-weight:600;">${status}</span>
-          </div>
-          <div style="color:var(--text-muted);">${details}</div>
-          <div style="text-align:right; color:var(--text-muted); font-size:10px; margin-top:4px;">${dateStr}</div>
-        </div>
-      `;
-      historyList.insertAdjacentHTML('afterbegin', itemHTML);
-    }
-
-    document.addEventListener("DOMContentLoaded", function () {
-      const btnCreateOrder = document.getElementById('btnCreateOrder');
-      const tradingBox = document.getElementById('tradingSimulationBox');
-      const timerDisplay = document.getElementById('timerDisplay');
-      const profitResultBox = document.getElementById('profitResultBox');
-      const earnedProfitValue = document.getElementById('earnedProfitValue');
-      const botSpinnerRing = document.getElementById('botSpinnerRing');
-      const amountInput = document.getElementById('homeInvestInput');
-
-      if (btnCreateOrder) {
-        btnCreateOrder.addEventListener('click', function () {
-          const now = Date.now();
-          if (now - lastOrderTimestamp < 86400000) {
-            alert("After 24 hrs you can create again");
-            return;
-          }
-
-          const val = parseFloat(amountInput.value);
-          if (isNaN(val) || val < 25) {
-            alert("Minimum investment amount is $25 USDT.");
-            return;
-          }
-
-          if (val > userBalance) {
-            alert("Insufficient account balance.");
-            return;
-          }
-
-          lastOrderTimestamp = now;
-          showToast("Strategy order initiated!");
-          
-          tradingBox.style.display = 'block';
-          profitResultBox.style.display = 'none';
-          botSpinnerRing.classList.add('active-spinning');
-
-          let totalSeconds = Math.floor(Math.random() * (240 - 60 + 1)) + 60;
-
-          const interval = setInterval(() => {
-            let mins = Math.floor(totalSeconds / 60);
-            let secs = totalSeconds % 60;
-            timerDisplay.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-            totalSeconds--;
-
-            if (totalSeconds < 0) {
-              clearInterval(interval);
-              timerDisplay.innerText = "Completed";
-              
-              botSpinnerRing.classList.remove('active-spinning');
-
-              let profit = val * 0.02;
-              userBalance += profit;
-              updateBalances();
-
-              earnedProfitValue.innerText = `+${profit.toFixed(2)} USDT`;
-              profitResultBox.style.display = 'block';
-
-              recordHistory("Strategy Profit", `Invested: ${val.toFixed(2)} USDT, Earned: +${profit.toFixed(2)} USDT`, "Completed");
-              showToast("Strategy completed successfully!");
-              saveCurrentUserData();
-            }
-          }, 1000);
-        });
-      }
-
-      const btnConfirmWithdraw = document.getElementById('btnConfirmWithdraw');
-      if (btnConfirmWithdraw) {
-        btnConfirmWithdraw.addEventListener('click', function () {
-          const address = document.getElementById('withdrawAddressInput').value.trim();
-          const amount = parseFloat(document.getElementById('withdrawAmountInput').value);
-
-          if (!address) {
-            alert("Please enter a valid destination address.");
-            return;
-          }
-          if (isNaN(amount) || amount < 50) {
-            alert("Amount is less than 50. Withdrawal not allowed.");
-            return;
-          }
-          if (amount > userBalance) {
-            alert("Insufficient account balance.");
-            return;
-          }
-
-          userBalance -= amount;
-          updateBalances();
-
-          recordHistory("USDT Withdrawal", `Amt: ${amount} USDT, Addr: ${address}`, "Withdrawal in Process");
-          saveCurrentUserData();
-
-          showToast("Withdrawal submitted!");
-          openPage('tab-home');
-        });
-      }
-    });
   </script>
 </body>
 </html>
