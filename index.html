@@ -99,7 +99,7 @@
       overflow-y: auto;
     }
 
-    .auth-screen.hidden { display: none; }
+    .auth-screen.hidden { display: none !important; }
 
     .auth-title {
       font-size: 28px;
@@ -579,7 +579,7 @@
       border-radius: 30px;
       font-weight: 900;
       font-size: 13px;
-      z-index: 2000;
+      z-index: 4000;
       transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       box-shadow: 0 5px 20px rgba(0,245,118,0.5);
     }
@@ -710,16 +710,16 @@
 
   <!-- SIGN UP SCREEN -->
   <div id="signupScreen" class="auth-screen">
-    <div class="auth-title">Create Account</div>
-    <div class="auth-subtitle">Join Dollar Investment AI Strategy (Canada Regulated)</div>
+    <div class="auth-title" data-i18n="signupTitle">Create Account</div>
+    <div class="auth-subtitle" data-i18n="signupSubtitle">Join Dollar Investment AI Strategy (Canada Regulated)</div>
     
     <div class="input-group">
-      <div class="input-label">Email or Phone</div>
+      <div class="input-label" data-i18n="emailPhoneLabel">Email or Phone</div>
       <input type="text" id="signupEmailPhone" class="amount-input" placeholder="Enter email or phone number">
     </div>
 
     <div class="input-group">
-      <div class="input-label">Password</div>
+      <div class="input-label" data-i18n="passwordLabel">Password</div>
       <div class="password-wrapper">
         <input type="password" id="signupPassword" class="amount-input" placeholder="Enter password">
         <span class="toggle-password" onclick="togglePasswordVisibility('signupPassword', this)">👁️</span>
@@ -727,7 +727,7 @@
     </div>
 
     <div class="input-group">
-      <div class="input-label">Confirm Password</div>
+      <div class="input-label" data-i18n="confirmPasswordLabel">Confirm Password</div>
       <div class="password-wrapper">
         <input type="password" id="signupConfirmPassword" class="amount-input" placeholder="Confirm password">
         <span class="toggle-password" onclick="togglePasswordVisibility('signupConfirmPassword', this)">👁️</span>
@@ -735,26 +735,26 @@
     </div>
 
     <div class="input-group">
-      <div class="input-label">Referral Link / Code</div>
+      <div class="input-label" data-i18n="referralCodeLabel">Referral Link / Code</div>
       <input type="text" id="signupReferralInput" class="amount-input" value="https://dollar-investment-offical.github.io/https-dollar-investment-app.com-signup-ref-User-391126/" readonly style="background: rgba(0,245,118,0.1); color: var(--accent-green); font-weight: 800; font-size: 11px;">
     </div>
 
-    <button class="btn-gradient" onclick="handleSignUp()">Sign Up ($2 Bonus)</button>
-    <div class="auth-toggle">Already have an account? <span onclick="showLoginScreen()">Log In</span></div>
+    <button type="button" class="btn-gradient" onclick="handleSignUp()" data-i18n="signupBtn">Sign Up ($2 Bonus)</button>
+    <div class="auth-toggle"><span data-i18n="alreadyAcc">Already have an account?</span> <span onclick="showLoginScreen()" data-i18n="loginLink">Log In</span></div>
   </div>
 
   <!-- LOG IN SCREEN -->
   <div id="loginScreen" class="auth-screen hidden">
-    <div class="auth-title">Welcome Back</div>
-    <div class="auth-subtitle">Log in to your account securely</div>
+    <div class="auth-title" data-i18n="loginTitle">Welcome Back</div>
+    <div class="auth-subtitle" data-i18n="loginSubtitle">Log in to your account securely</div>
     
     <div class="input-group">
-      <div class="input-label">User (Email or Phone)</div>
+      <div class="input-label" data-i18n="userLoginLabel">User (Email or Phone)</div>
       <input type="text" id="loginUser" class="amount-input" placeholder="Enter your email or phone">
     </div>
 
     <div class="input-group">
-      <div class="input-label">Password</div>
+      <div class="input-label" data-i18n="passwordLabel">Password</div>
       <div class="password-wrapper">
         <input type="password" id="loginPassword" class="amount-input" placeholder="Enter your password">
         <span class="toggle-password" onclick="togglePasswordVisibility('loginPassword', this)">👁️</span>
@@ -763,11 +763,11 @@
 
     <div class="remember-me-container">
       <input type="checkbox" id="rememberMeCheck" checked>
-      <label for="rememberMeCheck">Save Password & User ID</label>
+      <label for="rememberMeCheck" data-i18n="savePassLabel">Save Password & User ID</label>
     </div>
 
-    <button class="btn-gradient" onclick="handleLogIn()">Log In</button>
-    <div class="auth-toggle">Don't have an account? <span onclick="showSignupScreen()">Sign Up</span></div>
+    <button type="button" class="btn-gradient" onclick="handleLogIn()" data-i18n="loginBtn">Log In</button>
+    <div class="auth-toggle"><span data-i18n="noAcc">Don't have an account?</span> <span onclick="showSignupScreen()" data-i18n="signupLink">Sign Up</span></div>
   </div>
 
   <div class="app-container">
@@ -776,22 +776,23 @@
     <header class="top-bar" id="mainHeader">
       <div class="brand-logo">
         <div class="brand-icon">$</div>
-        <span id="brandTitle">Dollar Investment</span>
+        <span id="brandTitle" data-i18n="brandTitle">Dollar Investment</span>
       </div>
       <div class="top-actions">
         <div class="lang-dropdown-wrapper">
           🌐 
-          <select id="langSelect" class="lang-select">
-            <option value="EN" selected>EN</option>
-            <option value="ES">ES</option>
-            <option value="FR">FR</option>
-            <option value="DE">DE</option>
-            <option value="ZH">ZH</option>
-            <option value="AR">AR</option>
-            <option value="HI">HI</option>
-            <option value="UR">UR</option>
-            <option value="PT">PT</option>
-            <option value="RU">RU</option>
+          <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
+            <option value="EN" selected>EN (English)</option>
+            <option value="UR">UR (اردو)</option>
+            <option value="AR">AR (العربية)</option>
+            <option value="BN">BN (বাংলা)</option>
+            <option value="ES">ES (Español)</option>
+            <option value="FR">FR (Français)</option>
+            <option value="DE">DE (Deutsch)</option>
+            <option value="ZH">ZH (中文)</option>
+            <option value="HI">HI (हिन्दी)</option>
+            <option value="PT">PT (Português)</option>
+            <option value="RU">RU (Русский)</option>
           </select>
         </div>
       </div>
@@ -799,7 +800,7 @@
 
     <!-- Sub-page Navigation Header -->
     <header class="universal-header" id="universalHeader" style="display: none;">
-      <button class="nav-back-btn" onclick="navigateBack()">← Back</button>
+      <button class="nav-back-btn" onclick="navigateBack()" data-i18n="backBtn">← Back</button>
       <div style="font-size: 16px; font-weight: 800; color: #fff;" id="universalHeaderTitle">Subpage</div>
       <div style="width: 50px;"></div>
     </header>
@@ -811,64 +812,64 @@
     <div id="tab-home" class="tab-content active">
       <div class="ticker-banner">
         <span>📢</span>
-        <div class="ticker-text">🔥 Welcome to Dollar Investment! Over 34,000+ Active Members Worldwide. Fully Registered & Certified in Canada. Min Deposit $25, Min Withdrawal $50.</div>
+        <div class="ticker-text" data-i18n="tickerText">🔥 Welcome to Dollar Investment! Over 34,000+ Active Members Worldwide. Fully Registered & Certified in Canada. Min Deposit $25, Min Withdrawal $50.</div>
       </div>
 
       <!-- Home Total Assets Display -->
       <div class="balance-card">
-        <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;">Total Assets (USDT)</div>
+        <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;" data-i18n="totalAssets">Total Assets (USDT)</div>
         <div class="balance-amount" id="homeTotalAssetsDisplay">2.00</div>
         
         <div class="referral-box">
-          <span style="font-size: 12px; color: var(--text-muted); font-weight: 700;">Received by Referral:</span>
+          <span style="font-size: 12px; color: var(--text-muted); font-weight: 700;" data-i18n="recByRef">Received by Referral:</span>
           <span style="font-size: 14px; font-weight: 900; color: var(--accent-green);" id="homeReferralEarnedDisplay">$0.00</span>
         </div>
 
         <div class="balance-actions">
-          <button class="btn-sub primary" onclick="openDepositModal()">📥 Deposit</button>
-          <button class="btn-sub" onclick="openSubPage('page-withdraw', 'Withdrawal')">📤 Withdraw</button>
+          <button class="btn-sub primary" onclick="openDepositModal()" data-i18n="depositBtn">📥 Deposit</button>
+          <button class="btn-sub" onclick="openSubPage('page-withdraw', 'Withdrawal')" data-i18n="withdrawBtn">📤 Withdraw</button>
         </div>
       </div>
 
       <div class="quick-grid-8">
         <div class="quick-item" onclick="openDepositModal()">
           <div class="quick-icon-wrapper">📥</div>
-          <div class="quick-label">Top up</div>
+          <div class="quick-label" data-i18n="topupLabel">Top up</div>
         </div>
         <div class="quick-item" onclick="openSubPage('page-withdraw', 'Withdrawal')">
           <div class="quick-icon-wrapper">💸</div>
-          <div class="quick-label">Withdraw</div>
+          <div class="quick-label" data-i18n="withdrawLabel">Withdraw</div>
         </div>
         <div class="quick-item" onclick="switchTab('tab-team')">
           <div class="quick-icon-wrapper">👥</div>
-          <div class="quick-label">Invite</div>
+          <div class="quick-label" data-i18n="inviteLabel">Invite</div>
         </div>
         <div class="quick-item" onclick="alert('Task Center active. Complete daily milestones for rewards.')">
           <div class="quick-icon-wrapper">🪂</div>
-          <div class="quick-label">Tasks</div>
+          <div class="quick-label" data-i18n="tasksLabel">Tasks</div>
         </div>
         <div class="quick-item" onclick="switchTab('tab-vip')">
           <div class="quick-icon-wrapper">📊</div>
-          <div class="quick-label">VIP Level</div>
+          <div class="quick-label" data-i18n="vipLabel">VIP Level</div>
         </div>
         <div class="quick-item" onclick="openSubPage('page-intro', 'Platform Introduction')">
           <div class="quick-icon-wrapper">🎬</div>
-          <div class="quick-label">Intro</div>
+          <div class="quick-label" data-i18n="introLabel">Intro</div>
         </div>
         <div class="quick-item" onclick="openSubPage('page-terms', 'Terms of Use')">
           <div class="quick-icon-wrapper">📖</div>
-          <div class="quick-label">Terms</div>
+          <div class="quick-label" data-i18n="termsLabel">Terms</div>
         </div>
         <div class="quick-item" onclick="openSubPage('page-kyc', 'Identity Verification')">
           <div class="quick-icon-wrapper">🆔</div>
-          <div class="quick-label">KYC</div>
+          <div class="quick-label" data-i18n="kycLabel">KYC</div>
         </div>
       </div>
 
       <div class="investment-card">
-        <div style="font-weight: 800; margin-bottom: 14px; font-size: 15px; color: var(--accent-cyan);">📋 Activity & History Records</div>
+        <div style="font-weight: 800; margin-bottom: 14px; font-size: 15px; color: var(--accent-cyan);" data-i18n="activityRecords">📋 Activity & History Records</div>
         <div id="globalHistoryList">
-          <div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;">No recent history recorded.</div>
+          <div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;" data-i18n="noHistory">No recent history recorded.</div>
         </div>
       </div>
     </div>
@@ -876,44 +877,44 @@
     <!-- TAB 2: ASSETS -->
     <div id="tab-assets" class="tab-content">
       <div class="universal-header" style="padding: 8px 0; background: none; border: none;">
-        <button class="nav-back-btn" onclick="switchTab('tab-home')">← Back to Home</button>
+        <button class="nav-back-btn" onclick="switchTab('tab-home')" data-i18n="backHome">← Back to Home</button>
       </div>
 
       <div class="balance-card">
-        <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;">Total Assets (USDT)</div>
+        <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;" data-i18n="totalAssets">Total Assets (USDT)</div>
         <div class="balance-amount" id="totalBalanceDisplay">2.00</div>
         
         <div class="referral-box">
-          <span style="font-size: 12px; color: var(--text-muted); font-weight: 700;">Received by Referral:</span>
+          <span style="font-size: 12px; color: var(--text-muted); font-weight: 700;" data-i18n="recByRef">Received by Referral:</span>
           <span style="font-size: 14px; font-weight: 900; color: var(--accent-green);" id="assetsReferralEarnedDisplay">$0.00</span>
         </div>
 
         <div class="balance-actions">
-          <button class="btn-sub primary" onclick="openDepositModal()">📥 Deposit</button>
-          <button class="btn-sub" onclick="openSubPage('page-withdraw', 'Withdrawal')">📤 Withdraw</button>
+          <button class="btn-sub primary" onclick="openDepositModal()" data-i18n="depositBtn">📥 Deposit</button>
+          <button class="btn-sub" onclick="openSubPage('page-withdraw', 'Withdrawal')" data-i18n="withdrawBtn">📤 Withdraw</button>
         </div>
       </div>
 
       <div class="investment-card" style="border-color: rgba(0,245,118,0.4); background: linear-gradient(135deg, rgba(0,245,118,0.08), rgba(17,24,35,1));">
-        <div style="font-weight: 900; margin-bottom: 8px; font-size: 16px; color: var(--accent-green);">🎁 Free Withdrawal Privilege</div>
+        <div style="font-weight: 900; margin-bottom: 8px; font-size: 16px; color: var(--accent-green);" data-i18n="freeWithdrawTitle">🎁 Free Withdrawal Privilege</div>
         <div class="spec-row">
-          <span>Membership Days:</span>
+          <span data-i18n="memDays">Membership Days:</span>
           <span class="spec-value" id="daysJoinedText">0 / 25 Days</span>
         </div>
         <div class="spec-row">
-          <span>Withdrawal Fee Status:</span>
-          <span class="spec-value green" id="freeWithdrawStatusText">Standard 9% Fee (Free after 25 days)</span>
+          <span data-i18n="feeStatus">Withdrawal Fee Status:</span>
+          <span class="spec-value green" id="freeWithdrawStatusText" data-i18n="feeStandard">Standard 9% Fee (Free after 25 days)</span>
         </div>
       </div>
 
       <div class="investment-card">
-        <div style="font-weight: 800; margin-bottom: 12px; font-size: 15px;">💼 Asset Allocation Breakdown</div>
+        <div style="font-weight: 800; margin-bottom: 12px; font-size: 15px;" data-i18n="assetBreakdown">💼 Asset Allocation Breakdown</div>
         <div class="list-item">
-          <span style="color:var(--text-muted); font-weight:700;">Flexible Funds</span>
+          <span style="color:var(--text-muted); font-weight:700;" data-i18n="flexibleFunds">Flexible Funds</span>
           <span style="font-weight:900" id="flexibleFundsDisplay">2.00 USDT</span>
         </div>
         <div class="list-item">
-          <span style="color:var(--text-muted); font-weight:700;">Referral Rewards (10%)</span>
+          <span style="color:var(--text-muted); font-weight:700;" data-i18n="refRewards">Referral Rewards (10%)</span>
           <span style="font-weight:900; color:var(--accent-green)" id="assetReferralFundDisplay">0.00 USDT</span>
         </div>
       </div>
@@ -922,17 +923,17 @@
     <!-- TAB 3: VIP -->
     <div id="tab-vip" class="tab-content">
       <div class="universal-header" style="padding: 8px 0; background: none; border: none;">
-        <button class="nav-back-btn" onclick="switchTab('tab-home')">← Back to Home</button>
+        <button class="nav-back-btn" onclick="switchTab('tab-home')" data-i18n="backHome">← Back to Home</button>
       </div>
 
-      <div style="font-size: 18px; font-weight: 900; margin-bottom: 16px; color: var(--accent-cyan);">⚡ Dollar Investment AI Strategy</div>
+      <div style="font-size: 18px; font-weight: 900; margin-bottom: 16px; color: var(--accent-cyan);" data-i18n="aiStrategyHeader">⚡ Dollar Investment AI Strategy</div>
 
       <div class="investment-card" style="border-color: var(--accent-green);">
-        <div style="font-weight: 900; margin-bottom: 12px; font-size: 16px; color: var(--accent-green);">🤖 Smart Strategy Executor</div>
+        <div style="font-weight: 900; margin-bottom: 12px; font-size: 16px; color: var(--accent-green);" data-i18n="smartExecutor">🤖 Smart Strategy Executor</div>
         
         <div class="input-group">
           <div class="input-label">
-            <span>Investment Amount</span>
+            <span data-i18n="investAmount">Investment Amount</span>
             <span>Min: $25</span>
           </div>
           <div class="amount-input-wrapper">
@@ -948,67 +949,67 @@
           <div class="pct-btn" onclick="selectInvestmentPct(100)">100%</div>
         </div>
 
-        <button class="btn-gradient" id="btnCreateOrder" onclick="startAIOrderProcess()">Create Order (1~4 mins)</button>
+        <button class="btn-gradient" id="btnCreateOrder" onclick="startAIOrderProcess()" data-i18n="createOrderBtn">Create Order (1~4 mins)</button>
         <div id="cooldownNotice" style="display:none; text-align:center; color:var(--accent-yellow); font-size:12px; margin-top:12px; font-weight:800;">
-          ⏳ Next Order available in: <span id="cooldownTimer">24:00:00</span>
+          <span data-i18n="cooldownText">⏳ Next Order available in:</span> <span id="cooldownTimer">24:00:00</span>
         </div>
       </div>
 
       <!-- Strategy Live Simulation Box -->
       <div id="tradingSimulationBox" class="investment-card" style="display:none; text-align:center;">
-        <div style="font-size:15px; font-weight:900; color:var(--accent-green); margin-bottom:12px;">⚡ AI Strategy Arbitrage in Progress...</div>
+        <div style="font-size:15px; font-weight:900; color:var(--accent-green); margin-bottom:12px;" data-i18n="aiInProgress">⚡ AI Strategy Arbitrage in Progress...</div>
         <div class="spinning-ring" style="margin-bottom:14px;">
           <span style="font-size:26px;">🤖📈</span>
         </div>
-        <div style="font-size:13px; color:var(--text-muted); margin-bottom:6px; font-weight:700;">Time remaining: <span id="timerDisplay" style="color:#fff; font-weight:900;">03:00</span></div>
+        <div style="font-size:13px; color:var(--text-muted); margin-bottom:6px; font-weight:700;"><span data-i18n="timeRemaining">Time remaining:</span> <span id="timerDisplay" style="color:#fff; font-weight:900;">03:00</span></div>
         <div style="font-size:12px; color:var(--accent-cyan); font-weight:800;" id="livePairStatus">Analyzing BTC/USDT Market Trends...</div>
       </div>
 
-      <div style="font-size: 16px; font-weight: 900; margin: 22px 0 12px 0; color: var(--accent-purple);">🏆 Grid Levels (Auto-Unlocked by Team Size)</div>
-      <div class="vip-card" id="gridCard1"><div class="vip-header"><div class="vip-title">Grid 1 (4 Members)</div><div class="vip-rate">1.50% - 2.00%</div></div></div>
-      <div class="vip-card" id="gridCard2"><div class="vip-header"><div class="vip-title">Grid 2 (6 Members)</div><div class="vip-rate">2.00% - 4.00%</div></div></div>
-      <div class="vip-card" id="gridCard3"><div class="vip-header"><div class="vip-title">Grid 3 (8 Members)</div><div class="vip-rate">4.00% - 6.00%</div></div></div>
-      <div class="vip-card" id="gridCard4"><div class="vip-header"><div class="vip-title">Grid 4 (10 Members)</div><div class="vip-rate">6.00% - 8.00%</div></div></div>
-      <div class="vip-card" id="gridCard5"><div class="vip-header"><div class="vip-title">Grid 5 (12 Members)</div><div class="vip-rate">8.00% - 10.00%</div></div></div>
-      <div class="vip-card" id="gridCard6"><div class="vip-header"><div class="vip-title">Grid 6 (14 Members)</div><div class="vip-rate">10.00% - 12.00%</div></div></div>
-      <div class="vip-card" id="gridCard7"><div class="vip-header"><div class="vip-title">Grid 7 (16 Members)</div><div class="vip-rate">12.00% - 14.00%</div></div></div>
+      <div style="font-size: 16px; font-weight: 900; margin: 22px 0 12px 0; color: var(--accent-purple);" data-i18n="gridLevelsHeader">🏆 Grid Levels (Auto-Unlocked by Team Size)</div>
+      <div class="vip-card" id="gridCard1"><div class="vip-header"><div class="vip-title" data-i18n="grid1Title">Grid 1 (4 Members)</div><div class="vip-rate">1.50% - 2.00%</div></div></div>
+      <div class="vip-card" id="gridCard2"><div class="vip-header"><div class="vip-title" data-i18n="grid2Title">Grid 2 (6 Members)</div><div class="vip-rate">2.00% - 4.00%</div></div></div>
+      <div class="vip-card" id="gridCard3"><div class="vip-header"><div class="vip-title" data-i18n="grid3Title">Grid 3 (8 Members)</div><div class="vip-rate">4.00% - 6.00%</div></div></div>
+      <div class="vip-card" id="gridCard4"><div class="vip-header"><div class="vip-title" data-i18n="grid4Title">Grid 4 (10 Members)</div><div class="vip-rate">6.00% - 8.00%</div></div></div>
+      <div class="vip-card" id="gridCard5"><div class="vip-header"><div class="vip-title" data-i18n="grid5Title">Grid 5 (12 Members)</div><div class="vip-rate">8.00% - 10.00%</div></div></div>
+      <div class="vip-card" id="gridCard6"><div class="vip-header"><div class="vip-title" data-i18n="grid6Title">Grid 6 (14 Members)</div><div class="vip-rate">10.00% - 12.00%</div></div></div>
+      <div class="vip-card" id="gridCard7"><div class="vip-header"><div class="vip-title" data-i18n="grid7Title">Grid 7 (16 Members)</div><div class="vip-rate">12.00% - 14.00%</div></div></div>
     </div>
 
     <!-- TAB 4: TEAM -->
     <div id="tab-team" class="tab-content">
       <div class="universal-header" style="padding: 8px 0; background: none; border: none;">
-        <button class="nav-back-btn" onclick="switchTab('tab-home')">← Back to Home</button>
+        <button class="nav-back-btn" onclick="switchTab('tab-home')" data-i18n="backHome">← Back to Home</button>
       </div>
 
       <div class="investment-card" style="border-color: rgba(0, 210, 255, 0.4); background: linear-gradient(135deg, rgba(0,210,255,0.1), rgba(157,78,221,0.1));">
-        <div style="font-weight: 900; margin-bottom: 12px; font-size: 16px; color: var(--accent-cyan);">🤝 Invite Friends Overview (10% Bonus)</div>
-        <div class="spec-row"><span>Total Team Members:</span> <span class="spec-value green" id="homeTeamSizeText">0 Members</span></div>
-        <div class="spec-row"><span>Total Team Balance:</span> <span class="spec-value" id="homeTeamBalanceText">0.00 USDT</span></div>
-        <div class="spec-row"><span>Today New Joiners:</span> <span class="spec-value green" id="homeTodayJoinersText">+0 Users</span></div>
+        <div style="font-weight: 900; margin-bottom: 12px; font-size: 16px; color: var(--accent-cyan);" data-i18n="inviteOverview">🤝 Invite Friends Overview (10% Bonus)</div>
+        <div class="spec-row"><span data-i18n="totalTeamMem">Total Team Members:</span> <span class="spec-value green" id="homeTeamSizeText">0 Members</span></div>
+        <div class="spec-row"><span data-i18n="totalTeamBal">Total Team Balance:</span> <span class="spec-value" id="homeTeamBalanceText">0.00 USDT</span></div>
+        <div class="spec-row"><span data-i18n="todayJoiners">Today New Joiners:</span> <span class="spec-value green" id="homeTodayJoinersText">+0 Users</span></div>
         <div class="address-card" style="margin-top: 12px;">
           <span id="homeReferralLinkText" style="font-size: 11px;">https://dollar-investment-offical.github.io/https-dollar-investment-app.com-signup-ref-User-391126/</span>
-          <button class="copy-btn" onclick="copyReferralLink()">Copy Link</button>
+          <button class="copy-btn" onclick="copyReferralLink()" data-i18n="copyLinkBtn">Copy Link</button>
         </div>
       </div>
 
       <div class="balance-card">
-        <div style="font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 14px;">📊 Team Data Overview</div>
+        <div style="font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 14px;" data-i18n="teamDataOverview">📊 Team Data Overview</div>
         <div class="team-grid-2">
           <div class="team-stat-box">
-            <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;">Team Size</div>
+            <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;" data-i18n="teamSizeLabel">Team Size</div>
             <div class="team-stat-val" id="teamOverviewSize">0 Members</div>
           </div>
           <div class="team-stat-box">
-            <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;">Total Income (10%)</div>
+            <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;" data-i18n="totalIncomeLabel">Total Income (10%)</div>
             <div class="team-stat-val" id="teamOverviewIncome">$0.00</div>
           </div>
         </div>
       </div>
 
       <div class="investment-card">
-        <div style="font-weight: 900; margin-bottom: 12px; font-size: 15px; color: var(--accent-green);">👥 Team Members & Deposit History</div>
+        <div style="font-weight: 900; margin-bottom: 12px; font-size: 15px; color: var(--accent-green);" data-i18n="teamMembersHistory">👥 Team Members & Deposit History</div>
         <div id="teamMemberList">
-          <div style="color:var(--text-muted); font-size:13px; text-align:center; padding:12px;">No team members registered under your link yet. Share your link to earn 10% deposit commissions!</div>
+          <div style="color:var(--text-muted); font-size:13px; text-align:center; padding:12px;" data-i18n="noTeamMembers">No team members registered under your link yet. Share your link to earn 10% deposit commissions!</div>
         </div>
       </div>
     </div>
@@ -1016,7 +1017,7 @@
     <!-- TAB 5: ME -->
     <div id="tab-me" class="tab-content">
       <div class="universal-header" style="padding: 8px 0; background: none; border: none;">
-        <button class="nav-back-btn" onclick="switchTab('tab-home')">← Back to Home</button>
+        <button class="nav-back-btn" onclick="switchTab('tab-home')" data-i18n="backHome">← Back to Home</button>
       </div>
 
       <div class="investment-card" style="background: linear-gradient(135deg, rgba(157,78,221,0.2), rgba(0,245,118,0.15)); border: 2px solid rgba(157,78,221,0.4);">
@@ -1030,37 +1031,37 @@
       </div>
 
       <div class="investment-card">
-        <div style="font-weight: 900; margin-bottom: 14px; font-size: 16px; color: var(--accent-yellow);">👤 Personal Account Details</div>
+        <div style="font-weight: 900; margin-bottom: 14px; font-size: 16px; color: var(--accent-yellow);" data-i18n="personalAccDetails">👤 Personal Account Details</div>
         <div class="list-item" onclick="openSubPage('page-kyc', 'Identity Verification')">
-          <span style="font-weight: 700;">🆔 Identity Verification (KYC)</span>
-          <span style="color:var(--accent-green); font-weight:900;">Verify Now →</span>
+          <span style="font-weight: 700;" data-i18n="kycLinkMenu">🆔 Identity Verification (KYC)</span>
+          <span style="color:var(--accent-green); font-weight:900;" data-i18n="verifyNow">Verify Now →</span>
         </div>
         <div class="list-item" onclick="openSubPage('page-cs', 'Customer Service')">
-          <span style="font-weight: 700;">🎧 Customer Service</span>
-          <span style="color:var(--accent-cyan); font-weight:900;">Support Hub →</span>
+          <span style="font-weight: 700;" data-i18n="csLinkMenu">🎧 Customer Service</span>
+          <span style="color:var(--accent-cyan); font-weight:900;" data-i18n="supportHub">Support Hub →</span>
         </div>
         <div class="list-item" onclick="openSubPage('page-terms', 'Terms of Use')">
-          <span style="font-weight: 700;">📖 Terms of Use</span>
-          <span style="color:var(--text-muted); font-weight:800;">Read →</span>
+          <span style="font-weight: 700;" data-i18n="termsLinkMenu">📖 Terms of Use</span>
+          <span style="color:var(--text-muted); font-weight:800;" data-i18n="readMore">Read →</span>
         </div>
       </div>
 
       <div class="investment-card">
-        <button class="btn-sub primary" style="width:100%; padding:14px; margin-bottom:12px; font-weight:900;" onclick="handleLogout()">Sign Out</button>
-        <button class="danger-btn" onclick="handleDeleteAccount()">Delete Account</button>
+        <button class="btn-sub primary" style="width:100%; padding:14px; margin-bottom:12px; font-weight:900;" onclick="handleLogout()" data-i18n="signOutBtn">Sign Out</button>
+        <button class="danger-btn" onclick="handleDeleteAccount()" data-i18n="deleteAccBtn">Delete Account</button>
       </div>
     </div>
 
     <!-- SUB-PAGE: WITHDRAWAL SCREEN -->
     <div id="page-withdraw" class="tab-content">
-      <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;">Select Currency</div>
+      <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;" data-i18n="selectCurrency">Select Currency</div>
       <div class="input-group">
         <select id="withdrawCurrency" class="amount-input">
           <option value="USDT" selected>₮ USDT</option>
         </select>
       </div>
 
-      <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;">Select Network</div>
+      <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;" data-i18n="selectNetwork">Select Network</div>
       <div class="input-group">
         <select id="withdrawNetwork" class="amount-input">
           <option value="TRC20" selected>Tron (TRC20)</option>
@@ -1071,62 +1072,61 @@
 
       <div class="input-group">
         <div class="input-label">
-          <span>Withdrawal Amount</span>
+          <span data-i18n="withdrawAmountLabel">Withdrawal Amount</span>
           <span>Min: $50 USDT</span>
         </div>
         <input type="number" id="withdrawAmountInput" class="amount-input" placeholder="Min 50 USDT">
       </div>
 
       <div class="input-group">
-        <div class="input-label">Wallet Address</div>
+        <div class="input-label" data-i18n="walletAddressLabel">Wallet Address</div>
         <input type="text" id="withdrawAddressInput" class="amount-input" placeholder="Paste your USDT wallet address">
       </div>
 
       <div class="investment-card" style="background: rgba(0,0,0,0.4); padding: 14px; margin-bottom: 18px;">
-        <div class="spec-row"><span>Standard Fee:</span><span class="spec-value" id="withdrawalFeeNotice">9% Deduction</span></div>
-        <div class="spec-row"><span>Estimated Processing Time:</span><span class="spec-value green">10 minutes to 3 business days</span></div>
+        <div class="spec-row"><span data-i18n="standardFee">Standard Fee:</span><span class="spec-value" id="withdrawalFeeNotice" data-i18n="feeDeduction">9% Deduction</span></div>
+        <div class="spec-row"><span data-i18n="estProcessing">Estimated Processing Time:</span><span class="spec-value green" data-i18n="processingTimeText">10 minutes to 3 business days</span></div>
       </div>
 
-      <button class="btn-gradient" onclick="handleWithdrawSubmit()">Submit Withdrawal</button>
+      <button class="btn-gradient" onclick="handleWithdrawSubmit()" data-i18n="submitWithdrawBtn">Submit Withdrawal</button>
     </div>
 
     <!-- SUB-PAGE: PLATFORM INTRO -->
     <div id="page-intro" class="tab-content">
       <div class="investment-card" style="line-height:1.7; font-size:13px; color:#e2e8f0;">
-        <div style="font-weight:900; font-size:18px; color: var(--accent-cyan); margin-bottom:14px;">Certified by Canada Dollar Investment AI Plan</div>
-        <p style="margin-bottom:12px;"><strong>Dollar Investment</strong> is an internationally recognized, Canada-certified financial technology enterprise (Registration #882941-Canada). Operating at the forefront of automated digital asset management, we leverage advanced AI-driven algorithmic arbitrage to connect over 34,000+ active global investors with stable, high-yield digital returns.</p>
-        <p style="margin-bottom:12px;">Our robust infrastructure operates 24/7 across major global cryptocurrency and commodity markets (including BTC, ETH, and Crude Oil OTC pairs), ensuring maximum liquidity, transparent daily profit distribution, and rigorous security standards.</p>
-        <p style="margin-bottom:12px;">With certified regulatory compliance, dedicated customer support, and instant peer-to-peer referral bonuses, Dollar Investment provides a trusted gateway into the future of intelligent decentralized finance.</p>
+        <div style="font-weight:900; font-size:18px; color: var(--accent-cyan); margin-bottom:14px;" data-i18n="certifiedCanadaHeader">Certified by Canada Dollar Investment AI Plan</div>
+        <p style="margin-bottom:12px;"><strong data-i18n="introP1Bold">Dollar Investment</strong> <span data-i18n="introP1Text">is an internationally recognized, Canada-certified financial technology enterprise (Registration #882941-Canada). Operating at the forefront of automated digital asset management, we leverage advanced AI-driven algorithmic arbitrage to connect over 34,000+ active global investors with stable, high-yield digital returns.</span></p>
+        <p style="margin-bottom:12px;" data-i18n="introP2">Our robust infrastructure operates 24/7 across major global cryptocurrency and commodity markets (including BTC, ETH, and Crude Oil OTC pairs), ensuring maximum liquidity, transparent daily profit distribution, and rigorous security standards.</p>
+        <p style="margin-bottom:12px;" data-i18n="introP3">With certified regulatory compliance, dedicated customer support, and instant peer-to-peer referral bonuses, Dollar Investment provides a trusted gateway into the future of intelligent decentralized finance.</p>
       </div>
     </div>
 
-    <!-- SUB-PAGE: KYC VERIFICATION (Real Camera Capture & Strict Validation) -->
+    <!-- SUB-PAGE: KYC VERIFICATION -->
     <div id="page-kyc" class="tab-content">
       <div class="investment-card">
-        <div style="font-weight:900; font-size:18px; margin-bottom:6px; color: var(--accent-green);">Identity Verification (KYC)</div>
-        <div style="font-size:13px; color:var(--text-muted); margin-bottom:18px; line-height:1.4;">To comply with international financial regulations and Canada registry standards, please capture or upload clear images of your ID Front, ID Back, and a Live Selfie. All 3 documents are strictly mandatory before submitting.</div>
+        <div style="font-weight:900; font-size:18px; margin-bottom:6px; color: var(--accent-green);" data-i18n="kycTitle">Identity Verification (KYC)</div>
+        <div style="font-size:13px; color:var(--text-muted); margin-bottom:18px; line-height:1.4;" data-i18n="kycDesc">To comply with international financial regulations and Canada registry standards, please capture or upload clear images of your ID Front, ID Back, and a Live Selfie. All 3 documents are strictly mandatory before submitting.</div>
 
-        <!-- Hidden File Inputs with capture="environment" / "user" for real camera trigger -->
         <input type="file" id="inputKycFront" accept="image/*" capture="environment" style="display:none;" onchange="handleKycCapture('Front', event)">
         <input type="file" id="inputKycBack" accept="image/*" capture="environment" style="display:none;" onchange="handleKycCapture('Back', event)">
         <input type="file" id="inputKycSelfie" accept="image/*" capture="user" style="display:none;" onchange="handleKycCapture('Selfie', event)">
 
         <div class="kyc-upload-box" onclick="triggerCameraInput('Front')">
           <div style="font-size:28px;">🪪</div>
-          <div style="font-size:14px; font-weight:800; margin-top:6px; color:#fff;" id="kycFrontStatus">📷 Capture ID Front Picture</div>
+          <div style="font-size:14px; font-weight:800; margin-top:6px; color:#fff;" id="kycFrontStatus" data-i18n="kycFrontBtn">📷 Capture ID Front Picture</div>
         </div>
 
         <div class="kyc-upload-box" onclick="triggerCameraInput('Back')">
           <div style="font-size:28px;">💳</div>
-          <div style="font-size:14px; font-weight:800; margin-top:6px; color:#fff;" id="kycBackStatus">📷 Capture ID Back Picture</div>
+          <div style="font-size:14px; font-weight:800; margin-top:6px; color:#fff;" id="kycBackStatus" data-i18n="kycBackBtn">📷 Capture ID Back Picture</div>
         </div>
 
         <div class="kyc-upload-box" onclick="triggerCameraInput('Selfie')">
           <div style="font-size:28px;">🤳</div>
-          <div style="font-size:14px; font-weight:800; margin-top:6px; color:#fff;" id="kycSelfieStatus">📸 Capture Live Selfie</div>
+          <div style="font-size:14px; font-weight:800; margin-top:6px; color:#fff;" id="kycSelfieStatus" data-i18n="kycSelfieBtn">📸 Capture Live Selfie</div>
         </div>
 
-        <button class="btn-gradient" style="margin-top:14px;" onclick="submitKycVerification()">Submit Verification</button>
+        <button class="btn-gradient" style="margin-top:14px;" onclick="submitKycVerification()" data-i18n="submitKycBtn">Submit Verification</button>
       </div>
     </div>
 
@@ -1134,8 +1134,8 @@
     <div id="page-cs" class="tab-content">
       <div class="investment-card" style="text-align:center; padding: 30px 20px;">
         <div style="font-size:50px; margin-bottom:12px;">🎧</div>
-        <div style="font-weight:900; font-size:20px; color: var(--accent-cyan);">Dollar Investment Support Hub</div>
-        <div style="font-size:13px; color:var(--text-muted); margin:8px 0 20px 0; line-height:1.5;">Our professional support team is available 24/7 via official Telegram and WhatsApp channels.</div>
+        <div style="font-weight:900; font-size:20px; color: var(--accent-cyan);" data-i18n="csHeader">Dollar Investment Support Hub</div>
+        <div style="font-size:13px; color:var(--text-muted); margin:8px 0 20px 0; line-height:1.5;" data-i18n="csDesc">Our professional support team is available 24/7 via official Telegram and WhatsApp channels.</div>
 
         <div class="cs-btn-grid">
           <a href="https://t.me/" target="_blank" class="cs-btn cs-telegram">
@@ -1151,25 +1151,25 @@
     <!-- SUB-PAGE: TERMS OF USE -->
     <div id="page-terms" class="tab-content">
       <div class="investment-card" style="line-height:1.7; font-size:13px; color:#e2e8f0;">
-        <div style="font-weight:900; font-size:18px; color: var(--accent-yellow); margin-bottom:14px;">Terms of Use & Regulatory Agreement</div>
-        <p style="margin-bottom:12px;">1. <strong>Enterprise Background:</strong> Dollar Investment is a fully registered and certified financial institution in Canada (Reg #882941-Canada), proudly serving over 34,000+ active global members with robust automated trading strategies.</p>
-        <p style="margin-bottom:12px;">2. <strong>Bonus & Deposits:</strong> Every new verified user receives an automatic $2 USDT registration bonus. Minimum deposit requirement is $25 USDT with secure network processing.</p>
-        <p style="margin-bottom:12px;">3. <strong>Withdrawal Policy:</strong> Minimum withdrawal is $50 USDT. Standard transactions carry a 9% processing fee. Members enjoy 100% Free Withdrawals (0% fee) after maintaining active status for 25 days.</p>
-        <p style="margin-bottom:12px;">4. <strong>AI Strategy & Cooldown:</strong> Automated arbitrage orders execute across major crypto and commodity pairs (BTC, ETH, OIL). Each order requires a strict 24-hour interval before reactivation.</p>
-        <p style="margin-bottom:12px;">5. <strong>Identity & Compliance:</strong> Mandatory KYC identity verification (Front ID, Back ID, and Live Selfie) ensures platform security and regulatory compliance.</p>
+        <div style="font-weight:900; font-size:18px; color: var(--accent-yellow); margin-bottom:14px;" data-i18n="termsHeader">Terms of Use & Regulatory Agreement</div>
+        <p style="margin-bottom:12px;" data-i18n="term1">1. Enterprise Background: Dollar Investment is a fully registered and certified financial institution in Canada (Reg #882941-Canada), proudly serving over 34,000+ active global members with robust automated trading strategies.</p>
+        <p style="margin-bottom:12px;" data-i18n="term2">2. Bonus & Deposits: Every new verified user receives an automatic $2 USDT registration bonus. Minimum deposit requirement is $25 USDT with secure network processing.</p>
+        <p style="margin-bottom:12px;" data-i18n="term3">3. Withdrawal Policy: Minimum withdrawal is $50 USDT. Standard transactions carry a 9% processing fee. Members enjoy 100% Free Withdrawals (0% fee) after maintaining active status for 25 days.</p>
+        <p style="margin-bottom:12px;" data-i18n="term4">4. AI Strategy & Cooldown: Automated arbitrage orders execute across major crypto and commodity pairs (BTC, ETH, OIL). Each order requires a strict 24-hour interval before reactivation.</p>
+        <p style="margin-bottom:12px;" data-i18n="term5">5. Identity & Compliance: Mandatory KYC identity verification (Front ID, Back ID, and Live Selfie) ensures platform security and regulatory compliance.</p>
       </div>
     </div>
 
-    <!-- DEPOSIT MODAL SHEET (Address Only - No QR Scan) -->
+    <!-- DEPOSIT MODAL SHEET -->
     <div id="depositModal" class="modal-overlay">
       <div class="modal-sheet">
         <div class="modal-header">
-          <div style="font-weight: 900; font-size: 18px; color: #fff;">Deposit USDT</div>
+          <div style="font-weight: 900; font-size: 18px; color: #fff;" data-i18n="depositModalTitle">Deposit USDT</div>
           <button class="close-btn" onclick="closeDepositModal()">✕</button>
         </div>
 
         <div style="margin-bottom: 16px;">
-          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;">Deposit Network</div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;" data-i18n="selectNetwork">Deposit Network</div>
           <select id="depositNetworkSelect" class="amount-input" onchange="changeDepositNetwork(this.value)">
             <option value="TRC20" selected>Tron (TRC20)</option>
             <option value="ERC20">Ethereum (ERC20)</option>
@@ -1178,24 +1178,24 @@
         </div>
 
         <div class="pionex-box" style="background:var(--bg-card); border:1px solid var(--bg-card-border); padding:16px; border-radius:16px;">
-          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px; text-align: left; font-weight: 700;">Official Wallet Address</div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px; text-align: left; font-weight: 700;" data-i18n="officialWalletAddr">Official Wallet Address</div>
           <div class="address-card">
             <span id="depositWalletAddress">TBDXFTpapFkghPnURKFCVUkMbricHUKPrr</span>
-            <button class="copy-btn" onclick="copyDepositAddress()">Copy</button>
+            <button class="copy-btn" onclick="copyDepositAddress()" data-i18n="copyBtn">Copy</button>
           </div>
 
           <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-top: 10px; font-weight: 700;">
-            <span>Minimum Deposit:</span>
+            <span data-i18n="minDepositLabel">Minimum Deposit:</span>
             <span style="color: var(--accent-green); font-weight: 900;">$25 USDT</span>
           </div>
         </div>
 
         <div style="margin-top: 16px; margin-bottom: 22px;">
-          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;">Enter Deposit Amount ($)</div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;" data-i18n="enterDepositAmt">Enter Deposit Amount ($)</div>
           <input type="number" id="depositAmountInput" class="amount-input" placeholder="Min $25 USDT" value="25">
         </div>
 
-        <button class="btn-gradient" onclick="submitDepositPayment()">Confirm & Deposit</button>
+        <button class="btn-gradient" onclick="submitDepositPayment()" data-i18n="confirmDepositBtn">Confirm & Deposit</button>
       </div>
     </div>
 
@@ -1203,35 +1203,1321 @@
     <nav class="bottom-nav">
       <div class="nav-item active" id="nav-home" onclick="switchTab('tab-home')">
         <span class="nav-icon">🏠</span>
-        <span>Home</span>
+        <span data-i18n="navHome">Home</span>
       </div>
       <div class="nav-item" id="nav-assets" onclick="switchTab('tab-assets')">
         <span class="nav-icon">💼</span>
-        <span>Assets</span>
+        <span data-i18n="navAssets">Assets</span>
       </div>
       <div class="nav-item" id="nav-vip" onclick="switchTab('tab-vip')">
         <span class="nav-icon">⚡</span>
-        <span>VIP</span>
+        <span data-i18n="navVip">VIP</span>
       </div>
       <div class="nav-item" id="nav-team" onclick="switchTab('tab-team')">
         <span class="nav-icon">👥</span>
-        <span>Team</span>
+        <span data-i18n="navTeam">Team</span>
       </div>
       <div class="nav-item" id="nav-me" onclick="switchTab('tab-me')">
         <span class="nav-icon">👤</span>
-        <span>Me</span>
+        <span data-i18n="navMe">Me</span>
       </div>
     </nav>
 
   </div>
 
   <script>
+    // Dictionary for Multi-language Support
+    const translations = {
+      EN: {
+        brandTitle: "Dollar Investment",
+        signupTitle: "Create Account",
+        signupSubtitle: "Join Dollar Investment AI Strategy (Canada Regulated)",
+        emailPhoneLabel: "Email or Phone",
+        passwordLabel: "Password",
+        confirmPasswordLabel: "Confirm Password",
+        referralCodeLabel: "Referral Link / Code",
+        signupBtn: "Sign Up ($2 Bonus)",
+        alreadyAcc: "Already have an account?",
+        loginLink: "Log In",
+        loginTitle: "Welcome Back",
+        loginSubtitle: "Log in to your account securely",
+        userLoginLabel: "User (Email or Phone)",
+        savePassLabel: "Save Password & User ID",
+        loginBtn: "Log In",
+        noAcc: "Don't have an account?",
+        signupLink: "Sign Up",
+        backBtn: "← Back",
+        tickerText: "🔥 Welcome to Dollar Investment! Over 34,000+ Active Members Worldwide. Fully Registered & Certified in Canada. Min Deposit $25, Min Withdrawal $50.",
+        totalAssets: "Total Assets (USDT)",
+        recByRef: "Received by Referral:",
+        depositBtn: "📥 Deposit",
+        withdrawBtn: "📤 Withdraw",
+        topupLabel: "Top up",
+        withdrawLabel: "Withdraw",
+        inviteLabel: "Invite",
+        tasksLabel: "Tasks",
+        vipLabel: "VIP Level",
+        introLabel: "Intro",
+        termsLabel: "Terms",
+        kycLabel: "KYC",
+        activityRecords: "📋 Activity & History Records",
+        noHistory: "No recent history recorded.",
+        backHome: "← Back to Home",
+        freeWithdrawTitle: "🎁 Free Withdrawal Privilege",
+        memDays: "Membership Days:",
+        feeStatus: "Withdrawal Fee Status:",
+        feeStandard: "Standard 9% Fee (Free after 25 days)",
+        assetBreakdown: "💼 Asset Allocation Breakdown",
+        flexibleFunds: "Flexible Funds",
+        refRewards: "Referral Rewards (10%)",
+        aiStrategyHeader: "⚡ Dollar Investment AI Strategy",
+        smartExecutor: "🤖 Smart Strategy Executor",
+        investAmount: "Investment Amount",
+        createOrderBtn: "Create Order (1~4 mins)",
+        cooldownText: "⏳ Next Order available in:",
+        aiInProgress: "⚡ AI Strategy Arbitrage in Progress...",
+        timeRemaining: "Time remaining:",
+        gridLevelsHeader: "🏆 Grid Levels (Auto-Unlocked by Team Size)",
+        grid1Title: "Grid 1 (4 Members)",
+        grid2Title: "Grid 2 (6 Members)",
+        grid3Title: "Grid 3 (8 Members)",
+        grid4Title: "Grid 4 (10 Members)",
+        grid5Title: "Grid 5 (12 Members)",
+        grid6Title: "Grid 6 (14 Members)",
+        grid7Title: "Grid 7 (16 Members)",
+        inviteOverview: "🤝 Invite Friends Overview (10% Bonus)",
+        totalTeamMem: "Total Team Members:",
+        totalTeamBal: "Total Team Balance:",
+        todayJoiners: "Today New Joiners:",
+        copyLinkBtn: "Copy Link",
+        teamDataOverview: "📊 Team Data Overview",
+        teamSizeLabel: "Team Size",
+        totalIncomeLabel: "Total Income (10%)",
+        teamMembersHistory: "👥 Team Members & Deposit History",
+        noTeamMembers: "No team members registered under your link yet. Share your link to earn 10% deposit commissions!",
+        personalAccDetails: "👤 Personal Account Details",
+        kycLinkMenu: "🆔 Identity Verification (KYC)",
+        verifyNow: "Verify Now →",
+        csLinkMenu: "🎧 Customer Service",
+        supportHub: "Support Hub →",
+        termsLinkMenu: "📖 Terms of Use",
+        readMore: "Read →",
+        signOutBtn: "Sign Out",
+        deleteAccBtn: "Delete Account",
+        selectCurrency: "Select Currency",
+        selectNetwork: "Select Network",
+        withdrawAmountLabel: "Withdrawal Amount",
+        walletAddressLabel: "Wallet Address",
+        standardFee: "Standard Fee:",
+        feeDeduction: "9% Deduction",
+        estProcessing: "Estimated Processing Time:",
+        processingTimeText: "10 minutes to 3 business days",
+        submitWithdrawBtn: "Submit Withdrawal",
+        certifiedCanadaHeader: "Certified by Canada Dollar Investment AI Plan",
+        introP1Bold: "Dollar Investment",
+        introP1Text: "is an internationally recognized, Canada-certified financial technology enterprise (Registration #882941-Canada). Operating at the forefront of automated digital asset management, we leverage advanced AI-driven algorithmic arbitrage to connect over 34,000+ active global investors with stable, high-yield digital returns.",
+        introP2: "Our robust infrastructure operates 24/7 across major global cryptocurrency and commodity markets (including BTC, ETH, and Crude Oil OTC pairs), ensuring maximum liquidity, transparent daily profit distribution, and rigorous security standards.",
+        introP3: "With certified regulatory compliance, dedicated customer support, and instant peer-to-peer referral bonuses, Dollar Investment provides a trusted gateway into the future of intelligent decentralized finance.",
+        kycTitle: "Identity Verification (KYC)",
+        kycDesc: "To comply with international financial regulations and Canada registry standards, please capture or upload clear images of your ID Front, ID Back, and a Live Selfie. All 3 documents are strictly mandatory before submitting.",
+        kycFrontBtn: "📷 Capture ID Front Picture",
+        kycBackBtn: "📷 Capture ID Back Picture",
+        kycSelfieBtn: "📸 Capture Live Selfie",
+        submitKycBtn: "Submit Verification",
+        csHeader: "Dollar Investment Support Hub",
+        csDesc: "Our professional support team is available 24/7 via official Telegram and WhatsApp channels.",
+        termsHeader: "Terms of Use & Regulatory Agreement",
+        term1: "1. Enterprise Background: Dollar Investment is a fully registered and certified financial institution in Canada (Reg #882941-Canada), proudly serving over 34,000+ active global members with robust automated trading strategies.",
+        term2: "2. Bonus & Deposits: Every new verified user receives an automatic $2 USDT registration bonus. Minimum deposit requirement is $25 USDT with secure network processing.",
+        term3: "3. Withdrawal Policy: Minimum withdrawal is $50 USDT. Standard transactions carry a 9% processing fee. Members enjoy 100% Free Withdrawals (0% fee) after maintaining active status for 25 days.",
+        term4: "4. AI Strategy & Cooldown: Automated arbitrage orders execute across major crypto and commodity pairs (BTC, ETH, OIL). Each order requires a strict 24-hour interval before reactivation.",
+        term5: "5. Identity & Compliance: Mandatory KYC identity verification (Front ID, Back ID, and Live Selfie) ensures platform security and regulatory compliance.",
+        depositModalTitle: "Deposit USDT",
+        officialWalletAddr: "Official Wallet Address",
+        minDepositLabel: "Minimum Deposit:",
+        enterDepositAmt: "Enter Deposit Amount ($)",
+        confirmDepositBtn: "Confirm & Deposit",
+        navHome: "Home",
+        navAssets: "Assets",
+        navVip: "VIP",
+        navTeam: "Team",
+        navMe: "Me"
+      },
+      UR: {
+        brandTitle: "ڈالر انویسٹمنٹ",
+        signupTitle: "اکاؤنٹ بنائیں",
+        signupSubtitle: "ڈالر انویسٹمنٹ اے آئی حکمت عملی میں شامل ہوں (کینیڈا کے ضوابط کے تحت)",
+        emailPhoneLabel: "ای میل یا فون نمبر",
+        passwordLabel: "پاس ورڈ",
+        confirmPasswordLabel: "پاس ورڈ کی تصدیق کریں",
+        referralCodeLabel: "روسی لنک / کوڈ",
+        signupBtn: "سائن اپ کریں ($2 بونس)",
+        alreadyAcc: "پہلے سے اکاؤنٹ موجود ہے؟",
+        loginLink: "لاگ ان کریں",
+        loginTitle: "خوش آمدید",
+        loginSubtitle: "اپنے اکاؤنٹ میں محفوظ طریقے سے لاگ ان کریں",
+        userLoginLabel: "صارف (ای میل یا فون)",
+        savePassLabel: "پاس ورڈ اور یوزر آئی ڈی محفوظ کریں",
+        loginBtn: "لاگ ان کریں",
+        noAcc: "اکاؤنٹ نہیں ہے؟",
+        signupLink: "سائن اپ کریں",
+        backBtn: "← واپس",
+        tickerText: "🔥 ڈالر انویسٹمنٹ میں خوش آمدید! دنیا بھر میں 34,000+ سے زیادہ فعال ممبران۔ کینیڈا میں مکمل رجسٹرڈ اور سرٹیفائیڈ۔ کم از کم ڈپازٹ $25، کم از کم واپسی $50۔",
+        totalAssets: "کل اثاثے (USDT)",
+        recByRef: "ریفرل سے موصول ہوا:",
+        depositBtn: "📥 ڈپازٹ",
+        withdrawBtn: "📤 رقم نکالیں",
+        topupLabel: "ٹاپ اپ",
+        withdrawLabel: "واپس لیں",
+        inviteLabel: "دعوت دیں",
+        tasksLabel: "ٹاسکس",
+        vipLabel: "VIP لیول",
+        introLabel: "تعارف",
+        termsLabel: "شرائط",
+        kycLabel: "KYC",
+        activityRecords: "📋 سرگرمی اور تاریخ کا ریکارڈ",
+        noHistory: "کوئی حالیہ ہسٹری ریکارڈ نہیں ہوئی۔",
+        backHome: "← ہوم پر واپس جائیں",
+        freeWithdrawTitle: "🎁 مفت رقم نکالنے کی سہولت",
+        memDays: "ممبرشپ کے دن:",
+        feeStatus: "فیس کی حالت:",
+        feeStandard: "معیاری 9% فیس (25 دن کے بعد مفت)",
+        assetBreakdown: "💼 اثاثہ جات کی تقسیم",
+        flexibleFunds: "لچکدار فنڈز",
+        refRewards: "ریفرل انعامات (10%)",
+        aiStrategyHeader: "⚡ ڈالر انویسٹمنٹ اے آئی حکمت عملی",
+        smartExecutor: "🤖 سمارٹ اسٹریٹجی ایگزیکیوٹر",
+        investAmount: "سرمایہ کاری کی رقم",
+        createOrderBtn: "آرڈر بنائیں (1~4 منٹ)",
+        cooldownText: "⏳ اگلا آرڈر دستیاب ہوگا:",
+        aiInProgress: "⚡ اے آئی اسٹریٹجی آربیٹراج جاری ہے...",
+        timeRemaining: "باقی وقت:",
+        gridLevelsHeader: "🏆 گرڈ لیولز (ٹیم کے سائز سے آٹو انلاک)",
+        grid1Title: "گرڈ 1 (4 ممبران)",
+        grid2Title: "گرڈ 2 (6 ممبران)",
+        grid3Title: "گرڈ 3 (8 ممبران)",
+        grid4Title: "گرڈ 4 (10 ممبران)",
+        grid5Title: "گرڈ 5 (12 ممبران)",
+        grid6Title: "گرڈ 6 (14 ممبران)",
+        grid7Title: "گرڈ 7 (16 ممبران)",
+        inviteOverview: "🤝 دوستوں کو دعوت دیں (10% بونس)",
+        totalTeamMem: "کل ٹیم ممبران:",
+        totalTeamBal: "کل ٹیم بیلنس:",
+        todayJoiners: "آج کے نئے ممبران:",
+        copyLinkBtn: "لنک کاپی کریں",
+        teamDataOverview: "📊 ٹیم کا ڈیٹا",
+        teamSizeLabel: "ٹیم کا سائز",
+        totalIncomeLabel: "کل آمدنی (10%)",
+        teamMembersHistory: "👥 ٹیم ممبران اور ڈپازٹ ہسٹری",
+        noTeamMembers: "آپ کے لنک کے تحت کوئی ممبر رجسٹرڈ نہیں ہے۔ کمیشن کمانے کے لیے لنک شیئر کریں!",
+        personalAccDetails: "👤 ذاتی اکاؤنٹ کی تفصیلات",
+        kycLinkMenu: "🆔 شناخت کی تصدیق (KYC)",
+        verifyNow: "ابھی تصدیق کریں →",
+        csLinkMenu: "🎧 کسٹمر سروس",
+        supportHub: "سپورٹ حب →",
+        termsLinkMenu: "📖 استعمال کی شرائط",
+        readMore: "پڑھیں →",
+        signOutBtn: "سائن آؤٹ",
+        deleteAccBtn: "اکاؤنٹ حذف کریں",
+        selectCurrency: "کرنسی منتخب کریں",
+        selectNetwork: "نیٹ ورک منتخب کریں",
+        withdrawAmountLabel: "واپس لینے کی رقم",
+        walletAddressLabel: "والٹ ایڈریس",
+        standardFee: "معیاری فیس:",
+        feeDeduction: "9% کٹوتی",
+        estProcessing: "تخمینی وقت:",
+        processingTimeText: "10 منٹ سے 3 کاروباری دن",
+        submitWithdrawBtn: "واپس لینے کی درخواست جمع کریں",
+        certifiedCanadaHeader: "کینیڈا ڈالر انویسٹمنٹ اے آئی پلان سے مصدقہ",
+        introP1Bold: "ڈالر انویسٹمنٹ",
+        introP1Text: "ایک بین الاقوامی سطح پر تسلیم شدہ، کینیڈا سے مصدقہ فنانشل ٹیکنالوجی انٹرپرائز (رجسٹریشن #882941-Canada) ہے۔",
+        introP2: "ہمارا انفراسٹرکچر 24/7 بڑے عالمی کرپٹو اور کموڈٹی مارکیٹس میں کام کرتا ہے۔",
+        introP3: "مصدقہ ضوابط اور کسٹمر سپورٹ کے ساتھ، ڈالر انویسٹمنٹ ذہین مالیات کا ایک قابل اعتماد دروازہ ہے۔",
+        kycTitle: "شناخت کی تصدیق (KYC)",
+        kycDesc: "ضوابط کی تعمیل کے لیے اپنے شناختی کارڈ کے آگے، پیچھے اور لائیو سیلفی کی واضح تصویر اپ لوڈ کریں۔",
+        kycFrontBtn: "📷 آئی ڈی فرنٹ تصویر لیں",
+        kycBackBtn: "💳 آئی ڈی بیک تصویر لیں",
+        kycSelfieBtn: "📸 لائیو سیلفی لیں",
+        submitKycBtn: "تصدیق جمع کروائیں",
+        csHeader: "ڈالر انویسٹمنٹ سپورٹ حب",
+        csDesc: "ہماری سپورٹ ٹیم 24/7 ٹیلیگرام اور واٹس ایپ پر دستیاب ہے۔",
+        termsHeader: "استعمال کی شرائط اور معاہدہ",
+        term1: "1. انٹرپرائز کا پس منظر: ڈالر انویسٹمنٹ کینیڈا میں مکمل رجسٹرڈ ادارہ ہے۔",
+        term2: "2. بونس اور ڈپازٹ: ہر نئے تصدیق شدہ صارف کو $2 USDT سائن اپ بونس ملتا ہے۔",
+        term3: "3. واپسی کی پالیسی: کم از کم رقم $50 USDT ہے۔ 25 دن بعد فیس 0% ہے۔",
+        term4: "4. اے آئی اسٹریٹجی: ہر آرڈر کے درمیان 24 گھنٹے کا وقفہ لازمی ہے۔",
+        term5: "5. شناخت اور تعمیل: لازمی KYC تصدیق پلیٹ فارم کی سیکیورٹی کو یقینی بناتی ہے۔",
+        depositModalTitle: "USDT ڈپازٹ کریں",
+        officialWalletAddr: "آفیشل والٹ ایڈریس",
+        minDepositLabel: "کم از کم ڈپازٹ:",
+        enterDepositAmt: "ڈپازٹ کی رقم درج کریں ($)",
+        confirmDepositBtn: "تصدیق کریں اور ڈپازٹ کریں",
+        navHome: "ہوم",
+        navAssets: "اثاثے",
+        navVip: "VIP",
+        navTeam: "ٹیم",
+        navMe: "میں"
+      },
+      AR: {
+        brandTitle: "دولار إنवेस्टमेंट",
+        signupTitle: "إنشاء حساب",
+        signupSubtitle: "انضم إلى استراتيجية الذكاء الاصطناعي (مرخصة في كندا)",
+        emailPhoneLabel: "البريد الإلكتروني أو الهاتف",
+        passwordLabel: "كلمة المرور",
+        confirmPasswordLabel: "تأكيد كلمة المرور",
+        referralCodeLabel: "رابط الإحالة / الكود",
+        signupBtn: "تسجيل ($2 مكافأة)",
+        alreadyAcc: "لديك حساب بالفعل؟",
+        loginLink: "تسجيل الدخول",
+        loginTitle: "أهلاً بك مجدداً",
+        loginSubtitle: "تسجيل الدخول إلى حسابك بأمان",
+        userLoginLabel: "المستخدم (بريد أو هاتف)",
+        savePassLabel: "حفظ كلمة المرور والمعرف",
+        loginBtn: "تسجيل الدخول",
+        noAcc: "ليس لديك حساب؟",
+        signupLink: "تسجيل",
+        backBtn: "← رجوع",
+        tickerText: "🔥 أهلاً بك في دولار إنवेस्टमेंट! أكثر من 34,000+ عضو نشط عالمياً. مسجل بالكامل ومعتمد في كندا. الحد الأدنى للإيداع 25$، والحد الأدنى للسحب 50$.",
+        totalAssets: "إجمالي الأصول (USDT)",
+        recByRef: "تم استلامه عبر الإحالة:",
+        depositBtn: "📥 إيداع",
+        withdrawBtn: "📤 سحب",
+        topupLabel: "شحن",
+        withdrawLabel: "سحب",
+        inviteLabel: "دعوة",
+        tasksLabel: "المهام",
+        vipLabel: "مستوى VIP",
+        introLabel: "مقدمة",
+        termsLabel: "الشروط",
+        kycLabel: "توثيق KYC",
+        activityRecords: "📋 سجلات النشاط والتاريخ",
+        noHistory: "لا توجد سجلات حديثة.",
+        backHome: "← العودة للرئيسية",
+        freeWithdrawTitle: "🎁 امتياز السحب المجاني",
+        memDays: "أيام العضوية:",
+        feeStatus: "حالة رسوم السحب:",
+        feeStandard: "رسوم قياسية 9% (مجاني بعد 25 يوماً)",
+        assetBreakdown: "💼 تفصيل تخصيص الأصول",
+        flexibleFunds: "الأموال المرنة",
+        refRewards: "مكافآت الإحالة (10%)",
+        aiStrategyHeader: "⚡ استراتيجية الذكاء الاصطناعي",
+        smartExecutor: "🤖 منفذ الاستراتيجية الذكية",
+        investAmount: "مبلغ الاستثمار",
+        createOrderBtn: "إنشاء طلب (1~4 دقائق)",
+        cooldownText: "⏳ الطلب التالي متاح في:",
+        aiInProgress: "⚡ المراجحة الذكية قيد التنفيذ...",
+        timeRemaining: "الوقت المتبقي:",
+        gridLevelsHeader: "🏆 مستويات الشبكة (تفتح تلقائياً بحجم الفريق)",
+        grid1Title: "الشبكة 1 (4 أعضاء)",
+        grid2Title: "الشبكة 2 (6 أعضاء)",
+        grid3Title: "الشبكة 3 (8 أعضاء)",
+        grid4Title: "الشبكة 4 (10 أعضاء)",
+        grid5Title: "الشبكة 5 (12 عضواً)",
+        grid6Title: "الشبكة 6 (14 عضواً)",
+        grid7Title: "الشبكة 7 (16 عضواً)",
+        inviteOverview: "🤝 نظرة عامة على دعوة الأصدقاء (مكافأة 10%)",
+        totalTeamMem: "إجمالي أعضاء الفريق:",
+        totalTeamBal: "إجمالي رصيد الفريق:",
+        todayJoiners: "منضمون اليوم:",
+        copyLinkBtn: "نسخ الرابط",
+        teamDataOverview: "📊 نظرة عامة على بيانات الفريق",
+        teamSizeLabel: "حجم الفريق",
+        totalIncomeLabel: "إجمالي الدخل (10%)",
+        teamMembersHistory: "👥 أعضاء الفريق وسجل الإيداع",
+        noTeamMembers: "لا يوجد أعضاء مسجلين برابطك حتى الآن.",
+        personalAccDetails: "👤 تفاصيل الحساب الشخصي",
+        kycLinkMenu: "🆔 التحقق من الهوية (KYC)",
+        verifyNow: "تحقق الآن ←",
+        csLinkMenu: "🎧 خدمة العملاء",
+        supportHub: "مركز الدعم ←",
+        termsLinkMenu: "📖 شروط الاستخدام",
+        readMore: "قراءة ←",
+        signOutBtn: "تسجيل الخروج",
+        deleteAccBtn: "حذف الحساب",
+        selectCurrency: "اختر العملة",
+        selectNetwork: "اختر الشبكة",
+        withdrawAmountLabel: "مبلغ السحب",
+        walletAddressLabel: "عنوان المحفظة",
+        standardFee: "الرسوم القياسية:",
+        feeDeduction: "خصم 9%",
+        estProcessing: "وقت المعالجة المقدر:",
+        processingTimeText: "10 دقائق إلى 3 أيام عمل",
+        submitWithdrawBtn: "تقديم طلب السحب",
+        certifiedCanadaHeader: "معتمد من خطة استثمار كندا",
+        introP1Bold: "دولار إنवेस्टमेंट",
+        introP1Text: "هي مؤسسة تكنولوجيا مالية معترف بها دولياً ومعتمدة في كندا (رقم التسجيل #882941-Canada).",
+        introP2: "تعمل بنيتنا التحتية على مدار الساعة طوال أيام الأسبوع في أسواق العملات الرقمية والسلع.",
+        introP3: "مع الامتثال التنظيمي المعتمد، توفر دولار إنवेस्टमेंट بوابة موثوقة للتمويل الذكي.",
+        kycTitle: "التحقق من الهوية (KYC)",
+        kycDesc: "للامتثال للوائح المالية، يرجى التقاط أو رفع صور واضحة لوثيقة الهوية والسلفرة الشخصية.",
+        kycFrontBtn: "📷 التقاط صورة وجه الهوية",
+        kycBackBtn: "💳 التقاط صورة ظهر الهوية",
+        kycSelfieBtn: "📸 التقاط صورة سيلفي حية",
+        submitKycBtn: "إرسال التحقق",
+        csHeader: "مركز دعم دولار إنवेस्टमेंट",
+        csDesc: "فريق الدعم المحترف لدينا متاح 24/7 عبر تيليجرام وواتساب.",
+        termsHeader: "شروط الاستخدام والاتفاقية التنظيمية",
+        term1: "1. خلفية المؤسسة: دولار إنवेस्टमेंट هي مؤسسة مالية مسجلة بالكامل في كندا.",
+        term2: "2. المكافآت والإيداعات: يحصل كل مستخدم جديد على مكافأة تسجيل 2$ USDT.",
+        term3: "3. سياسة السحب: الحد الأدنى للسحب 50$ USDT. رسوم قياسية 9% (صفر بعد 25 يوماً).",
+        term4: "4. استراتيجية الذكاء الاصطناعي: تتطلب أوامر المراجحة فترة فاصلة مدتها 24 ساعة.",
+        term5: "5. الهوية والامتثال: التحقق الإجباري من الهوية يضمن أمان المنصة.",
+        depositModalTitle: "إيداع USDT",
+        officialWalletAddr: "عنوان المحفظة الرسمي",
+        minDepositLabel: "الحد الأدنى للإيداع:",
+        enterDepositAmt: "أدخل مبلغ الإيداع ($)",
+        confirmDepositBtn: "تأكيد وإيداع",
+        navHome: "الرئيسية",
+        navAssets: "الأصول",
+        navVip: "VIP",
+        navTeam: "الفريق",
+        navMe: "حسابي"
+      },
+      BN: {
+        brandTitle: "ডলার ইনভেস্টমেন্ট",
+        signupTitle: "অ্যাকাউন্ট তৈরি করুন",
+        signupSubtitle: "ডলার ইনভেস্টমেন্ট এআই স্ট্র্যাটেজিতে যোগ দিন",
+        emailPhonePhoneLabel: "ইমেল বা ফোন",
+        passwordLabel: "পাসওয়ার্ড",
+        confirmPasswordLabel: "পাসওয়ার্ড নিশ্চিত করুন",
+        referralCodeLabel: "রেফারেল লিংক / কোড",
+        signupBtn: "সাইন আপ করুন ($2 বোনাস)",
+        alreadyAcc: "ইতিমধ্যে একটি অ্যাকাউন্ট আছে?",
+        loginLink: "লগ ইন",
+        loginTitle: "স্বাগতম",
+        loginSubtitle: "নিরাপদে আপনার অ্যাকাউন্টে লগ ইন করুন",
+        userLoginLabel: "ব্যবহারকারী (ইমেল বা ফোন)",
+        savePassLabel: "পাসওয়ার্ড এবং আইডি সংরক্ষণ করুন",
+        loginBtn: "লগ ইন",
+        noAcc: "কোন অ্যাকাউন্ট নেই?",
+        signupLink: "সাইন আপ",
+        backBtn: "← ফিরে যান",
+        tickerText: "🔥 ডলার ইনভেস্টমেন্টে স্বাগতম! বিশ্বব্যাপী ৩৪,০০০+ সক্রিয় সদস্য। কানাডায় সম্পূর্ণ নিবন্ধিত। সর্বনিম্ন ডিপোজিট $২৫, সর্বনিম্ন উত্তোলন $৫০।",
+        totalAssets: "মোট সম্পদ (USDT)",
+        recByRef: "রেফারেল থেকে প্রাপ্ত:",
+        depositBtn: "📥 ডিপোজিট",
+        withdrawBtn: "📤 উত্তোলন",
+        topupLabel: "টপ আপ",
+        withdrawLabel: "উত্তোলন",
+        inviteLabel: "আমন্ত্রণ",
+        tasksLabel: "টাস্ক",
+        vipLabel: "ভিআইপি লেভেল",
+        introLabel: "পরিচিতি",
+        termsLabel: "শর্তাবলী",
+        kycLabel: "কেওয়াইসি",
+        activityRecords: "📋 কার্যকলাপ এবং ইতিহাস",
+        noHistory: "কোনো সাম্প্রতিক ইতিহাস নেই।",
+        backHome: "← হোম পেজে ফিরে যান",
+        freeWithdrawTitle: "🎁 ফ্রি উত্তোলনের সুবিধা",
+        memDays: "সদস্যপদের দিন:",
+        feeStatus: "উত্তোলন ফি স্ট্যাটাস:",
+        feeStandard: "স্ট্যান্ডার্ড ৯% ফি (২৫ দিন পর ফ্রি)",
+        assetBreakdown: "💼 সম্পদ বরাদ্দ বিবরণ",
+        flexibleFunds: "নমনীয় তহবিল",
+        refRewards: "রেফারেল পুরস্কার (১০%)",
+        aiStrategyHeader: "⚡ ডলার ইনভেস্টমেন্ট এআই স্ট্র্যাটেজি",
+        smartExecutor: "🤖 স্মার্ট স্ট্র্যাটেজি এক্সিকিউটর",
+        investAmount: "বিনিয়োগের পরিমাণ",
+        createOrderBtn: "অর্ডার তৈরি করুন (১~৪ মিনিট)",
+        cooldownText: "⏳ পরবর্তী অর্ডার উপলব্ধ:",
+        aiInProgress: "⚡ এআই আর্বিট্রেজ প্রক্রিয়াধীন...",
+        timeRemaining: "বাকি সময়:",
+        gridLevelsHeader: "🏆 গ্রিড লেভেল (টিম সাইজ দ্বারা আনলক)",
+        grid1Title: "গ্রিড ১ (৪ সদস্য)",
+        grid2Title: "গ্রিড ২ (৬ সদস্য)",
+        grid3Title: "গ্রিড ৩ (৮ সদস্য)",
+        grid4Title: "গ্রিড ৪ (১০ সদস্য)",
+        grid5Title: "গ্রিড ৫ (১২ সদস্য)",
+        grid6Title: "গ্রিড ৬ (১৪ সদস্য)",
+        grid7Title: "গ্রিড ৭ (১৬ সদস্য)",
+        inviteOverview: "🤝 বন্ধু আমন্ত্রণ ওভারভিউ (১০% বোনাস)",
+        totalTeamMem: "মোট টিম সদস্য:",
+        totalTeamBal: "মোট টিম ব্যালেন্স:",
+        todayJoiners: "আজ নতুন যোগদানকারী:",
+        copyLinkBtn: "লিংক কপি করুন",
+        teamDataOverview: "📊 টিম ডেটা ওভারভিউ",
+        teamSizeLabel: "টিম সাইজ",
+        totalIncomeLabel: "মোট আয় (১০%)",
+        teamMembersHistory: "👥 টিম সদস্য এবং ডিপোজিট ইতিহাস",
+        noTeamMembers: "আপনার লিংকের অধীনে কোনো সদস্য নিবন্ধিত হয়নি।",
+        personalAccDetails: "👤 ব্যক্তিগত অ্যাকাউন্ট বিবরণ",
+        kycLinkMenu: "🆔 পরিচয় যাচাইকরণ (KYC)",
+        verifyNow: "এখনই যাচাই করুন →",
+        csLinkMenu: "🎧 কাস্টমার সার্ভিস",
+        supportHub: "সাপোর্ট হাব →",
+        termsLinkMenu: "📖 ব্যবহারের শর্তাবলী",
+        readMore: "পড়ুন →",
+        signOutBtn: "সাইন আউট",
+        deleteAccBtn: "অ্যাকাউন্ট মুছুন",
+        selectCurrency: "মুদ্রা নির্বাচন করুন",
+        selectNetwork: "নেটওয়ার্ক নির্বাচন করুন",
+        withdrawAmountLabel: "উত্তোলনের পরিমাণ",
+        walletAddressLabel: "ওয়ালেট ঠিকানা",
+        standardFee: "স্ট্যান্ডার্ড ফি:",
+        feeDeduction: "৯% কর্তন",
+        estProcessing: "আনুমানিক সময়:",
+        processingTimeText: "১০ মিনিট থেকে ৩ কার্যদিবস",
+        submitWithdrawBtn: "উত্তোলন জমা দিন",
+        certifiedCanadaHeader: "কানাডা ডলার ইনভেস্টমেন্ট এআই প্ল্যান দ্বারা প্রত্যয়িত",
+        introP1Bold: "ডলার ইনভেস্টমেন্ট",
+        introP1Text: "একটি আন্তর্জাতিকভাবে স্বীকৃত, কানাডা-প্রত্যয়িত আর্থিক প্রযুক্তি এন্টারপ্রাইজ (রেজিস্ট্রেশন #৮৮২৯৪১-কানাডা)।",
+        introP2: "আমাদের পরিকাঠামো প্রধান বৈশ্বিক ক্রিপ্টো এবং পণ্য বাজারে ২৪/৭ কাজ করে।",
+        introP3: "নিয়ন্ত্রক সম্মতি এবং ডেডিকেটেড সাপোর্টের সাথে, ডলার ইনভেস্টমেন্ট একটি বিশ্বস্ত গেটওয়ে প্রদান করে।",
+        kycTitle: "পরিচয় যাচাইকরণ (KYC)",
+        kycDesc: "আর্ন্তজাতিক নিয়ম মেনে আইডি সামনের, পেছনের ছবি এবং সেলফি আপলোড করুন।",
+        kycFrontBtn: "📷 আইডি ফ্রন্ট ছবি তুলুন",
+        kycBackBtn: "💳 আইডি ব্যাক ছবি তুলুন",
+        kycSelfieBtn: "📸 লাইভ সেলফি তুলুন",
+        submitKycBtn: "যাচাইকরণ জমা দিন",
+        csHeader: "ডলার ইনভেস্টমেন্ট সাপোর্ট হাব",
+        csDesc: "আমাদের সহায়তা টিম টেলিগ্রাম এবং হোয়াটসঅ্যাপে ২৪/৭ উপলব্ধ।",
+        termsHeader: "ব্যবহারের শর্তাবলী এবং চুক্তি",
+        term1: "১. এন্টারপ্রাইজ ব্যাকগ্রাউন্ড: ডলার ইনভেস্টমেন্ট কানাডায় একটি নিবন্ধিত প্রতিষ্ঠান।",
+        term2: "২. বোনাস এবং ডিপোজিট: প্রতিটি নতুন ব্যবহারকারী স্বয়ংক্রিয়ভাবে $২ USDT পান।",
+        term3: "৩. উত্তোলন নীতি: সর্বনিম্ন উত্তোলন $৫০ USDT। ২৫ দিন পর ফি ০%।",
+        term4: "৪. এআই স্ট্র্যাটেজি: প্রতিটি অর্ডারের মাঝে ২৪ ঘণ্টার ব্যবধান প্রয়োজন।",
+        term5: "৫. পরিচয় ও সম্মতি: বাধ্যতামূলক কেওয়াইসি প্ল্যাটফর্মের নিরাপত্তা নিশ্চিত করে।",
+        depositModalTitle: "USDT ডিপোজিট করুন",
+        officialWalletAddr: "অফিসিয়াল ওয়ালেট ঠিকানা",
+        minDepositLabel: "সর্বনিম্ন ডিপোজিট:",
+        enterDepositAmt: "ডিপোজিট পরিমাণ লিখুন ($)",
+        confirmDepositBtn: "নিশ্চিত করুন এবং ডিপোজিট করুন",
+        navHome: "হোম",
+        navAssets: "সম্পদ",
+        navVip: "ভিআইপি",
+        navTeam: "টিম",
+        navMe: "আমি"
+      },
+      ES: {
+        brandTitle: "Dollar Investment",
+        signupTitle: "Crear Cuenta",
+        signupSubtitle: "Únete a la estrategia de IA de Dollar Investment",
+        emailPhoneLabel: "Correo electrónico o Teléfono",
+        passwordLabel: "Contraseña",
+        confirmPasswordLabel: "Confirmar Contraseña",
+        referralCodeLabel: "Enlace / Código de Referido",
+        signupBtn: "Registrarse (Bono de $2)",
+        alreadyAcc: "¿Ya tienes una cuenta?",
+        loginLink: "Iniciar Sesión",
+        loginTitle: "Bienvenido de nuevo",
+        loginSubtitle: "Inicia sesión en tu cuenta de forma segura",
+        userLoginLabel: "Usuario (Correo o Teléfono)",
+        savePassLabel: "Guardar contraseña e ID",
+        loginBtn: "Iniciar Sesión",
+        noAcc: "¿No tienes una cuenta?",
+        signupLink: "Registrarse",
+        backBtn: "← Atrás",
+        tickerText: "🔥 ¡Bienvenido a Dollar Investment! Más de 34,000+ miembros activos. Registrado y certificado en Canadá. Depósito mín. $25, Retiro mín. $50.",
+        totalAssets: "Activos Totales (USDT)",
+        recByRef: "Recibido por Referidos:",
+        depositBtn: "📥 Depositar",
+        withdrawBtn: "📤 Retirar",
+        topupLabel: "Recargar",
+        withdrawLabel: "Retirar",
+        inviteLabel: "Invitar",
+        tasksLabel: "Tareas",
+        vipLabel: "Nivel VIP",
+        introLabel: "Intro",
+        termsLabel: "Términos",
+        kycLabel: "KYC",
+        activityRecords: "📋 Registros de Actividad e Historial",
+        noHistory: "No hay historial reciente registrado.",
+        backHome: "← Volver al Inicio",
+        freeWithdrawTitle: "🎁 Privilegio de Retiro Gratuito",
+        memDays: "Días de Membresía:",
+        feeStatus: "Estado de Tarifa:",
+        feeStandard: "Tarifa estándar del 9% (Gratis tras 25 días)",
+        assetBreakdown: "💼 Desglose de Activos",
+        flexibleFunds: "Fondos Flexibles",
+        refRewards: "Recompensas por Referidos (10%)",
+        aiStrategyHeader: "⚡ Estrategia de IA Dollar Investment",
+        smartExecutor: "🤖 Ejecutor de Estrategia Inteligente",
+        investAmount: "Monto de Inversión",
+        createOrderBtn: "Crear Orden (1~4 mins)",
+        cooldownText: "⏳ Próxima orden disponible en:",
+        aiInProgress: "⚡ Arbitraje de estrategia de IA en curso...",
+        timeRemaining: "Tiempo restante:",
+        gridLevelsHeader: "🏆 Niveles de Red (Desbloqueados por tamaño de equipo)",
+        grid1Title: "Red 1 (4 Miembros)",
+        grid2Title: "Red 2 (6 Miembros)",
+        grid3Title: "Red 3 (8 Miembros)",
+        grid4Title: "Red 4 (10 Miembros)",
+        grid5Title: "Red 5 (12 Miembros)",
+        grid6Title: "Red 6 (14 Miembros)",
+        grid7Title: "Red 7 (16 Miembros)",
+        inviteOverview: "🤝 Resumen de Invitaciones (Bono del 10%)",
+        totalTeamMem: "Miembros Totales del Equipo:",
+        totalTeamBal: "Balance Total del Equipo:",
+        todayJoiners: "Nuevos hoy:",
+        copyLinkBtn: "Copiar Enlace",
+        teamDataOverview: "📊 Resumen de Datos del Equipo",
+        teamSizeLabel: "Tamaño del Equipo",
+        totalIncomeLabel: "Ingresos Totales (10%)",
+        teamMembersHistory: "👥 Miembros del Equipo e Historial de Depósitos",
+        noTeamMembers: "Aún no hay miembros registrados con tu enlace.",
+        personalAccDetails: "👤 Detalles de la Cuenta Personal",
+        kycLinkMenu: "🆔 Verificación de Identidad (KYC)",
+        verifyNow: "Verificar Ahora →",
+        csLinkMenu: "🎧 Servicio al Cliente",
+        supportHub: "Centro de Soporte →",
+        termsLinkMenu: "📖 Términos de Uso",
+        readMore: "Leer →",
+        signOutBtn: "Cerrar Sesión",
+        deleteAccBtn: "Eliminar Cuenta",
+        selectCurrency: "Seleccionar Moneda",
+        selectNetwork: "Seleccionar Red",
+        withdrawAmountLabel: "Monto de Retiro",
+        walletAddressLabel: "Dirección de Billetera",
+        standardFee: "Tarifa Estándar:",
+        feeDeduction: "Deducción del 9%",
+        estProcessing: "Tiempo Estimado:",
+        processingTimeText: "10 minutos a 3 días hábiles",
+        submitWithdrawBtn: "Enviar Retiro",
+        certifiedCanadaHeader: "Certificado por el Plan de Inversión de IA de Canadá",
+        introP1Bold: "Dollar Investment",
+        introP1Text: "es una empresa de tecnología financiera reconocida internacionalmente y certificada en Canadá (Registro #882941-Canada).",
+        introP2: "Nuestra infraestructura opera 24/7 en los principales mercados globales de criptomonedas y materias primas.",
+        introP3: "Con un cumplimiento normativo certificado, Dollar Investment ofrece una puerta de entrada confiable.",
+        kycTitle: "Verificación de Identidad (KYC)",
+        kycDesc: "Para cumplir con las normas financieras, capture o suba imágenes claras de su identificación y una selfie.",
+        kycFrontBtn: "📷 Capturar Frente de ID",
+        kycBackBtn: "💳 Capturar Reverso de ID",
+        kycSelfieBtn: "📸 Capturar Selfie en Vivo",
+        submitKycBtn: "Enviar Verificación",
+        csHeader: "Centro de Soporte Dollar Investment",
+        csDesc: "Nuestro equipo de soporte está disponible 24/7 a través de Telegram y WhatsApp.",
+        termsHeader: "Términos de Uso y Acuerdo Regulatorio",
+        term1: "1. Antecedentes: Dollar Investment es una institución financiera registrada en Canadá.",
+        term2: "2. Bonos y Depósitos: Cada usuario verificado recibe un bono de registro automático de $2 USDT.",
+        term3: "3. Política de Retiro: El retiro mínimo es de $50 USDT. Tarifa del 9% (0% tras 25 días).",
+        term4: "4. Estrategia de IA: Los pedidos requieren un intervalo estricto de 24 horas.",
+        term5: "5. Identidad y Cumplimiento: La verificación KYC obligatoria garantiza la seguridad.",
+        depositModalTitle: "Depositar USDT",
+        officialWalletAddr: "Dirección de Billetera Oficial",
+        minDepositLabel: "Depósito Mínimo:",
+        enterDepositAmt: "Ingrese el monto de depósito ($)",
+        confirmDepositBtn: "Confirmar y Depositar",
+        navHome: "Inicio",
+        navAssets: "Activos",
+        navVip: "VIP",
+        navTeam: "Equipo",
+        navMe: "Perfil"
+      },
+      FR: {
+        brandTitle: "Dollar Investment",
+        signupTitle: "Créer un compte",
+        signupSubtitle: "Rejoignez la stratégie IA de Dollar Investment",
+        emailPhoneLabel: "E-mail ou Téléphone",
+        passwordLabel: "Mot de passe",
+        confirmPasswordLabel: "Confirmer le mot de passe",
+        referralCodeLabel: "Lien / Code de parrainage",
+        signupBtn: "S'inscrire (Bonus 2$)",
+        alreadyAcc: "Vous avez déjà un compte ?",
+        loginLink: "Connexion",
+        loginTitle: "Bon retour",
+        loginSubtitle: "Connectez-vous à votre compte en toute sécurité",
+        userLoginLabel: "Utilisateur (E-mail ou Téléphone)",
+        savePassLabel: "Enregistrer le mot de passe",
+        loginBtn: "Connexion",
+        noAcc: "Vous n'avez pas de compte ?",
+        signupLink: "S'inscrire",
+        backBtn: "← Retour",
+        tickerText: "🔥 Bienvenue chez Dollar Investment ! Plus de 34 000+ membres actifs. Enregistré et certifié au Canada. Dépôt min. 25$, Retrait min. 50$.",
+        totalAssets: "Actifs Totaux (USDT)",
+        recByRef: "Reçu par parrainage :",
+        depositBtn: "📥 Dépôt",
+        withdrawBtn: "📤 Retrait",
+        topupLabel: "Recharger",
+        withdrawLabel: "Retirer",
+        inviteLabel: "Inviter",
+        tasksLabel: "Tâches",
+        vipLabel: "Niveau VIP",
+        introLabel: "Intro",
+        termsLabel: "Termes",
+        kycLabel: "KYC",
+        activityRecords: "📋 Registres d'activité et d'historique",
+        noHistory: "Aucun historique récent enregistré.",
+        backHome: "← Retour à l'accueil",
+        freeWithdrawTitle: "🎁 Privilège de retrait gratuit",
+        memDays: "Jours d'adhésion :",
+        feeStatus: "Statut des frais :",
+        feeStandard: "Frais standard de 9% (Gratuit après 25 jours)",
+        assetBreakdown: "💼 Répartition des actifs",
+        flexibleFunds: "Fonds flexibles",
+        refRewards: "Récompenses de parrainage (10%)",
+        aiStrategyHeader: "⚡ Stratégie IA Dollar Investment",
+        smartExecutor: "🤖 Exécuteur de stratégie intelligent",
+        investAmount: "Montant de l'investissement",
+        createOrderBtn: "Créer un ordre (1~4 min)",
+        cooldownText: "⏳ Prochain ordre disponible dans :",
+        aiInProgress: "⚡ Arbitrage de stratégie IA en cours...",
+        timeRemaining: "Temps restant :",
+        gridLevelsHeader: "🏆 Niveaux de grille (Déverrouillés par la taille de l'équipe)",
+        grid1Title: "Grille 1 (4 membres)",
+        grid2Title: "Grille 2 (6 membres)",
+        grid3Title: "Grille 3 (8 membres)",
+        grid4Title: "Grille 4 (10 membres)",
+        grid5Title: "Grille 5 (12 membres)",
+        grid6Title: "Grille 6 (14 membres)",
+        grid7Title: "Grille 7 (16 membres)",
+        inviteOverview: "🤝 Aperçu des invitations (Bonus 10%)",
+        totalTeamMem: "Membres totaux de l'équipe :",
+        totalTeamBal: "Solde total de l'équipe :",
+        todayJoiners: "Nouveaux aujourd'hui :",
+        copyLinkBtn: "Copier le lien",
+        teamDataOverview: "📊 Aperçu des données de l'équipe",
+        teamSizeLabel: "Taille de l'équipe",
+        totalIncomeLabel: "Revenu total (10%)",
+        teamMembersHistory: "👥 Membres de l'équipe et historique",
+        noTeamMembers: "Aucun membre enregistré sous votre lien pour l'instant.",
+        personalAccDetails: "👤 Détails du compte personnel",
+        kycLinkMenu: "🆔 Vérification d'identité (KYC)",
+        verifyNow: "Vérifier maintenant →",
+        csLinkMenu: "🎧 Service client",
+        supportHub: "Centre de support →",
+        termsLinkMenu: "📖 Conditions d'utilisation",
+        readMore: "Lire →",
+        signOutBtn: "Se déconnecter",
+        deleteAccBtn: "Supprimer le compte",
+        selectCurrency: "Sélectionner la devise",
+        selectNetwork: "Sélectionner le réseau",
+        withdrawAmountLabel: "Montant du retrait",
+        walletAddressLabel: "Adresse du portefeuille",
+        standardFee: "Frais standard :",
+        feeDeduction: "Déduction de 9%",
+        estProcessing: "Temps de traitement estimé :",
+        processingTimeText: "10 minutes à 3 jours ouvrables",
+        submitWithdrawBtn: "Soumettre le retrait",
+        certifiedCanadaHeader: "Certifié par le plan d'investissement IA du Canada",
+        introP1Bold: "Dollar Investment",
+        introP1Text: "est une entreprise de technologie financière reconnue et certifiée au Canada (Enregistrement #882941-Canada).",
+        introP2: "Notre infrastructure fonctionne 24h/24 et 7j/7 sur les principaux marchés mondiaux.",
+        introP3: "Avec une conformité réglementaire certifiée, Dollar Investment offre une passerelle de confiance.",
+        kycTitle: "Vérification d'identité (KYC)",
+        kycDesc: "Veuillez capturer ou télécharger des images claires de votre pièce d'identité et un selfie.",
+        kycFrontBtn: "📷 Capturer le recto de la pièce",
+        kycBackBtn: "💳 Capturer le verso de la pièce",
+        kycSelfieBtn: "📸 Capturer un selfie en direct",
+        submitKycBtn: "Soumettre la vérification",
+        csHeader: "Centre de support Dollar Investment",
+        csDesc: "Notre équipe de support est disponible 24/7 via Telegram et WhatsApp.",
+        termsHeader: "Conditions d'utilisation et accord réglementaire",
+        term1: "1. Contexte : Dollar Investment est une institution financière enregistrée au Canada.",
+        term2: "2. Bonus et dépôts : Chaque utilisateur vérifié reçoit un bonus automatique de 2$ USDT.",
+        term3: "3. Politique de retrait : Retrait min. de 50$ USDT. Frais de 9% (0% après 25 jours).",
+        term4: "4. Stratégie IA : Les ordres d'arbitrage nécessitent un intervalle strict de 24 heures.",
+        term5: "5. Identité et conformité : La vérification KYC garantit la sécurité de la plateforme.",
+        depositModalTitle: "Déposer des USDT",
+        officialWalletAddr: "Adresse de portefeuille officielle",
+        minDepositLabel: "Dépôt minimum :",
+        enterDepositAmt: "Entrez le montant du dépôt ($)",
+        confirmDepositBtn: "Confirmer et déposer",
+        navHome: "Accueil",
+        navAssets: "Actifs",
+        navVip: "VIP",
+        navTeam: "Équipe",
+        navMe: "Profil"
+      },
+      DE: {
+        brandTitle: "Dollar Investment",
+        signupTitle: "Konto erstellen",
+        signupSubtitle: "Treten Sie der Dollar Investment KI-Strategie bei",
+        emailPhoneLabel: "E-Mail oder Telefon",
+        passwordLabel: "Passwort",
+        confirmPasswordLabel: "Passwort bestätigen",
+        referralCodeLabel: "Empfehlungslink / Code",
+        signupBtn: "Registrieren ($2 Bonus)",
+        alreadyAcc: "Bereits ein Konto?",
+        loginLink: "Anmelden",
+        loginTitle: "Willkommen zurück",
+        loginSubtitle: "Melden Sie sich sicher bei Ihrem Konto an",
+        userLoginLabel: "Benutzer (E-Mail oder Telefon)",
+        savePassLabel: "Passwort & ID speichern",
+        loginBtn: "Anmelden",
+        noAcc: "Kein Konto?",
+        signupLink: "Registrieren",
+        backBtn: "← Zurück",
+        tickerText: "🔥 Willkommen bei Dollar Investment! Über 34.000+ aktive Mitglieder. In Kanada registriert. Min. Einzahlung $25, Min. Auszahlung $50.",
+        totalAssets: "Gesamtvermögen (USDT)",
+        recByRef: "Durch Empfehlung erhalten:",
+        depositBtn: "📥 Einzahlen",
+        withdrawBtn: "📤 Abheben",
+        topupLabel: "Aufladen",
+        withdrawLabel: "Abheben",
+        inviteLabel: "Einladen",
+        tasksLabel: "Aufgaben",
+        vipLabel: "VIP-Stufe",
+        introLabel: "Intro",
+        termsLabel: "AGB",
+        kycLabel: "KYC",
+        activityRecords: "📋 Aktivitäts- & Verlaufsprotokolle",
+        noHistory: "Kein aktueller Verlauf aufgezeichnet.",
+        backHome: "← Zurück zur Startseite",
+        freeWithdrawTitle: "🎁 Kostenloses Auszahlungsprivileg",
+        memDays: "Mitgliedschaftstage:",
+        feeStatus: "Auszahlungsgebühr:",
+        feeStandard: "Standard 9% Gebühr (Kostenlos nach 25 Tagen)",
+        assetBreakdown: "💼 Vermögensaufteilung",
+        flexibleFunds: "Flexible Mittel",
+        refRewards: "Empfehlungsbelohnungen (10%)",
+        aiStrategyHeader: "⚡ Dollar Investment KI-Strategie",
+        smartExecutor: "🤖 Smart Strategy Executor",
+        investAmount: "Investitionsbetrag",
+        createOrderBtn: "Auftrag erstellen (1~4 Min)",
+        cooldownText: "⏳ Nächster Auftrag verfügbar in:",
+        aiInProgress: "⚡ KI-Strategie-Arbitrage läuft...",
+        timeRemaining: "Verbleibende Zeit:",
+        gridLevelsHeader: "🏆 Grid-Stufen (Automatisch freigeschaltet nach Teamgröße)",
+        grid1Title: "Grid 1 (4 Mitglieder)",
+        grid2Title: "Grid 2 (6 Mitglieder)",
+        grid3Title: "Grid 3 (8 Mitglieder)",
+        grid4Title: "Grid 4 (10 Mitglieder)",
+        grid5Title: "Grid 5 (12 Mitglieder)",
+        grid6Title: "Grid 6 (14 Mitglieder)",
+        grid7Title: "Grid 7 (16 Mitglieder)",
+        inviteOverview: "🤝 Einladungsübersicht (10% Bonus)",
+        totalTeamMem: "Gesamte Teammitglieder:",
+        totalTeamBal: "Gesamtes Teamguthaben:",
+        todayJoiners: "Heutige Neuzugänge:",
+        copyLinkBtn: "Link kopieren",
+        teamDataOverview: "📊 Teamdaten-Übersicht",
+        teamSizeLabel: "Teamgröße",
+        totalIncomeLabel: "Gesamteinkommen (10%)",
+        teamMembersHistory: "👥 Teammitglieder & Einzahlungshistorie",
+        noTeamMembers: "Noch keine Teammitglieder unter Ihrem Link registriert.",
+        personalAccDetails: "👤 Persönliche Kontodetails",
+        kycLinkMenu: "🆔 Identitätsprüfung (KYC)",
+        verifyNow: "Jetzt verifizieren →",
+        csLinkMenu: "🎧 Kundenservice",
+        supportHub: "Support-Center →",
+        termsLinkMenu: "📖 Nutzungsbedingungen",
+        readMore: "Lesen →",
+        signOutBtn: "Abmelden",
+        deleteAccBtn: "Konto löschen",
+        selectCurrency: "Währung auswählen",
+        selectNetwork: "Netzwerk auswählen",
+        withdrawAmountLabel: "Auszahlungsbetrag",
+        walletAddressLabel: "Wallet-Adresse",
+        standardFee: "Standardgebühr:",
+        feeDeduction: "9% Abzug",
+        estProcessing: "Geschätzte Bearbeitungszeit:",
+        processingTimeText: "10 Minuten bis 3 Werktage",
+        submitWithdrawBtn: "Auszahlung einreichen",
+        certifiedCanadaHeader: "Zertifiziert durch den Kanada KI-Investitionsplan",
+        introP1Bold: "Dollar Investment",
+        introP1Text: "ist ein international anerkanntes, in Kanada zertifiziertes Finanztechnologie-Unternehmen (Reg. #882941-Canada).",
+        introP2: "Unsere Infrastruktur arbeitet rund um die Uhr in den globalen Krypto- und Rohstoffmärkten.",
+        introP3: "Mit zertifizierter regulatorischer Compliance bietet Dollar Investment ein vertrauenswürdiges Tor.",
+        kycTitle: "Identitätsprüfung (KYC)",
+        kycDesc: "Bitte erfassen oder laden Sie klare Bilder Ihres Ausweises und ein Live-Selfie hoch.",
+        kycFrontBtn: "📷 Ausweis-Vorderseite erfassen",
+        kycBackBtn: "💳 Ausweis-Rückseite erfassen",
+        kycSelfieBtn: "📸 Live-Selfie erfassen",
+        submitKycBtn: "Verifizierung einreichen",
+        csHeader: "Dollar Investment Support-Center",
+        csDesc: "Unser Support-Team ist 24/7 über offizielle Telegram- und WhatsApp-Kanäle erreichbar.",
+        termsHeader: "Nutzungsbedingungen & Regulatorische Vereinbarung",
+        term1: "1. Unternehmenshintergrund: Dollar Investment ist ein in Kanada registriertes Finanzinstitut.",
+        term2: "2. Bonus & Einzahlungen: Jeder verifizierte Benutzer erhält einen $2 USDT Registrierungsbonus.",
+        term3: "3. Auszahlungsrichtlinie: Mindestauszahlung $50 USDT. 9% Gebühr (0% nach 25 Tagen).",
+        term4: "4. KI-Strategie: Arbitrage-Aufträge erfordern ein striktes 24-Stunden-Intervall.",
+        term5: "5. Identität & Compliance: Die obligatorische KYC-Prüfung gewährleistet Sicherheit.",
+        depositModalTitle: "USDT einzahlen",
+        officialWalletAddr: "Offizielle Wallet-Adresse",
+        minDepositLabel: "Mindesteinzahlung:",
+        enterDepositAmt: "Einzahlungsbetrag eingeben ($)",
+        confirmDepositBtn: "Bestätigen & Einzahlen",
+        navHome: "Start",
+        navAssets: "Vermögen",
+        navVip: "VIP",
+        navTeam: "Team",
+        navMe: "Profil"
+      },
+      ZH: {
+        brandTitle: "Dollar Investment",
+        signupTitle: "创建账户",
+        signupSubtitle: "加入 Dollar Investment AI 策略（加拿大监管）",
+        emailPhoneLabel: "电子邮箱或手机号",
+        passwordLabel: "密码",
+        confirmPasswordLabel: "确认密码",
+        referralCodeLabel: "推荐链接 / 代码",
+        signupBtn: "注册（赠送 $2 奖励）",
+        alreadyAcc: "已有账户？",
+        loginLink: "登录",
+        loginTitle: "欢迎回来",
+        loginSubtitle: "安全登录您的账户",
+        userLoginLabel: "用户（邮箱或手机）",
+        savePassLabel: "保存密码与用户 ID",
+        loginBtn: "登录",
+        noAcc: "没有账户？",
+        signupLink: "注册",
+        backBtn: "← 返回",
+        tickerText: "🔥 欢迎来到 Dollar Investment！全球超过 34,000+ 活跃会员。在加拿大完全注册并认证。最低充值 $25，最低提现 $50。",
+        totalAssets: "总资产 (USDT)",
+        recByRef: "推荐奖励收入：",
+        depositBtn: "📥 充值",
+        withdrawBtn: "📤 提现",
+        topupLabel: "充值",
+        withdrawLabel: "提现",
+        inviteLabel: "邀请",
+        tasksLabel: "任务",
+        vipLabel: "VIP 等级",
+        introLabel: "简介",
+        termsLabel: "条款",
+        kycLabel: "KYC认证",
+        activityRecords: "📋 活动与历史记录",
+        noHistory: "暂无近期历史记录。",
+        backHome: "← 返回首页",
+        freeWithdrawTitle: "🎁 免费提现特权",
+        memDays: "会员天数：",
+        feeStatus: "提现手续费状态：",
+        feeStandard: "标准 9% 手续费（25天后免费）",
+        assetBreakdown: "💼 资产配置明细",
+        flexibleFunds: "灵活资金",
+        refRewards: "推荐奖励 (10%)",
+        aiStrategyHeader: "⚡ Dollar Investment AI 策略",
+        smartExecutor: "🤖 智能策略执行器",
+        investAmount: "投资金额",
+        createOrderBtn: "创建订单 (1~4分钟)",
+        cooldownText: "⏳ 下次订单可用时间：",
+        aiInProgress: "⚡ AI 策略套利进行中...",
+        timeRemaining: "剩余时间：",
+        gridLevelsHeader: "🏆 网格等级（根据团队规模自动解锁）",
+        grid1Title: "网格 1 (4 名成员)",
+        grid2Title: "网格 2 (6 名成员)",
+        grid3Title: "网格 3 (8 名成员)",
+        grid4Title: "网格 4 (10 名成员)",
+        grid5Title: "网格 5 (12 名成员)",
+        grid6Title: "网格 6 (14 名成员)",
+        grid7Title: "网格 7 (16 名成员)",
+        inviteOverview: "🤝 邀请好友概览 (10% 奖励)",
+        totalTeamMem: "总团队成员：",
+        totalTeamBal: "总团队余额：",
+        todayJoiners: "今日新加入：",
+        copyLinkBtn: "复制链接",
+        teamDataOverview: "📊 团队数据概览",
+        teamSizeLabel: "团队规模",
+        totalIncomeLabel: "总收入 (10%)",
+        teamMembersHistory: "👥 团队成员与充值历史",
+        noTeamMembers: "您的链接下暂无注册成员。分享您的链接以赚取 10% 佣金！",
+        personalAccDetails: "👤 个人账户详情",
+        kycLinkMenu: "🆔 身份验证 (KYC)",
+        verifyNow: "立即验证 →",
+        csLinkMenu: "🎧 客户服务",
+        supportHub: "支持中心 →",
+        termsLinkMenu: "📖 使用条款",
+        readMore: "阅读 →",
+        signOutBtn: "登出",
+        deleteAccBtn: "删除账户",
+        selectCurrency: "选择币种",
+        selectNetwork: "选择网络",
+        withdrawAmountLabel: "提现金额",
+        walletAddressLabel: "钱包地址",
+        standardFee: "标准手续费：",
+        feeDeduction: "9% 扣除",
+        estProcessing: "预计处理时间：",
+        processingTimeText: "10分钟至3个工作日",
+        submitWithdrawBtn: "提交提现",
+        certifiedCanadaHeader: "获得加拿大 Dollar Investment AI 计划认证",
+        introP1Bold: "Dollar Investment",
+        introP1Text: "是一家国际认可的、经加拿大认证的金融科技企业（注册号 #882941-Canada）。",
+        introP2: "我们的基础设施在各大全球加密货币和商品市场 24/7 运行。",
+        introP3: "凭借合规认证与客服支持，Dollar Investment 为智能去中心化金融提供可信网关。",
+        kycTitle: "身份验证 (KYC)",
+        kycDesc: "为符合国际金融法规，请拍摄或上传清晰的身份证正反面及真人自拍照。",
+        kycFrontBtn: "📷 拍摄身份证正面",
+        kycBackBtn: "💳 拍摄身份证背面",
+        kycSelfieBtn: "📸 拍摄实时自拍",
+        submitKycBtn: "提交验证",
+        csHeader: "Dollar Investment 支持中心",
+        csDesc: "我们的专业客服团队通过官方电报和 WhatsApp 24/7 为您服务。",
+        termsHeader: "使用条款与监管协议",
+        term1: "1. 企业背景：Dollar Investment 是在加拿大完全注册认证的金融机构。",
+        term2: "2. 奖励与充值：每个验证通过的用户自动获得 $2 USDT 注册奖励。",
+        term3: "3. 提现政策：最低提现 $50 USDT。标准 9% 手续费（25天后 0%）。",
+        term4: "4. AI 策略：自动化套利订单需严格间隔 24 小时。",
+        term5: "5. 身份与合规：强制性的 KYC 身份验证确保平台安全。",
+        depositModalTitle: "充值 USDT",
+        officialWalletAddr: "官方钱包地址",
+        minDepositLabel: "最低充值：",
+        enterDepositAmt: "输入充值金额 ($)",
+        confirmDepositBtn: "确认并充值",
+        navHome: "首页",
+        navAssets: "资产",
+        navVip: "VIP",
+        navTeam: "团队",
+        navMe: "我的"
+      },
+      HI: {
+        brandTitle: "डॉलर इन्वेस्टमेंट",
+        signupTitle: "खाता बनाएँ",
+        signupSubtitle: "डॉलर इन्वेस्टमेंट एआई रणनीति में शामिल हों",
+        emailPhoneLabel: "ईमेल या फोन",
+        passwordLabel: "पासवर्ड",
+        confirmPasswordLabel: "पासवर्ड की पुष्टि करें",
+        referralCodeLabel: "रेफरल लिंक / कोड",
+        signupBtn: "साइन अप करें ($2 बोनस)",
+        alreadyAcc: "क्या आपका खाता पहले से है?",
+        loginLink: "लॉग इन",
+        loginTitle: "वापसी पर स्वागत है",
+        loginSubtitle: "सुरक्षित रूप से अपने खाते में लॉग इन करें",
+        userLoginLabel: "उपयोगकर्ता (ईमेल या फोन)",
+        savePassLabel: "पासवर्ड और आईडी सहेजें",
+        loginBtn: "लॉग इन",
+        noAcc: "खाता नहीं है?",
+        signupLink: "साइन अप",
+        backBtn: "← पीछे",
+        tickerText: "🔥 डॉलर इन्वेस्टमेंट में आपका स्वागत है! 34,000+ से अधिक सक्रिय सदस्य। कनाडा में पंजीकृत। न्यूनतम जमा $25, न्यूनतम निकासी $50।",
+        totalAssets: "कुल संपत्ति (USDT)",
+        recByRef: "रेफरल द्वारा प्राप्त:",
+        depositBtn: "📥 जमा करें",
+        withdrawBtn: "📤 निकासी",
+        topupLabel: "टॉप अप",
+        withdrawLabel: "निकासी",
+        inviteLabel: "आमंत्रित",
+        tasksLabel: "टास्क",
+        vipLabel: "VIP स्तर",
+        introLabel: "परिचय",
+        termsLabel: "शर्तें",
+        kycLabel: "KYC",
+        activityRecords: "📋 गतिविधि और इतिहास रिकॉर्ड",
+        noHistory: "कोई हालिया इतिहास दर्ज नहीं है।",
+        backHome: "← होम पर वापस जाएं",
+        freeWithdrawTitle: "🎁 मुफ्त निकासी विशेषाधिकार",
+        memDays: "सदस्यता के दिन:",
+        feeStatus: "शुल्क स्थिति:",
+        feeStandard: "मानक 9% शुल्क (25 दिन बाद मुफ्त)",
+        assetBreakdown: "💼 संपत्ति आवंटन विवरण",
+        flexibleFunds: "लचीले फंड",
+        refRewards: "रेफरल पुरस्कार (10%)",
+        aiStrategyHeader: "⚡ डॉलर इन्वेस्टमेंट एआई रणनीति",
+        smartExecutor: "🤖 स्मार्ट रणनीति निष्पादक",
+        investAmount: "निवेश राशि",
+        createOrderBtn: "ऑर्डर बनाएं (1~4 मिनट)",
+        cooldownText: "⏳ अगला ऑर्डर उपलब्ध:",
+        aiInProgress: "⚡ एआई रणनीति आर्बिटrage प्रगति पर है...",
+        timeRemaining: "शेष समय:",
+        gridLevelsHeader: "🏆 ग्रिड स्तर (टीम के आकार द्वारा अनलॉक)",
+        grid1Title: "ग्रिड 1 (4 सदस्य)",
+        grid2Title: "ग्रिड 2 (6 सदस्य)",
+        grid3Title: "ग्रिड 3 (8 सदस्य)",
+        grid4Title: "ग्रिड 4 (10 सदस्य)",
+        grid5Title: "ग्रिड 5 (12 सदस्य)",
+        grid6Title: "ग्रिड 6 (14 सदस्य)",
+        grid7Title: "ग्रिड 7 (16 सदस्य)",
+        inviteOverview: "🤝 मित्र आमंत्रण अवलोकन (10% बोनस)",
+        totalTeamMem: "कुल टीम सदस्य:",
+        totalTeamBal: "कुल टीम शेष:",
+        todayJoiners: "आज के नए सदस्य:",
+        copyLinkBtn: "लिंक कॉपी करें",
+        teamDataOverview: "📊 टीम डेटा अवलोकन",
+        teamSizeLabel: "टीम का आकार",
+        totalIncomeLabel: "कुल आय (10%)",
+        teamMembersHistory: "👥 टीम सदस्य और जमा इतिहास",
+        noTeamMembers: "आपके लिंक के तहत कोई सदस्य पंजीकृत नहीं है।",
+        personalAccDetails: "👤 व्यक्तिगत खाता विवरण",
+        kycLinkMenu: "🆔 पहचान सत्यापन (KYC)",
+        verifyNow: "अभी सत्यापित करें →",
+        csLinkMenu: "🎧 ग्राहक सेवा",
+        supportHub: "सहायता केंद्र →",
+        termsLinkMenu: "📖 उपयोग की शर्तें",
+        readMore: "पढ़ें →",
+        signOutBtn: "साइन आउट",
+        deleteAccBtn: "खाता हटाएं",
+        selectCurrency: "मुद्रा चुनें",
+        selectNetwork: "नेटवर्क चुनें",
+        withdrawAmountLabel: "निकासी राशि",
+        walletAddressLabel: "वॉलेट पता",
+        standardFee: "मानक शुल्क:",
+        feeDeduction: "9% कटौती",
+        estProcessing: "अनुमानित समय:",
+        processingTimeText: "10 मिनट से 3 कार्य दिवस",
+        submitWithdrawBtn: "निकासी जमा करें",
+        certifiedCanadaHeader: "कनाडा डॉलर इन्वेस्टमेंट एआई योजना द्वारा प्रमाणित",
+        introP1Bold: "डॉलर इन्वेस्टमेंट",
+        introP1Text: "एक अंतरराष्ट्रीय स्तर पर मान्यता प्राप्त, कनाडा-प्रमाणित वित्तीय तकनीक उद्यम है।",
+        introP2: "हमारा बुनियादी ढांचा वैश्विक क्रिप्टो और जिंस बाजारों में 24/7 काम करता है।",
+        introP3: "प्रमाणित अनुपालन के साथ, डॉलर इन्वेस्टमेंट एक विश्वसनीय मंच प्रदान करता है।",
+        kycTitle: "पहचान सत्यापन (KYC)",
+        kycDesc: "नियामक मानकों का पालन करने के लिए अपनी आईडी और लाइव सेल्फी की स्पष्ट तस्वीरें अपलोड करें।",
+        kycFrontBtn: "📷 आईडी फ्रंट तस्वीर लें",
+        kycBackBtn: "💳 आईडी बैक तस्वीर लें",
+        kycSelfieBtn: "📸 लाइव सेल्फी लें",
+        submitKycBtn: "सत्यापन जमा करें",
+        csHeader: "डॉलर इन्वेस्टमेंट सहायता केंद्र",
+        csDesc: "हमारी सहायता टीम टेलीग्राम और व्हाट्सएप पर 24/7 उपलब्ध है।",
+        termsHeader: "उपयोग की शर्तें और विनियामक समझौता",
+        term1: "1. पृष्ठभूमि: डॉलर इन्वेस्टमेंट कनाडा में पंजीकृत वित्तीय संस्थान है।",
+        term2: "2. बोनस और जमा: प्रत्येक सत्यापित उपयोगकर्ता को $2 USDT पंजीकरण बोनस मिलता है।",
+        term3: "3. निकासी नीति: न्यूनतम निकासी $50 USDT है।",
+        term4: "4. एआई रणनीति: स्वचालित आर्बिट्रेज ऑर्डर के बीच 24 घंटे का अंतराल आवश्यक है।",
+        term5: "5. अनुपालन: अनिवार्य केवाईसी सत्यापन सुरक्षा सुनिश्चित करता है।",
+        depositModalTitle: "USDT जमा करें",
+        officialWalletAddr: "आधिकारिक वॉलेट पता",
+        minDepositLabel: "न्यूनतम जमा:",
+        enterDepositAmt: "जमा राशि दर्ज करें ($)",
+        confirmDepositBtn: "पुष्टि करें और जमा करें",
+        navHome: "होम",
+        navAssets: "संपत्ति",
+        navVip: "VIP",
+        navTeam: "टीम",
+        navMe: "मी"
+      },
+      PT: {
+        brandTitle: "Dollar Investment",
+        signupTitle: "Criar Conta",
+        signupSubtitle: "Junte-se à Estratégia de IA Dollar Investment",
+        emailPhoneLabel: "E-mail ou Telefone",
+        passwordLabel: "Senha",
+        confirmPasswordLabel: "Confirmar Senha",
+        referralCodeLabel: "Link / Código de Indicação",
+        signupBtn: "Cadastrar (Bônus $2)",
+        alreadyAcc: "Já tem uma conta?",
+        loginLink: "Entrar",
+        loginTitle: "Bem-vindo de volta",
+        loginSubtitle: "Entre na sua conta com segurança",
+        userLoginLabel: "Usuário (E-mail ou Telefone)",
+        savePassLabel: "Salvar senha e ID",
+        loginBtn: "Entrar",
+        noAcc: "Não tem uma conta?",
+        signupLink: "Cadastrar",
+        backBtn: "← Voltar",
+        tickerText: "🔥 Bem-vindo ao Dollar Investment! Mais de 34.000+ membros ativos. Registrado no Canadá. Depósito mín. $25, Retirada mín. $50.",
+        totalAssets: "Ativos Totais (USDT)",
+        recByRef: "Recebido por Indicação:",
+        depositBtn: "📥 Depositar",
+        withdrawBtn: "📤 Retirar",
+        topupLabel: "Recarregar",
+        withdrawLabel: "Retirar",
+        inviteLabel: "Convidar",
+        tasksLabel: "Tarefas",
+        vipLabel: "Nível VIP",
+        introLabel: "Intro",
+        termsLabel: "Termos",
+        kycLabel: "KYC",
+        activityRecords: "📋 Registros de Atividade e Histórico",
+        noHistory: "Nenhum histórico recente registrado.",
+        backHome: "← Voltar ao Início",
+        freeWithdrawTitle: "🎁 Privilégio de Retirada Gratuita",
+        memDays: "Dias de Assinatura:",
+        feeStatus: "Status da Taxa:",
+        feeStandard: "Taxa padrão de 9% (Grátis após 25 dias)",
+        assetBreakdown: "💼 Divisão de Ativos",
+        flexibleFunds: "Fundos Flexíveis",
+        refRewards: "Recomensas de Indicação (10%)",
+        aiStrategyHeader: "⚡ Estratégia de IA Dollar Investment",
+        smartExecutor: "🤖 Executor de Estratégia Inteligente",
+        investAmount: "Valor do Investimento",
+        createOrderBtn: "Criar Ordem (1~4 mins)",
+        cooldownText: "⏳ Próxima ordem disponível em:",
+        aiInProgress: "⚡ Arbitragem de IA em andamento...",
+        timeRemaining: "Tempo restante:",
+        gridLevelsHeader: "🏆 Níveis de Grade (Desbloqueados por tamanho da equipe)",
+        grid1Title: "Grade 1 (4 Membros)",
+        grid2Title: "Grade 2 (6 Membros)",
+        grid3Title: "Grade 3 (8 Membros)",
+        grid4Title: "Grade 4 (10 Membros)",
+        grid5Title: "Grade 5 (12 Membros)",
+        grid6Title: "Grade 6 (14 Membros)",
+        grid7Title: "Grade 7 (16 Membros)",
+        inviteOverview: "🤝 Visão Geral de Convites (Bônus de 10%)",
+        totalTeamMem: "Total de Membros da Equipe:",
+        totalTeamBal: "Saldo Total da Equipe:",
+        todayJoiners: "Novos hoje:",
+        copyLinkBtn: "Copiar Link",
+        teamDataOverview: "📊 Visão Geral da Equipe",
+        teamSizeLabel: "Tamanho da Equipe",
+        totalIncomeLabel: "Renda Total (10%)",
+        teamMembersHistory: "👥 Membros da Equipe e Histórico de Depósito",
+        noTeamMembers: "Nenhum membro registrado sob seu link ainda.",
+        personalAccDetails: "👤 Detalhes da Conta Pessoal",
+        kycLinkMenu: "🆔 Verificação de Identidad (KYC)",
+        verifyNow: "Verificar Agora →",
+        csLinkMenu: "🎧 Atendimento ao Cliente",
+        supportHub: "Central de Suporte →",
+        termsLinkMenu: "📖 Termos de Uso",
+        readMore: "Ler →",
+        signOutBtn: "Sair",
+        deleteAccBtn: "Excluir Conta",
+        selectCurrency: "Selecionar Moeda",
+        selectNetwork: "Selecionar Rede",
+        withdrawAmountLabel: "Valor da Retirada",
+        walletAddressLabel: "Endereço da Carteira",
+        standardFee: "Taxa Padrão:",
+        feeDeduction: "Dedução de 9%",
+        estProcessing: "Tempo Estimado:",
+        processingTimeText: "10 minutos a 3 dias úteis",
+        submitWithdrawBtn: "Enviar Retirada",
+        certifiedCanadaHeader: "Certificado pelo Plano de IA do Canadá",
+        introP1Bold: "Dollar Investment",
+        introP1Text: "é uma empresa de tecnologia financeira reconhecida internacionalmente e certificada no Canadá.",
+        introP2: "Nossa infraestrutura opera 24/7 nos principais mercados globais.",
+        introP3: "Com conformidade regulatória certificada, o Dollar Investment oferece um portal confiável.",
+        kycTitle: "Verificação de Identidade (KYC)",
+        kycDesc: "Para cumprir regulamentos financeiros, envie imagens claras da sua identidade e uma selfie.",
+        kycFrontBtn: "📷 Capturar Frente do ID",
+        kycBackBtn: "💳 Capturar Verso do ID",
+        kycSelfieBtn: "📸 Capturar Selfie ao Vivo",
+        submitKycBtn: "Enviar Verificação",
+        csHeader: "Central de Suporte Dollar Investment",
+        csDesc: "Nossa equipe de suporte está disponível 24/7 via Telegram e WhatsApp.",
+        termsHeader: "Termos de Uso e Acordo Regulatório",
+        term1: "1. Antecedentes: Dollar Investment é uma instituição financeira registrada no Canadá.",
+        term2: "2. Bônus e Depósitos: Cada usuário verificado recebe um bônus automático de $2 USDT.",
+        term3: "3. Política de Retirada: Retirada mínima de $50 USDT. Taxa de 9% (0% após 25 dias).",
+        term4: "4. Estratégia de IA: Ordens de arbitragem exigem um intervalo estrito de 24 horas.",
+        term5: "5. Conformidade: A verificação KYC obrigatória garante a segurança da plataforma.",
+        depositModalTitle: "Depositar USDT",
+        officialWalletAddr: "Endereço de Carteira Oficial",
+        minDepositLabel: "Depósito Mínimo:",
+        enterDepositAmt: "Insira o valor do depósito ($)",
+        confirmDepositBtn: "Confirmar e Depositar",
+        navHome: "Início",
+        navAssets: "Ativos",
+        navVip: "VIP",
+        navTeam: "Equipe",
+        navMe: "Perfil"
+      },
+      RU: {
+        brandTitle: "Dollar Investment",
+        signupTitle: "Создать аккаунт",
+        signupSubtitle: "Присоединяйтесь к AI стратегии Dollar Investment",
+        emailPhoneLabel: "Email или Телефон",
+        passwordLabel: "Пароль",
+        confirmPasswordLabel: "Подтвердите пароль",
+        referralCodeLabel: "Реферальная ссылка / Код",
+        signupBtn: "Регистрация (Бонус $2)",
+        alreadyAcc: "Уже есть аккаунт?",
+        loginLink: "Войти",
+        loginTitle: "С возвращением",
+        loginSubtitle: "Безопасный вход в ваш аккаунт",
+        userLoginLabel: "Пользователь (Email или Телефон)",
+        savePassLabel: "Сохранить пароль и ID",
+        loginBtn: "Войти",
+        noAcc: "Нет аккаунта?",
+        signupLink: "Регистрация",
+        backBtn: "← Назад",
+        tickerText: "🔥 Добро пожаловать в Dollar Investment! Более 34 000+ активных участников. Зарегистрировано в Канаде. Мин. депозит $25, Мин. вывод $50.",
+        totalAssets: "Всего активов (USDT)",
+        recByRef: "Получено по рефералам:",
+        depositBtn: "📥 Депозит",
+        withdrawBtn: "📤 Вывод",
+        topupLabel: "Пополнить",
+        withdrawLabel: "Вывод",
+        inviteLabel: "Пригласить",
+        tasksLabel: "Задачи",
+        vipLabel: "VIP Уровень",
+        introLabel: "Интро",
+        termsLabel: "Условия",
+        kycLabel: "KYC",
+        activityRecords: "📋 Журнал активности и истории",
+        noHistory: "История операций пуста.",
+        backHome: "← На главную",
+        freeWithdrawTitle: "🎁 Привилегия бесплатного вывода",
+        memDays: "Дней членства:",
+        feeStatus: "Статус комиссии:",
+        feeStandard: "Стандартная комиссия 9% (Бесплатно через 25 дней)",
+        assetBreakdown: "💼 Распределение активов",
+        flexibleFunds: "Гибкие средства",
+        refRewards: "Реферальные вознаграждения (10%)",
+        aiStrategyHeader: "⚡ AI Стратегия Dollar Investment",
+        smartExecutor: "🤖 Исполнитель умной стратегии",
+        investAmount: "Сумма инвестиций",
+        createOrderBtn: "Создать ордер (1~4 мин)",
+        cooldownText: "⏳ Следующий ордер доступен через:",
+        aiInProgress: "⚡ Арбитраж по AI стратегии выполняется...",
+        timeRemaining: "Осталось времени:",
+        gridLevelsHeader: "🏆 Уровни сетки (Авто-разблокировка по размеру команды)",
+        grid1Title: "Сетка 1 (4 участника)",
+        grid2Title: "Сетка 2 (6 участников)",
+        grid3Title: "Сетка 3 (8 участников)",
+        grid4Title: "Сетка 4 (10 участников)",
+        grid5Title: "Сетка 5 (12 участников)",
+        grid6Title: "Сетка 6 (14 участников)",
+        grid7Title: "Сетка 7 (16 участников)",
+        inviteOverview: "🤝 Обзор приглашений (Бонус 10%)",
+        totalTeamMem: "Всего участников команды:",
+        totalTeamBal: "Общий баланс команды:",
+        todayJoiners: "Новых за сегодня:",
+        copyLinkBtn: "Копировать ссылку",
+        teamDataOverview: "📊 Обзор данных команды",
+        teamSizeLabel: "Размер команды",
+        totalIncomeLabel: "Общий доход (10%)",
+        teamMembersHistory: "👥 Участники команды и история депозитов",
+        noTeamMembers: "По вашей ссылке еще нет зарегистрированных участников.",
+        personalAccDetails: "👤 Детали личного аккаунта",
+        kycLinkMenu: "🆔 Верификация личности (KYC)",
+        verifyNow: "Пройти →",
+        csLinkMenu: "🎧 Служба поддержки",
+        supportHub: "Центр поддержки →",
+        termsLinkMenu: "📖 Условия использования",
+        readMore: "Читать →",
+        signOutBtn: "Выйти",
+        deleteAccBtn: "Удалить аккаунт",
+        selectCurrency: "Выберите валюту",
+        selectNetwork: "Выберите сеть",
+        withdrawAmountLabel: "Сумма вывода",
+        walletAddressLabel: "Адрес кошелька",
+        standardFee: "Стандартная комиссия:",
+        feeDeduction: "Удержание 9%",
+        estProcessing: "Расчетное время:",
+        processingTimeText: "От 10 минут до 3 рабочих дней",
+        submitWithdrawBtn: "Подать заявку на вывод",
+        certifiedCanadaHeader: "Сертифицировано канадским планом AI инвестиций",
+        introP1Bold: "Dollar Investment",
+        introP1Text: "— это признанное международное финансово-технологическое предприятие, сертифицированное в Канаде.",
+        introP2: "Наша инфраструктура работает круглосуточно на ведущих мировых криптовалютных и сырьевых рынках.",
+        introP3: "Благодаря строгому соблюдению нормативных требований, Dollar Investment предоставляет надежный шлюз.",
+        kycTitle: "Верификация личности (KYC)",
+        kycDesc: "В соответствии с нормативными требованиями, загрузите четкие фото удостоверения личности и селфи.",
+        kycFrontBtn: "📷 Сфотографировать лицевую сторону ID",
+        kycBackBtn: "💳 Сфотографировать обратную сторону ID",
+        kycSelfieBtn: "📸 Сделать селфи",
+        submitKycBtn: "Отправить верификацию",
+        csHeader: "Центр поддержки Dollar Investment",
+        csDesc: "Наша служба поддержки доступна 24/7 через Telegram и WhatsApp.",
+        termsHeader: "Условия использования и регуляторное соглашение",
+        term1: "1. Информация о компании: Dollar Investment — финансовое учреждение, зарегистрированное в Канаде.",
+        term2: "2. Бонусы и депозиты: Каждый верифицированный пользователь получает бонус $2 USDT.",
+        term3: "3. Политика вывода: Минимальный вывод $50 USDT. Комиссия 9% (0% через 25 дней).",
+        term4: "4. AI стратегия: Арбитражные ордера требуют строгого интервала в 24 часа.",
+        term5: "5. Безопасность: Обязательная верификация KYC гарантирует безопасность платформы.",
+        depositModalTitle: "Депозит USDT",
+        officialWalletAddr: "Официальный адрес кошелька",
+        minDepositLabel: "Минимальный депозит:",
+        enterDepositAmt: "Введите сумму депозита ($)",
+        confirmDepositBtn: "Подтвердить и внести депозит",
+        navHome: "Главная",
+        navAssets: "Активы",
+        navVip: "VIP",
+        navTeam: "Команда",
+        navMe: "Профиль"
+      }
+    };
+
+    let currentLang = 'EN';
+
+    function changeLanguage(langCode) {
+      currentLang = langCode;
+      const dict = translations[langCode] || translations['EN'];
+      
+      // Update all elements with data-i18n attribute
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) {
+          el.textContent = dict[key];
+        }
+      });
+    }
+
     const STORAGE_KEY = 'dollar_investment_user_data';
     
     let appData = {
       user: '',
       userId: 34001,
-      balance: 2.00,
+      balance: 0.00,
+      signupBonusCredited: false,
+      referredBy: null,
       referralEarned: 0.00,
       joinTimestamp: Date.now(),
       kycStatus: 'Pending',
@@ -1265,15 +2551,23 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       loadState();
-      document.getElementById('signupReferralInput').value = "https://dollar-investment-offical.github.io/https-dollar-investment-app.com-signup-ref-User-391126/";
-      document.getElementById('homeReferralLinkText').textContent = "https://dollar-investment-offical.github.io/https-dollar-investment-app.com-signup-ref-User-391126/";
+      const baseRefLink = window.location.origin + window.location.pathname;
+      const refLink = baseRefLink + '?ref=' + encodeURIComponent(appData.userId);
+      
+      const refInput = document.getElementById('signupReferralInput');
+      if (refInput) refInput.value = refLink;
+      
+      const refText = document.getElementById('homeReferralLinkText');
+      if (refText) refText.textContent = refLink;
 
       const savedUser = localStorage.getItem('dollar_saved_user');
       const savedPass = localStorage.getItem('dollar_saved_pass');
 
       if (savedUser && savedPass) {
-        document.getElementById('loginUser').value = savedUser;
-        document.getElementById('loginPassword').value = savedPass;
+        const uInp = document.getElementById('loginUser');
+        const pInp = document.getElementById('loginPassword');
+        if (uInp) uInp.value = savedUser;
+        if (pInp) pInp.value = savedPass;
       }
 
       updateUI();
@@ -1283,36 +2577,48 @@
 
     function showToast(msg) {
       const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 3000);
+      if (t) {
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+      }
     }
 
     function togglePasswordVisibility(inputId, iconElem) {
       const input = document.getElementById(inputId);
-      if (input.type === "password") {
-        input.type = "text";
-        iconElem.textContent = "🙈";
-      } else {
-        input.type = "password";
-        iconElem.textContent = "👁️";
+      if (input) {
+        if (input.type === "password") {
+          input.type = "text";
+          iconElem.textContent = "🙈";
+        } else {
+          input.type = "password";
+          iconElem.textContent = "👁️";
+        }
       }
     }
 
     function showLoginScreen() {
-      document.getElementById('signupScreen').classList.add('hidden');
-      document.getElementById('loginScreen').classList.remove('hidden');
+      const su = document.getElementById('signupScreen');
+      const li = document.getElementById('loginScreen');
+      if (su) su.classList.add('hidden');
+      if (li) li.classList.remove('hidden');
     }
 
     function showSignupScreen() {
-      document.getElementById('loginScreen').classList.add('hidden');
-      document.getElementById('signupScreen').classList.remove('hidden');
+      const li = document.getElementById('loginScreen');
+      const su = document.getElementById('signupScreen');
+      if (li) li.classList.add('hidden');
+      if (su) su.classList.remove('hidden');
     }
 
     function handleSignUp() {
-      const email = document.getElementById('signupEmailPhone').value.trim();
-      const pass = document.getElementById('signupPassword').value;
-      const confirmPass = document.getElementById('signupConfirmPassword').value;
+      const emailElem = document.getElementById('signupEmailPhone');
+      const passElem = document.getElementById('signupPassword');
+      const confirmElem = document.getElementById('signupConfirmPassword');
+
+      const email = emailElem ? emailElem.value.trim() : '';
+      const pass = passElem ? passElem.value : '';
+      const confirmPass = confirmElem ? confirmElem.value : '';
 
       if (!email || !pass) {
         alert("Please fill in email/phone and password.");
@@ -1325,24 +2631,42 @@
       }
 
       appData.user = email;
-      if (!appData.balance || appData.balance < 2) {
-        appData.balance = 2.00; // $2 Sign-up bonus guaranteed
+      if (typeof appData.balance !== 'number') appData.balance = 0;
+      if (!appData.signupBonusCredited) {
+        appData.balance += 2.00;
+        appData.signupBonusCredited = true;
+        if (!appData.historyRecords) appData.historyRecords = [];
+        appData.historyRecords.unshift({
+          type: 'Signup Welcome Bonus', amount: 2.00, status: 'Success',
+          time: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+        });
       }
+      // A referral ID is captured from ?ref=... . Linking different users and paying
+      // commissions requires a server-side account database; browser storage alone cannot do that safely.
+      const referralId = new URLSearchParams(window.location.search).get('ref');
+      if (referralId && String(referralId) !== String(appData.userId)) appData.referredBy = referralId;
+      if (!appData.teamMembers) appData.teamMembers = [];
+
       saveState();
 
       localStorage.setItem('dollar_saved_user', email);
       localStorage.setItem('dollar_saved_pass', pass);
 
-      showToast("Account created! $2 USDT Bonus credited.");
-      setTimeout(() => {
-        document.getElementById('signupScreen').classList.add('hidden');
-        updateUI();
-      }, 1000);
+      showToast("Account created successfully! $2 USDT Bonus credited.");
+      
+      const su = document.getElementById('signupScreen');
+      const li = document.getElementById('loginScreen');
+      if (su) su.classList.add('hidden');
+      if (li) li.classList.add('hidden');
+      updateUI();
     }
 
     function handleLogIn() {
-      const user = document.getElementById('loginUser').value.trim();
-      const pass = document.getElementById('loginPassword').value;
+      const userElem = document.getElementById('loginUser');
+      const passElem = document.getElementById('loginPassword');
+
+      const user = userElem ? userElem.value.trim() : '';
+      const pass = passElem ? passElem.value : '';
 
       if (!user || !pass) {
         alert("Please enter credentials.");
@@ -1351,16 +2675,21 @@
 
       appData.user = user;
       if (!appData.balance || appData.balance < 2) {
-        appData.balance = 2.00; // Ensure baseline bonus if new session
+        appData.balance = 2.00;
       }
+
       saveState();
 
       localStorage.setItem('dollar_saved_user', user);
       localStorage.setItem('dollar_saved_pass', pass);
 
       showToast("Logged in successfully!");
-      document.getElementById('loginScreen').classList.add('hidden');
-      document.getElementById('signupScreen').classList.add('hidden');
+      
+      const su = document.getElementById('signupScreen');
+      const li = document.getElementById('loginScreen');
+      if (su) su.classList.add('hidden');
+      if (li) li.classList.add('hidden');
+      
       updateUI();
     }
 
@@ -1379,12 +2708,13 @@
       }
     }
 
-    // Tab Navigation & Header Controls
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
 
-      document.getElementById(tabId).classList.add('active');
+      const targetTab = document.getElementById(tabId);
+      if (targetTab) targetTab.classList.add('active');
+
       const navBtn = document.getElementById(tabId.replace('tab-', 'nav-'));
       if (navBtn) navBtn.classList.add('active');
 
@@ -1395,7 +2725,8 @@
 
     function openSubPage(pageId, title) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.getElementById(pageId).classList.add('active');
+      const sub = document.getElementById(pageId);
+      if (sub) sub.classList.add('active');
       document.getElementById('mainHeader').style.display = 'none';
       document.getElementById('universalHeaderTitle').textContent = title;
       document.getElementById('universalHeader').style.display = 'flex';
@@ -1405,7 +2736,6 @@
       switchTab('tab-home');
     }
 
-    // Deposit System
     function openDepositModal() { document.getElementById('depositModal').classList.add('active'); }
     function closeDepositModal() { document.getElementById('depositModal').classList.remove('active'); }
 
@@ -1426,41 +2756,50 @@
 
     function submitDepositPayment() {
       const depositAmt = parseFloat(document.getElementById('depositAmountInput').value) || 0;
-
-      if (depositAmt < 25) {
+      if (!Number.isFinite(depositAmt) || depositAmt < 25) {
         alert("Minimum deposit amount is $25 USDT.");
         return;
       }
-
+      const fee = Number((depositAmt * 0.09).toFixed(2));
+      const netAmount = Number((depositAmt - fee).toFixed(2));
       closeDepositModal();
-      showToast("Deposit submitted! Status: Processing (2 minutes wait)...");
-
       const now = new Date();
       const timeStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-
       const record = {
-        type: "Deposit",
-        amount: depositAmt,
-        status: "Processing",
-        time: timeStr
+        id: 'dep_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+        type: 'Deposit (9% fee deducted)',
+        amount: netAmount,
+        grossAmount: depositAmt,
+        fee: fee,
+        netAmount: netAmount,
+        status: 'Pending Verification',
+        time: timeStr,
+        note: 'Gross: ' + depositAmt.toFixed(2) + ' USDT; 9% fee: ' + fee.toFixed(2) + ' USDT; net: ' + netAmount.toFixed(2) + ' USDT'
       };
-
+      if (!appData.historyRecords) appData.historyRecords = [];
       appData.historyRecords.unshift(record);
       saveState();
       renderHistory();
-
-      // 2 Minutes Processing Window Timer
-      setTimeout(() => {
-        record.status = "Success";
-        appData.balance += depositAmt;
-        saveState();
-        renderHistory();
-        updateUI();
-        showToast("Success! $" + depositAmt.toFixed(2) + " USDT deposited.");
-      }, 120000);
+      updateUI();
+      showToast('Deposit request saved as PENDING. Expected review: 5 minutes to 1 hour. Funds will not be credited until payment is verified.');
+      alert('Deposit request submitted. Status: Pending Verification. Expected review time is 5 minutes to 1 hour. Net credit after 9% fee: ' + netAmount.toFixed(2) + ' USDT. No balance or referral reward is credited until a trusted payment verifier confirms the transaction.');
     }
 
-    // Withdrawal System
+    // Called only by a trusted backend after on-chain/payment verification.
+    // Do not call this from a public button or a client-side timer.
+    function applyVerifiedDeposit(recordId, verifiedByServer) {
+      if (verifiedByServer !== true) return false;
+      const record = (appData.historyRecords || []).find(r => r.id === recordId);
+      if (!record || record.status !== 'Pending Verification') return false;
+      record.status = 'Success';
+      appData.balance = Number((appData.balance + Number(record.netAmount || record.amount || 0)).toFixed(2));
+      record.verifiedAt = new Date().toISOString();
+      saveState();
+      renderHistory();
+      updateUI();
+      return true;
+    }
+
     function handleWithdrawSubmit() {
       const amt = parseFloat(document.getElementById('withdrawAmountInput').value) || 0;
       const addr = document.getElementById('withdrawAddressInput').value.trim();
@@ -1490,6 +2829,7 @@
       const now = new Date();
       const timeStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
+      if (!appData.historyRecords) appData.historyRecords = [];
       appData.historyRecords.unshift({
         type: `Withdrawal (${(feePct*100)}% Fee)`,
         amount: finalAmt,
@@ -1504,17 +2844,20 @@
       switchTab('tab-home');
     }
 
-    // VIP Percentage Selectors & Smart Strategy Order Processing
     function selectInvestmentPct(pct) {
       document.querySelectorAll('.pct-btn').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
+      if (event && event.target) event.target.classList.add('active');
       const calcAmt = (appData.balance * (pct / 100)).toFixed(2);
       document.getElementById('homeInvestInput').value = calcAmt;
     }
 
     function checkCooldown() {
-      const elapsed = Date.now() - appData.lastOrderTimestamp;
+      const elapsed = Date.now() - (appData.lastOrderTimestamp || 0);
       const cooldownMs = 24 * 60 * 60 * 1000;
+
+      const notice = document.getElementById('cooldownNotice');
+      const timer = document.getElementById('cooldownTimer');
+      const btn = document.getElementById('btnCreateOrder');
 
       if (elapsed < cooldownMs) {
         const remainingMs = cooldownMs - elapsed;
@@ -1522,14 +2865,18 @@
         const mins = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
         const secs = Math.floor((remainingMs % (1000 * 60)) / 1000).toString().padStart(2, '0');
 
-        document.getElementById('cooldownNotice').style.display = 'block';
-        document.getElementById('cooldownTimer').textContent = `${hours}:${mins}:${secs}`;
-        document.getElementById('btnCreateOrder').disabled = true;
-        document.getElementById('btnCreateOrder').style.opacity = '0.5';
+        if (notice) notice.style.display = 'block';
+        if (timer) timer.textContent = `${hours}:${mins}:${secs}`;
+        if (btn) {
+          btn.disabled = true;
+          btn.style.opacity = '0.5';
+        }
       } else {
-        document.getElementById('cooldownNotice').style.display = 'none';
-        document.getElementById('btnCreateOrder').disabled = false;
-        document.getElementById('btnCreateOrder').style.opacity = '1';
+        if (notice) notice.style.display = 'none';
+        if (btn) {
+          btn.disabled = false;
+          btn.style.opacity = '1';
+        }
       }
     }
 
@@ -1550,28 +2897,31 @@
       document.getElementById('btnCreateOrder').disabled = true;
 
       const pairs = ["BTC/USDT", "ETH/USDT", "CRUDE_OIL/USDT"];
-      let countdown = 180; // 3 Minutes execution simulation
+      let countdown = 180;
 
       const timerInterval = setInterval(() => {
         countdown--;
         const m = Math.floor(countdown / 60).toString().padStart(2, '0');
         const s = (countdown % 60).toString().padStart(2, '0');
-        document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+        const tDisp = document.getElementById('timerDisplay');
+        if (tDisp) tDisp.textContent = `${m}:${s}`;
 
         const randomPair = pairs[Math.floor(Math.random() * pairs.length)];
-        document.getElementById('livePairStatus').textContent = `Executing Smart Strategy Arbitrage on ${randomPair}...`;
+        const pairStat = document.getElementById('livePairStatus');
+        if (pairStat) pairStat.textContent = `Executing Smart Strategy Arbitrage on ${randomPair}...`;
 
         if (countdown <= 0) {
           clearInterval(timerInterval);
           document.getElementById('tradingSimulationBox').style.display = 'none';
 
-          const profit = investAmt * 0.02; // 2% Guaranteed Profit
+          const profit = investAmt * 0.02;
           appData.balance += profit;
           appData.lastOrderTimestamp = Date.now();
 
           const now = new Date();
           const timeStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
+          if (!appData.historyRecords) appData.historyRecords = [];
           appData.historyRecords.unshift({
             type: "AI Strategy Trading Return (+2%)",
             amount: profit,
@@ -1588,7 +2938,6 @@
       }, 1000);
     }
 
-    // Real Camera Capture & Strict KYC Validation Logic
     function triggerCameraInput(type) {
       if (type === 'Front') document.getElementById('inputKycFront').click();
       if (type === 'Back') document.getElementById('inputKycBack').click();
@@ -1629,33 +2978,34 @@
       switchTab('tab-me');
     }
 
-    // Referral Copy Link
     function copyReferralLink() {
       const linkText = document.getElementById('homeReferralLinkText').textContent;
       navigator.clipboard.writeText(linkText);
-      showToast("Referral link copied!");
+      showToast("Referral link copied successfully!");
     }
 
-    // Render Global History List
     function renderHistory() {
       const container = document.getElementById('globalHistoryList');
+      if (!container) return;
       if (!appData.historyRecords || appData.historyRecords.length === 0) {
-        container.innerHTML = '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;">No recent history recorded.</div>';
+        container.innerHTML = '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;" data-i18n="noHistory">No recent history recorded.</div>';
+        changeLanguage(currentLang);
         return;
       }
 
       let html = '';
       appData.historyRecords.forEach(r => {
-        const isGreen = r.status.includes('Success') || r.type.includes('Deposit') || r.type.includes('Return');
+        const isGreen = r.status.includes('Success') || r.type.includes('Return') || r.type.includes('Bonus');
         const badgeColor = isGreen ? 'var(--accent-green)' : 'var(--accent-yellow)';
         html += `
           <div class="list-item">
             <div>
               <div style="font-weight:800; color:#fff;">${r.type}</div>
               <div style="font-size:11px; color:var(--text-muted); font-weight:600;">${r.time}</div>
+              ${r.note ? `<div style="font-size:10px; color:var(--text-muted); margin-top:3px;">${r.note}</div>` : ''}
             </div>
             <div style="text-align:right;">
-              <div style="font-weight:900; color:#fff;">$${r.amount.toFixed(2)} USDT</div>
+              <div style="font-weight:900; color:#fff;">$${Number(r.amount || 0).toFixed(2)} USDT</div>
               <div style="font-weight:800; color:${badgeColor}; font-size:11px;">${r.status}</div>
             </div>
           </div>
@@ -1664,51 +3014,83 @@
       container.innerHTML = html;
     }
 
-    // Global UI State Update
+    function renderTeamMembers() {
+      const container = document.getElementById('teamMemberList');
+      if (!container) return;
+      if (!appData.teamMembers || appData.teamMembers.length === 0) {
+        container.innerHTML = '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:12px;" data-i18n="noTeamMembers">No team members registered under your link yet. Share your link to earn 10% deposit commissions!</div>';
+        changeLanguage(currentLang);
+        return;
+      }
+
+      let html = '';
+      appData.teamMembers.forEach((m, idx) => {
+        html += `
+          <div class="list-item">
+            <div>
+              <div style="font-weight:800; color:var(--accent-cyan);">Member #${391127 + idx} (${m.name})</div>
+              <div style="font-size:11px; color:var(--text-muted);">Joined: ${m.time}</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-weight:900; color:var(--accent-green);">Active Chain User</div>
+              <div style="font-size:11px; color:#ffd166;">10% Commission Active</div>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
     function updateUI() {
       const balanceVal = appData.balance || 0;
       const refEarnedVal = appData.referralEarned || 0;
 
-      document.getElementById('homeTotalAssetsDisplay').textContent = balanceVal.toFixed(2);
-      document.getElementById('totalBalanceDisplay').textContent = balanceVal.toFixed(2);
-      document.getElementById('flexibleFundsDisplay').textContent = balanceVal.toFixed(2) + " USDT";
-      document.getElementById('homeInvestInput').value = balanceVal.toFixed(2);
+      const setT = (id, txt) => { const e = document.getElementById(id); if (e) e.textContent = txt; };
+      const setV = (id, txt) => { const e = document.getElementById(id); if (e) e.value = txt; };
 
-      document.getElementById('homeReferralEarnedDisplay').textContent = "$" + refEarnedVal.toFixed(2);
-      document.getElementById('assetsReferralEarnedDisplay').textContent = "$" + refEarnedVal.toFixed(2);
-      document.getElementById('assetReferralFundDisplay').textContent = refEarnedVal.toFixed(2) + " USDT";
+      setT('homeTotalAssetsDisplay', balanceVal.toFixed(2));
+      setT('totalBalanceDisplay', balanceVal.toFixed(2));
+      setT('flexibleFundsDisplay', balanceVal.toFixed(2) + " USDT");
+      setV('homeInvestInput', balanceVal.toFixed(2));
 
-      const daysJoined = Math.floor((Date.now() - appData.joinTimestamp) / (1000 * 60 * 60 * 24));
-      document.getElementById('daysJoinedText').textContent = `${daysJoined} / 25 Days`;
+      setT('homeReferralEarnedDisplay', "$" + refEarnedVal.toFixed(2));
+      setT('assetsReferralEarnedDisplay', "$" + refEarnedVal.toFixed(2));
+      setT('assetReferralFundDisplay', refEarnedVal.toFixed(2) + " USDT");
+
+      const daysJoined = Math.floor((Date.now() - (appData.joinTimestamp || Date.now())) / (1000 * 60 * 60 * 24));
+      setT('daysJoinedText', `${daysJoined} / 25 Days`);
       if (daysJoined >= 25) {
-        document.getElementById('freeWithdrawStatusText').textContent = "🎉 Free Withdrawal Unlocked (0% Fee)";
-        document.getElementById('withdrawalFeeNotice').textContent = "0% Deduction (Free Privilege Active)";
+        setT('freeWithdrawStatusText', "🎉 Free Withdrawal Unlocked (0% Fee)");
+        setT('withdrawalFeeNotice', "0% Deduction (Free Privilege Active)");
       }
 
-      document.getElementById('meUsernameDisplay').textContent = appData.user || "Dollar-User";
-      document.getElementById('meUserIdDisplay').textContent = `ID: ${appData.userId || 34001}`;
+      setT('meUsernameDisplay', appData.user || "Dollar-User");
+      setT('meUserIdDisplay', `ID: ${appData.userId || 34001}`);
       
       const kycBadge = document.getElementById('meKycStatusBadge');
-      kycBadge.textContent = `KYC: ${appData.kycStatus}`;
-      kycBadge.className = `badge-status ${appData.kycStatus === 'Verified' ? 'badge-verified' : 'badge-pending'}`;
+      if (kycBadge) {
+        kycBadge.textContent = `KYC: ${appData.kycStatus || 'Pending'}`;
+        kycBadge.className = `badge-status ${appData.kycStatus === 'Verified' ? 'badge-verified' : 'badge-pending'}`;
+      }
 
       if (appData.kycFrontUploaded) {
-        document.getElementById('kycFrontStatus').textContent = '✅ ID Front Captured Successfully';
-        document.getElementById('kycFrontStatus').style.color = 'var(--accent-green)';
+        const kf = document.getElementById('kycFrontStatus');
+        if (kf) { kf.textContent = '✅ ID Front Captured Successfully'; kf.style.color = 'var(--accent-green)'; }
       }
       if (appData.kycBackUploaded) {
-        document.getElementById('kycBackStatus').textContent = '✅ ID Back Captured Successfully';
-        document.getElementById('kycBackStatus').style.color = 'var(--accent-green)';
+        const kb = document.getElementById('kycBackStatus');
+        if (kb) { kb.textContent = '✅ ID Back Captured Successfully'; kb.style.color = 'var(--accent-green)'; }
       }
       if (appData.kycSelfieUploaded) {
-        document.getElementById('kycSelfieStatus').textContent = '✅ Live Selfie Captured Successfully';
-        document.getElementById('kycSelfieStatus').style.color = 'var(--accent-green)';
+        const ks = document.getElementById('kycSelfieStatus');
+        if (ks) { ks.textContent = '✅ Live Selfie Captured Successfully'; ks.style.color = 'var(--accent-green)'; }
       }
 
       const teamSize = appData.teamMembers ? appData.teamMembers.length : 0;
-      document.getElementById('homeTeamSizeText').textContent = `${teamSize} Members`;
-      document.getElementById('teamOverviewSize').textContent = `${teamSize} Members`;
-      document.getElementById('homeTodayJoinersText').textContent = `+${teamSize} Users`;
+      setT('homeTeamSizeText', `${teamSize} Members`);
+      setT('teamOverviewSize', `${teamSize} Members`);
+      setT('teamOverviewIncome', `$${refEarnedVal.toFixed(2)}`);
+      setT('homeTodayJoinersText', `+${teamSize} Users`);
 
       for (let i = 1; i <= 7; i++) {
         const card = document.getElementById(`gridCard${i}`);
@@ -1724,6 +3106,8 @@
       else if (teamSize >= 4 && document.getElementById('gridCard1')) document.getElementById('gridCard1').classList.add('active');
 
       renderHistory();
+      renderTeamMembers();
+      changeLanguage(currentLang);
     }
   </script>
 </body>
