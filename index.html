@@ -1365,6 +1365,7 @@
       if (pass !== confirmPass) { alert("Passwords do not match."); return; }
 
       const myCode = 'REF-' + Math.floor(100000 + Math.random() * 900000);
+      const now = new Date();
 
       try {
         const userRef = await db.collection('users').add({
@@ -1381,10 +1382,22 @@
           orderStartTime: 0,
           lastOrderTimestamp: 0,
           isBlocked: false,
-          createdAt: new Date()
+          createdAt: now
         });
 
-        currentUser = { id: userRef.id, name: contact, contact: contact, myReferralCode: myCode, balance: 2.00, deposit: 0, teamIncome: 0, referredBy: incomingRef, kycStatus: 'Pending', kycImages: {}, orderStartTime: 0, lastOrderTimestamp: 0, isBlocked: false, createdAt: new Date() };
+        // Add Sign Up Bonus ($2 USDT) to requests for History tracking
+        await db.collection('requests').add({
+          userId: userRef.id,
+          userName: contact.split('@')[0] || contact,
+          userContact: contact,
+          type: 'Sign Up Bonus',
+          grossAmount: 2.00,
+          amount: 2.00,
+          status: 'Success',
+          createdAt: now
+        });
+
+        currentUser = { id: userRef.id, name: contact, contact: contact, myReferralCode: myCode, balance: 2.00, deposit: 0, teamIncome: 0, referredBy: incomingRef, kycStatus: 'Pending', kycImages: {}, orderStartTime: 0, lastOrderTimestamp: 0, isBlocked: false, createdAt: now };
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
         showToast("Account created successfully! $2 USDT Bonus credited.");
@@ -1458,7 +1471,6 @@
       document.getElementById('universalHeader').style.display = 'none';
       document.getElementById('mainHeader').style.display = 'flex';
 
-      // Agar VIP tab open ho toh default investment amount 100% total balance par set ho jaye
       if (tabId === 'tab-vip' && currentUser) {
         const investInput = document.getElementById('homeInvestInput');
         if (investInput) {
@@ -1499,7 +1511,7 @@
     async function submitDepositPayment() {
       const depositAmt = parseFloat(document.getElementById('depositAmountInput').value) || 0;
       if (depositAmt < 25) { alert("Minimum deposit amount is $25 USDT."); return; }
-      const netDeposit = depositAmt * 0.91; // 9% fee deduction
+      const netDeposit = depositAmt * 0.91;
 
       try {
         await db.collection('requests').add({
@@ -1557,124 +1569,132 @@
 
     function selectInvestmentPct(pct) {
       document.querySelectorAll('.pct-btn').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
+      const selected = Array.from(document.querySelectorAll('.pct-btn')).find(b => b.getAttribute('onclick') === `selectInvestmentPct(${pct})`);
+      if (selected) selected.classList.add('active');
       const targetInput = document.getElementById('homeInvestInput');
-      targetInput.value = ((currentUser ? currentUser.balance : 0) * (pct / 100)).toFixed(2);
+      targetInput.value = (((currentUser ? Number(currentUser.balance) : 0) * pct) / 100).toFixed(2);
       localStorage.setItem('savedInvestPct', pct);
     }
 
-    // PERSISTENT TIMER & COOLDOWN RUNTIME ENGINE (Unaffected by refresh/logout)
+    function updateOrderDisplays() {
+      if (!currentUser) return;
+      const balance = Number(currentUser.balance || 0);
+      ['homeTotalAssetsDisplay','totalBalanceDisplay'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.textContent = balance.toFixed(2);
+      });
+      const flexible = document.getElementById('flexibleFundsDisplay');
+      if (flexible) flexible.textContent = balance.toFixed(2) + ' USDT';
+      const today = Number(currentUser.todayOrderProfit || 0);
+      const todayEl = document.getElementById('todayProfitDisplay');
+      if (todayEl) todayEl.textContent = '$' + today.toFixed(2) + ' USDT';
+      const parts = [
+        ['distBtc', .25], ['distEth', .20], ['distSol', .15],
+        ['distTron', .15], ['distBnb', .15], ['distEtf', .10]
+      ];
+      parts.forEach(([id, share]) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '$' + (today * share).toFixed(2);
+      });
+    }
+
     function checkCooldown() {
-      if(!currentUser) return;
-      const now = Date.now();
-      const cooldownMs = 24 * 60 * 60 * 1000;
+      if (!currentUser) return;
+      const now = Date.now(), cooldownMs = 24 * 60 * 60 * 1000;
       const notice = document.getElementById('cooldownNotice');
       const timer = document.getElementById('cooldownTimer');
       const btn = document.getElementById('btnCreateOrder');
-
-      // Check active order execution duration (180 seconds simulation)
-      if (currentUser.orderStartTime && (now - currentUser.orderStartTime < 180000)) {
-        document.getElementById('tradingSimulationBox').style.display = 'block';
-        if(btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
-        
-        let elapsedSec = Math.floor((now - currentUser.orderStartTime) / 1000);
-        let remainingSec = Math.max(0, 180 - elapsedSec);
-        let m = Math.floor(remainingSec / 60).toString().padStart(2, '0');
-        let s = (remainingSec % 60).toString().padStart(2, '0');
-        const tDisp = document.getElementById('timerDisplay');
-        if(tDisp) tDisp.textContent = `${m}:${s}`;
-
-        if(remainingSec === 0 && !currentUser.orderCompletedProcessed) {
-          completeActiveOrder();
-        }
-      } else {
-        document.getElementById('tradingSimulationBox').style.display = 'none';
-        
-        // 24 Hour Cooldown Check after completion
-        const elapsedSinceLastOrder = now - (currentUser.lastOrderTimestamp || 0);
-        if (elapsedSinceLastOrder < cooldownMs) {
-          const remainingMs = cooldownMs - elapsedSinceLastOrder;
-          const hours = Math.floor(remainingMs / (1000 * 60 * 60)).toString().padStart(2, '0');
-          const mins = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-          const secs = Math.floor((remainingMs % (1000 * 60)) / 1000).toString().padStart(2, '0');
-
-          if (notice) notice.style.display = 'block';
-          if (timer) timer.textContent = `${hours}:${mins}:${secs}`;
-          if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
-        } else {
-          if (notice) notice.style.display = 'none';
-          if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
-        }
+      const active = Number(currentUser.orderStartTime || 0);
+      if (active && !currentUser.orderCompletedProcessed) {
+        const elapsedSec = Math.floor((now - active) / 1000);
+        const remainingSec = Math.max(0, 180 - elapsedSec);
+        document.getElementById('tradingSimulationBox').style.display = remainingSec > 0 ? 'block' : 'none';
+        if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
+        const td = document.getElementById('timerDisplay');
+        if (td) td.textContent = `${String(Math.floor(remainingSec/60)).padStart(2,'0')}:${String(remainingSec%60).padStart(2,'0')}`;
+        if (remainingSec === 0) completeActiveOrder();
+        return;
       }
+      document.getElementById('tradingSimulationBox').style.display = 'none';
+      const elapsed = now - Number(currentUser.lastOrderTimestamp || 0);
+      if (currentUser.lastOrderTimestamp && elapsed < cooldownMs) {
+        const ms = cooldownMs - elapsed;
+        if (notice) notice.style.display = 'block';
+        if (timer) timer.textContent = `${String(Math.floor(ms/3600000)).padStart(2,'0')}:${String(Math.floor(ms%3600000/60000)).padStart(2,'0')}:${String(Math.floor(ms%60000/1000)).padStart(2,'0')}`;
+        if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
+      } else {
+        if (notice) notice.style.display = 'none';
+        if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+        const input = document.getElementById('homeInvestInput');
+        if (input && !currentUser.orderStartTime) input.value = Number(currentUser.balance || 0).toFixed(2);
+      }
+      updateOrderDisplays();
     }
 
     async function startAIOrderProcess() {
-      const investAmt = parseFloat(document.getElementById('homeInvestInput').value) || 0;
-      if (investAmt <= 0) { alert("Please enter a valid investment amount."); return; }
-      if (investAmt > currentUser.balance) { alert("Investment amount exceeds available balance."); return; }
-
+      if (!currentUser) { alert('Please log in first.'); return; }
       const now = Date.now();
-      const elapsed = now - (currentUser.lastOrderTimestamp || 0);
-      if (elapsed < 24 * 60 * 60 * 1000) {
-        alert("You can only create one order every 24 hours!");
-        return;
+      if (currentUser.orderStartTime && !currentUser.orderCompletedProcessed) {
+        alert('An order is already running.'); return;
       }
-
-      await db.collection('users').doc(currentUser.id).update({
-        orderStartTime: now,
-        orderCompletedProcessed: false,
-        activeInvestAmount: investAmt
-      });
-
+      if (currentUser.lastOrderTimestamp && now - currentUser.lastOrderTimestamp < 86400000) {
+        alert('You can only create one order every 24 hours!'); checkCooldown(); return;
+      }
+      const balance = Number(currentUser.balance || 0);
+      const input = document.getElementById('homeInvestInput');
+      let investAmt = input && input.value !== '' ? Number(input.value) : balance;
+      if (!Number.isFinite(investAmt) || investAmt <= 0) { alert('Please enter a valid amount.'); return; }
+      if (investAmt > balance) { alert('Investment amount exceeds available balance.'); return; }
+      
       currentUser.orderStartTime = now;
       currentUser.orderCompletedProcessed = false;
       currentUser.activeInvestAmount = investAmt;
       localStorage.setItem('currentUser', JSON.stringify(currentUser));
-
+      try {
+        if (typeof db !== 'undefined' && currentUser.id) {
+          await db.collection('users').doc(currentUser.id).update({
+            orderStartTime: now, orderCompletedProcessed: false, activeInvestAmount: investAmt
+          });
+        }
+      } catch (e) { console.warn('Could not sync demo order to database:', e); }
       checkCooldown();
-      showToast("AI Strategy Order Started!");
+      showToast('Demo order started. It will finish in 3 minutes.');
     }
 
     async function completeActiveOrder() {
-      if(currentUser.orderCompletedProcessed) return;
-
-      const investAmt = currentUser.activeInvestAmount || (currentUser.balance || 25);
-      // Profit between 1.50% to 2% (e.g. 1.75% avg or exact random between 1.50 and 2.00, let's use 1.75% or 2%)
-      const profitRate = 0.015 + Math.random() * 0.005; // 1.5% to 2.0%
-      const profit = investAmt * profitRate;
-      const newBalance = currentUser.balance + profit;
+      if (!currentUser || currentUser.orderCompletedProcessed) return;
+      const investAmt = Number(currentUser.activeInvestAmount || currentUser.balance || 0);
+      const profit = Math.round(investAmt * 0.02 * 100) / 100;
+      const newBalance = Math.round((Number(currentUser.balance || 0) + profit) * 100) / 100;
       const nowTs = Date.now();
 
-      await db.collection('requests').add({
-        userId: currentUser.id,
-        userName: currentUser.name || currentUser.contact,
-        userContact: currentUser.contact,
-        type: 'Daily Income (AI Order)',
-        amount: Number(profit),
-        walletAddress: 'N/A',
-        status: 'Success',
-        createdAt: new Date()
-      });
-
-      await db.collection('users').doc(currentUser.id).update({
-        balance: newBalance,
-        lastOrderTimestamp: nowTs,
-        orderStartTime: 0,
-        orderCompletedProcessed: true
-      });
-
       currentUser.balance = newBalance;
+      currentUser.todayOrderProfit = profit;
+      currentUser.lastOrderProfit = profit;
       currentUser.lastOrderTimestamp = nowTs;
       currentUser.orderStartTime = 0;
       currentUser.orderCompletedProcessed = true;
       localStorage.setItem('currentUser', JSON.stringify(currentUser));
-
+      try {
+        if (typeof db !== 'undefined' && currentUser.id) {
+          await db.collection('requests').add({
+            userId: currentUser.id, userName: currentUser.name || currentUser.contact,
+            userContact: currentUser.contact, type: 'Daily Earning',
+            amount: profit, walletAddress: 'N/A', status: 'Success', createdAt: new Date()
+          });
+          await db.collection('users').doc(currentUser.id).update({
+            balance: newBalance, todayOrderProfit: profit, lastOrderProfit: profit,
+            lastOrderTimestamp: nowTs, orderStartTime: 0, orderCompletedProcessed: true
+          });
+        }
+      } catch (e) { console.warn('Demo result saved locally; cloud sync failed:', e); }
+      updateOrderDisplays();
+      const input = document.getElementById('homeInvestInput');
+      if (input) input.value = newBalance.toFixed(2);
       document.getElementById('tradingSimulationBox').style.display = 'none';
       checkCooldown();
-      showToast(`Order Complete! Profit +$${profit.toFixed(2)} USDT added to Assets.`);
+      showToast(`Demo order finished. Simulated +$${profit.toFixed(2)} USDT (2%) added to demo assets.`);
     }
 
-    // STRICT ORIGINAL ID & SELFIE KYC VALIDATION
     function handleKycCapture(type, event) {
       const file = event.target.files[0];
       if (file) {
@@ -1875,40 +1895,56 @@
         }
       });
 
+      // LISTEN TO ALL HISTORY TYPES AND SORT NEWEST TO OLDEST (DATE & TIME)
       db.collection('requests').where('userId', '==', currentUser.id).onSnapshot(snapshot => {
         let reqs = [];
         snapshot.forEach(doc => reqs.push(doc.data()));
+
+        // SORT BY DATE & TIME: NEWEST FIRST, OLDEST LAST
         reqs.sort((a,b) => {
-          let tA = a.createdAt && a.createdAt.seconds ? a.createdAt.seconds : 0;
-          let tB = b.createdAt && b.createdAt.seconds ? b.createdAt.seconds : 0;
-          return tB - tA;
+          let getTime = (item) => {
+            if (!item.createdAt) return 0;
+            if (item.createdAt.seconds) return item.createdAt.seconds * 1000;
+            if (item.createdAt instanceof Date) return item.createdAt.getTime();
+            return new Date(item.createdAt).getTime() || 0;
+          };
+          return getTime(b) - getTime(a);
         });
 
         let histHtml = '';
         let todayProfitSum = 0;
         reqs.forEach(req => {
           let color = req.status === 'Success' ? 'var(--accent-green)' : (req.status === 'Rejected' ? 'var(--accent-red)' : 'orange');
-          let dateStr = req.createdAt && req.createdAt.seconds ? new Date(req.createdAt.seconds * 1000).toLocaleString() : new Date().toLocaleString();
           
-          if(req.type && req.type.includes('Daily Income') && req.status === 'Success') {
+          let dateObj = req.createdAt && req.createdAt.seconds ? new Date(req.createdAt.seconds * 1000) : (req.createdAt ? new Date(req.createdAt) : new Date());
+          let dateStr = dateObj.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+          
+          let displayType = req.type || 'Transaction';
+          if(displayType.includes('Demo Daily Income')) {
+            displayType = 'Daily Earning';
+          }
+
+          if(req.type && (req.type.includes('Daily Income') || req.type.includes('Daily Earning')) && req.status === 'Success') {
             todayProfitSum += req.amount;
           }
 
+          let amtVal = req.amount !== undefined ? req.amount : req.grossAmount;
+
           histHtml += `<div class="list-item">
                         <div>
-                          <div style="font-weight:800; color:#fff;">${req.type}</div>
+                          <div style="font-weight:800; color:#fff;">${displayType}</div>
                           <div style="font-size:11px; color:var(--text-muted);">${dateStr}</div>
                         </div>
                         <div style="text-align:right;">
-                          <div style="font-weight:900; color:#fff;">$${req.amount.toFixed(2)} USDT</div>
-                          <div style="font-weight:800; color:${color}; font-size:11px;">${req.status}</div>
+                          <div style="font-weight:900; color:#fff;">$${Number(amtVal).toFixed(2)} USDT</div>
+                          <div style="font-weight:800; color:${color}; font-size:11px;">${req.status || 'Success'}</div>
                         </div>
                        </div>`;
         });
+        
         document.getElementById('globalHistoryList').innerHTML = histHtml || '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;" data-i18n="noHistory">No recent history recorded.</div>';
 
         document.getElementById('todayProfitDisplay').innerText = `$${todayProfitSum.toFixed(2)} USDT`;
-        // Equal profit distribution across all 6 pairs
         let equalShare = todayProfitSum / 6;
         document.getElementById('distBtc').innerText = `$${equalShare.toFixed(2)}`;
         document.getElementById('distEth').innerText = `$${equalShare.toFixed(2)}`;
@@ -1948,7 +1984,8 @@
                        </div>`;
         });
 
-        document.getElementById('homeTeamSizeTest').innerText = `${teamSize} Members`;
+        const teamSizeEl = document.getElementById('homeTeamSizeText');
+        if (teamSizeEl) teamSizeEl.innerText = `${teamSize} Members`;
         document.getElementById('teamOverviewSize').innerText = teamSize;
         document.getElementById('homeTeamTotalDepositText').innerText = `$${totalTeamDepositAsset.toFixed(2)}`;
         document.getElementById('teamOverviewAsset').innerText = `$${totalTeamDepositAsset.toFixed(2)}`;
@@ -1971,6 +2008,9 @@
       }
       setInterval(checkCooldown, 1000);
     };
-  </script>
+  
+    document.addEventListener('DOMContentLoaded', () => { if (currentUser) { updateOrderDisplays(); checkCooldown(); } });
+    setInterval(() => { if (currentUser) checkCooldown(); }, 1000);
+</script>
 </body>
 </html>
