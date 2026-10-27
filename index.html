@@ -956,7 +956,7 @@
           <span style="font-weight:900; font-size:14px; color:var(--accent-cyan);">📈 Today Profit Summary</span>
           <span style="font-weight:900; font-size:16px; color:var(--accent-green);" id="todayProfitDisplay">$0.00 USDT</span>
         </div>
-        <div style="font-size:12px; color:var(--text-muted); font-weight:700; margin-bottom:6px;">Multi-Asset Profit Distribution:</div>
+        <div style="font-size:12px; color:var(--text-muted); font-weight:700; margin-bottom:6px;">Multi-Asset Equal Profit Distribution:</div>
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; font-size:11px;">
           <div style="background:rgba(0,0,0,0.4); padding:6px; border-radius:8px;">₿ BTC: <span id="distBtc" style="color:#fff; font-weight:800;">$0.00</span></div>
           <div style="background:rgba(0,0,0,0.4); padding:6px; border-radius:8px;">Ξ ETH: <span id="distEth" style="color:#fff; font-weight:800;">$0.00</span></div>
@@ -1146,7 +1146,7 @@
       </div>
     </div>
 
-    <!-- SUB-PAGE: KYC VERIFICATION (STRICT ORIGINAL ID & SELFIE VALIDATION) -->
+    <!-- SUB-PAGE: KYC VERIFICATION -->
     <div id="page-kyc" class="tab-content">
       <div class="investment-card">
         <div style="font-weight:900; font-size:18px; margin-bottom:6px; color: var(--accent-green);" data-i18n="kycTitle">Identity Verification (KYC)</div>
@@ -1381,10 +1381,11 @@
           kycImages: {},
           orderStartTime: 0,
           lastOrderTimestamp: 0,
+          isBlocked: false,
           createdAt: new Date()
         });
 
-        currentUser = { id: userRef.id, name: contact, contact: contact, myReferralCode: myCode, balance: 2.00, deposit: 0, teamIncome: 0, referredBy: incomingRef, kycStatus: 'Pending', kycImages: {}, orderStartTime: 0, lastOrderTimestamp: 0, createdAt: new Date() };
+        currentUser = { id: userRef.id, name: contact, contact: contact, myReferralCode: myCode, balance: 2.00, deposit: 0, teamIncome: 0, referredBy: incomingRef, kycStatus: 'Pending', kycImages: {}, orderStartTime: 0, lastOrderTimestamp: 0, isBlocked: false, createdAt: new Date() };
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
         showToast("Account created successfully! $2 USDT Bonus credited.");
@@ -1407,6 +1408,10 @@
         if(!snapshot.empty) {
           let doc = snapshot.docs[0];
           let data = doc.data();
+          if(data.isBlocked) {
+            alert("Your account has been blocked by Admin!");
+            return;
+          }
           if(data.password === passVal) {
             currentUser = { id: doc.id, ...data };
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
@@ -1484,7 +1489,7 @@
     async function submitDepositPayment() {
       const depositAmt = parseFloat(document.getElementById('depositAmountInput').value) || 0;
       if (depositAmt < 25) { alert("Minimum deposit amount is $25 USDT."); return; }
-      const netDeposit = depositAmt * 0.91;
+      const netDeposit = depositAmt * 0.91; // 9% fee deduction
 
       try {
         await db.collection('requests').add({
@@ -1542,11 +1547,14 @@
 
     function selectInvestmentPct(pct) {
       document.querySelectorAll('.pct-btn').forEach(b => b.classList.remove('active'));
-      if (event && event.target) event.target.classList.add('active');
-      document.getElementById('homeInvestInput').value = ((currentUser ? currentUser.balance : 0) * (pct / 100)).toFixed(2);
+      event.target.classList.add('active');
+      const targetInput = document.getElementById('homeInvestInput');
+      targetInput.value = ((currentUser ? currentUser.balance : 0) * (pct / 100)).toFixed(2);
+      // Persist chosen percentage to prevent reset on navigation/refresh
+      localStorage.setItem('savedInvestPct', pct);
     }
 
-    // PERSISTENT ORDER CHECK & RUNTIME ENGINE (Unaffected by refresh/logout)
+    // PERSISTENT TIMER & COOLDOWN RUNTIME ENGINE (Unaffected by refresh/logout)
     function checkCooldown() {
       if(!currentUser) return;
       const now = Date.now();
@@ -1573,7 +1581,7 @@
       } else {
         document.getElementById('tradingSimulationBox').style.display = 'none';
         
-        // 24 Hour Cooldown Check
+        // 24 Hour Cooldown Check after completion
         const elapsedSinceLastOrder = now - (currentUser.lastOrderTimestamp || 0);
         if (elapsedSinceLastOrder < cooldownMs) {
           const remainingMs = cooldownMs - elapsedSinceLastOrder;
@@ -1623,7 +1631,7 @@
       if(currentUser.orderCompletedProcessed) return;
 
       const investAmt = currentUser.activeInvestAmount || 25;
-      const profit = investAmt * 0.02;
+      const profit = investAmt * 0.02; // 2% daily profit based on grid/tier
       const newBalance = currentUser.balance + profit;
       const nowTs = Date.now();
 
@@ -1653,14 +1661,13 @@
 
       document.getElementById('tradingSimulationBox').style.display = 'none';
       checkCooldown();
-      showToast(`Order Complete! Profit +$${profit.toFixed(2)} USDT added.`);
+      showToast(`Order Complete! Profit +$${profit.toFixed(2)} USDT added to Assets.`);
     }
 
     // STRICT ORIGINAL ID & SELFIE KYC VALIDATION
     function handleKycCapture(type, event) {
       const file = event.target.files[0];
       if (file) {
-        // Validate if file is an actual image or document
         if (!file.type.startsWith('image/')) {
           alert("Please upload an authentic original image/document!");
           event.target.value = '';
@@ -1695,7 +1702,6 @@
 
       showToast("KYC Verification submitted! Processing...");
 
-      // 2 minutes (120 seconds) verification simulation process
       setTimeout(async () => {
         if(currentUser) {
           await db.collection('users').doc(currentUser.id).update({
@@ -1708,7 +1714,7 @@
         }
         showToast("Identity Verified Successfully!");
         switchTab('tab-me');
-      }, 3000); // Simulated 3 seconds for instant response or standard time
+      }, 3000);
     }
 
     function handleKycMenuClick() {
@@ -1736,7 +1742,7 @@
         sender: 'User',
         text: msg || '',
         status: 'Delivered',
-        adminRead: false,    // Unread notification trigger for admin
+        adminRead: false,
         createdAt: new Date()
       };
 
@@ -1771,7 +1777,7 @@
       if(!currentUser) return;
       db.collection('chats').where('userId', '==', currentUser.id).onSnapshot(snapshot => {
         let msgs = [];
-        snapshot.forEach(doc => msgs.push(doc.data()));
+        snapshot.forEach(doc => msgs.push({ id: doc.id, ...doc.data() }));
         msgs.sort((a,b) => (a.createdAt && b.createdAt) ? a.createdAt.seconds - b.createdAt.seconds : 0);
 
         let chatHtml = "";
@@ -1811,6 +1817,11 @@
       db.collection('users').doc(currentUser.id).onSnapshot(doc => {
         if(doc.exists) {
           let data = doc.data();
+          if(data.isBlocked) {
+            alert("Your account has been blocked by Admin!");
+            handleLogout();
+            return;
+          }
           currentUser = { id: doc.id, ...data };
           localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
@@ -1887,12 +1898,14 @@
         document.getElementById('globalHistoryList').innerHTML = histHtml || '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;" data-i18n="noHistory">No recent history recorded.</div>';
 
         document.getElementById('todayProfitDisplay').innerText = `$${todayProfitSum.toFixed(2)} USDT`;
-        document.getElementById('distBtc').innerText = `$${(todayProfitSum * 0.30).toFixed(2)}`;
-        document.getElementById('distEth').innerText = `$${(todayProfitSum * 0.20).toFixed(2)}`;
-        document.getElementById('distSol').innerText = `$${(todayProfitSum * 0.15).toFixed(2)}`;
-        document.getElementById('distTron').innerText = `$${(todayProfitSum * 0.15).toFixed(2)}`;
-        document.getElementById('distBnb').innerText = `$${(todayProfitSum * 0.10).toFixed(2)}`;
-        document.getElementById('distEtf').innerText = `$${(todayProfitSum * 0.10).toFixed(2)}`;
+        // Equal profit distribution across all 6 pairs
+        let equalShare = todayProfitSum / 6;
+        document.getElementById('distBtc').innerText = `$${equalShare.toFixed(2)}`;
+        document.getElementById('distEth').innerText = `$${equalShare.toFixed(2)}`;
+        document.getElementById('distSol').innerText = `$${equalShare.toFixed(2)}`;
+        document.getElementById('distTron').innerText = `$${equalShare.toFixed(2)}`;
+        document.getElementById('distBnb').innerText = `$${equalShare.toFixed(2)}`;
+        document.getElementById('distEtf').innerText = `$${equalShare.toFixed(2)}`;
       });
 
       db.collection('users').where('referredBy', '==', currentUser.myReferralCode).onSnapshot(snapshot => {
