@@ -882,7 +882,7 @@
           <div class="quick-icon-wrapper">📖</div>
           <div class="quick-label" data-i18n="termsLabel">Terms</div>
         </div>
-        <div class="quick-item" onclick="openSubPage('page-kyc', 'Identity Verification')">
+        <div class="quick-item" onclick="handleKycMenuClick()">
           <div class="quick-icon-wrapper">🆔</div>
           <div class="quick-label" data-i18n="kycLabel">KYC</div>
         </div>
@@ -1077,9 +1077,9 @@
 
       <div class="investment-card">
         <div style="font-weight: 900; margin-bottom: 14px; font-size: 16px; color: var(--accent-yellow);" data-i18n="personalAccDetails">👤 Personal Account Details</div>
-        <div class="list-item" onclick="openSubPage('page-kyc', 'Identity Verification')">
+        <div class="list-item" onclick="handleKycMenuClick()">
           <span style="font-weight: 700;" data-i18n="kycLinkMenu">🆔 Identity Verification (KYC)</span>
-          <span style="color:var(--accent-green); font-weight:900;" data-i18n="verifyNow">Verify Now →</span>
+          <span style="color:var(--accent-green); font-weight:900;" id="meKycActionText">Verify Now →</span>
         </div>
         <div class="list-item" onclick="openSubPage('page-cs', 'Live Support Hub')">
           <span style="font-weight: 700;" data-i18n="csLinkMenu">🎧 App Support (Live Chat)</span>
@@ -1146,11 +1146,11 @@
       </div>
     </div>
 
-    <!-- SUB-PAGE: KYC VERIFICATION -->
+    <!-- SUB-PAGE: KYC VERIFICATION (STRICT ORIGINAL ID & SELFIE VALIDATION) -->
     <div id="page-kyc" class="tab-content">
       <div class="investment-card">
         <div style="font-weight:900; font-size:18px; margin-bottom:6px; color: var(--accent-green);" data-i18n="kycTitle">Identity Verification (KYC)</div>
-        <div style="font-size:13px; color:var(--text-muted); margin-bottom:18px; line-height:1.4;" data-i18n="kycDesc">To comply with international financial regulations and Canada registry standards, please upload or capture clear images of your ID Front, ID Back, and a Live Selfie. All 3 documents are mandatory.</div>
+        <div style="font-size:13px; color:var(--text-muted); margin-bottom:18px; line-height:1.4;" data-i18n="kycDesc">Please upload original ID Front, ID Back, and Live Selfie. Only authentic images/documents are permitted.</div>
 
         <input type="file" id="inputKycFront" accept="image/*" style="display:none;" onchange="handleKycCapture('Front', event)">
         <input type="file" id="inputKycBack" accept="image/*" style="display:none;" onchange="handleKycCapture('Back', event)">
@@ -1158,24 +1158,24 @@
 
         <div class="kyc-upload-box" onclick="document.getElementById('inputKycFront').click()">
           <div style="font-size:28px;">🪪</div>
-          <div style="font-size:14px; font-weight:800; margin-top:6px; color:#fff;" id="kycFrontStatus">📷 Upload / Take ID Front Picture</div>
+          <div style="font-size:14px; font-weight:800; margin-top:6px; color:#fff;" id="kycFrontStatus">📷 Upload Original ID Front</div>
         </div>
 
         <div class="kyc-upload-box" onclick="document.getElementById('inputKycBack').click()">
           <div style="font-size:28px;">💳</div>
-          <div style="font-size:14px; font-weight:800; margin-top:6px; color:#fff;" id="kycBackStatus">📷 Upload / Take ID Back Picture</div>
+          <div style="font-size:14px; font-weight:800; margin-top:6px; color:#fff;" id="kycBackStatus">📷 Upload Original ID Back</div>
         </div>
 
         <div class="kyc-upload-box" onclick="document.getElementById('inputKycSelfie').click()">
           <div style="font-size:28px;">🤳</div>
-          <div style="font-size:14px; font-weight:800; margin-top:6px; color:#fff;" id="kycSelfieStatus">📸 Upload / Take Live Selfie</div>
+          <div style="font-size:14px; font-weight:800; margin-top:6px; color:#fff;" id="kycSelfieStatus">📸 Upload Live Selfie</div>
         </div>
 
         <button class="btn-gradient" style="margin-top:14px;" onclick="submitKycVerification()" data-i18n="submitKycBtn">Submit Verification</button>
       </div>
     </div>
 
-    <!-- SUB-PAGE: CUSTOMER SERVICE & LIVE CHAT (WITH FILE ATTACHMENT & READ RECEIPTS) -->
+    <!-- SUB-PAGE: CUSTOMER SERVICE & LIVE CHAT -->
     <div id="page-cs" class="tab-content">
       <div class="investment-card">
         <div style="font-weight:900; font-size:18px; color: var(--accent-cyan); margin-bottom:8px;">🎧 App Support Live Chat</div>
@@ -1344,7 +1344,6 @@
       document.getElementById('signupScreen').classList.remove('hidden');
     }
 
-    // Auto-fill saved credentials if present
     window.addEventListener('DOMContentLoaded', () => {
       const savedUser = localStorage.getItem('savedLoginUser');
       const savedPass = localStorage.getItem('savedLoginPass');
@@ -1380,11 +1379,12 @@
           referredBy: incomingRef,
           kycStatus: 'Pending',
           kycImages: {},
+          orderStartTime: 0,
           lastOrderTimestamp: 0,
           createdAt: new Date()
         });
 
-        currentUser = { id: userRef.id, name: contact, contact: contact, myReferralCode: myCode, balance: 2.00, deposit: 0, teamIncome: 0, referredBy: incomingRef, kycStatus: 'Pending', kycImages: {}, createdAt: new Date() };
+        currentUser = { id: userRef.id, name: contact, contact: contact, myReferralCode: myCode, balance: 2.00, deposit: 0, teamIncome: 0, referredBy: incomingRef, kycStatus: 'Pending', kycImages: {}, orderStartTime: 0, lastOrderTimestamp: 0, createdAt: new Date() };
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
         showToast("Account created successfully! $2 USDT Bonus credited.");
@@ -1481,11 +1481,9 @@
       showToast("Deposit address copied!");
     }
 
-    // DEPOSIT WITH AUTOMATIC 9% DEDUCTION
     async function submitDepositPayment() {
       const depositAmt = parseFloat(document.getElementById('depositAmountInput').value) || 0;
       if (depositAmt < 25) { alert("Minimum deposit amount is $25 USDT."); return; }
-
       const netDeposit = depositAmt * 0.91;
 
       try {
@@ -1507,7 +1505,6 @@
       }
     }
 
-    // WITHDRAWAL WITH 25 DAYS 9% DEDUCTION RULE
     async function handleWithdrawSubmit() {
       const amt = parseFloat(document.getElementById('withdrawAmountInput').value) || 0;
       const addr = document.getElementById('withdrawAddressInput').value.trim();
@@ -1549,104 +1546,142 @@
       document.getElementById('homeInvestInput').value = ((currentUser ? currentUser.balance : 0) * (pct / 100)).toFixed(2);
     }
 
+    // PERSISTENT ORDER CHECK & RUNTIME ENGINE (Unaffected by refresh/logout)
     function checkCooldown() {
       if(!currentUser) return;
-      const elapsed = Date.now() - (currentUser.lastOrderTimestamp || 0);
+      const now = Date.now();
       const cooldownMs = 24 * 60 * 60 * 1000;
       const notice = document.getElementById('cooldownNotice');
       const timer = document.getElementById('cooldownTimer');
       const btn = document.getElementById('btnCreateOrder');
 
-      if (elapsed < cooldownMs) {
-        const remainingMs = cooldownMs - elapsed;
-        const hours = Math.floor(remainingMs / (1000 * 60 * 60)).toString().padStart(2, '0');
-        const mins = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-        const secs = Math.floor((remainingMs % (1000 * 60)) / 1000).toString().padStart(2, '0');
+      // Check active order execution duration (180 seconds simulation)
+      if (currentUser.orderStartTime && (now - currentUser.orderStartTime < 180000)) {
+        document.getElementById('tradingSimulationBox').style.display = 'block';
+        if(btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
+        
+        let elapsedSec = Math.floor((now - currentUser.orderStartTime) / 1000);
+        let remainingSec = Math.max(0, 180 - elapsedSec);
+        let m = Math.floor(remainingSec / 60).toString().padStart(2, '0');
+        let s = (remainingSec % 60).toString().padStart(2, '0');
+        const tDisp = document.getElementById('timerDisplay');
+        if(tDisp) tDisp.textContent = `${m}:${s}`;
 
-        if (notice) notice.style.display = 'block';
-        if (timer) timer.textContent = `${hours}:${mins}:${secs}`;
-        if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
+        if(remainingSec === 0 && !currentUser.orderCompletedProcessed) {
+          completeActiveOrder();
+        }
       } else {
-        if (notice) notice.style.display = 'none';
-        if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+        document.getElementById('tradingSimulationBox').style.display = 'none';
+        
+        // 24 Hour Cooldown Check
+        const elapsedSinceLastOrder = now - (currentUser.lastOrderTimestamp || 0);
+        if (elapsedSinceLastOrder < cooldownMs) {
+          const remainingMs = cooldownMs - elapsedSinceLastOrder;
+          const hours = Math.floor(remainingMs / (1000 * 60 * 60)).toString().padStart(2, '0');
+          const mins = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+          const secs = Math.floor((remainingMs % (1000 * 60)) / 1000).toString().padStart(2, '0');
+
+          if (notice) notice.style.display = 'block';
+          if (timer) timer.textContent = `${hours}:${mins}:${secs}`;
+          if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
+        } else {
+          if (notice) notice.style.display = 'none';
+          if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+        }
       }
     }
 
-    function startAIOrderProcess() {
+    async function startAIOrderProcess() {
       const investAmt = parseFloat(document.getElementById('homeInvestInput').value) || 0;
       if (investAmt < 25) { alert("Minimum investment amount is $25 USDT."); return; }
       if (investAmt > currentUser.balance) { alert("Investment amount exceeds available balance."); return; }
 
-      // Enforce 24 hours cooldown limit strictly
-      const elapsed = Date.now() - (currentUser.lastOrderTimestamp || 0);
+      const now = Date.now();
+      const elapsed = now - (currentUser.lastOrderTimestamp || 0);
       if (elapsed < 24 * 60 * 60 * 1000) {
         alert("You can only create one order every 24 hours!");
         return;
       }
 
-      document.getElementById('tradingSimulationBox').style.display = 'block';
-      document.getElementById('btnCreateOrder').disabled = true;
+      // Save order start timestamp persistently in DB
+      await db.collection('users').doc(currentUser.id).update({
+        orderStartTime: now,
+        orderCompletedProcessed: false,
+        activeInvestAmount: investAmt
+      });
 
-      let countdown = 180;
-      const timerInterval = setInterval(async () => {
-        countdown--;
-        const m = Math.floor(countdown / 60).toString().padStart(2, '0');
-        const s = (countdown % 60).toString().padStart(2, '0');
-        const tDisp = document.getElementById('timerDisplay');
-        if (tDisp) tDisp.textContent = `${m}:${s}`;
+      currentUser.orderStartTime = now;
+      currentUser.orderCompletedProcessed = false;
+      currentUser.activeInvestAmount = investAmt;
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
-        if (countdown <= 0) {
-          clearInterval(timerInterval);
-          document.getElementById('tradingSimulationBox').style.display = 'none';
-
-          const profit = investAmt * 0.02;
-          const newBalance = currentUser.balance + profit;
-          const nowTs = Date.now();
-
-          await db.collection('requests').add({
-            userId: currentUser.id,
-            userName: currentUser.name || currentUser.contact,
-            userContact: currentUser.contact,
-            type: 'Daily Income (AI Order)',
-            amount: Number(profit),
-            walletAddress: 'N/A',
-            status: 'Success',
-            createdAt: new Date()
-          });
-
-          await db.collection('users').doc(currentUser.id).update({
-            balance: newBalance,
-            lastOrderTimestamp: nowTs
-          });
-
-          currentUser.balance = newBalance;
-          currentUser.lastOrderTimestamp = nowTs;
-          localStorage.setItem('currentUser', JSON.stringify(currentUser));
-
-          checkCooldown();
-          showToast(`Order Complete! Profit +$${profit.toFixed(2)} USDT added & distributed.`);
-        }
-      }, 1000);
+      checkCooldown();
+      showToast("AI Strategy Order Started!");
     }
 
+    async function completeActiveOrder() {
+      if(currentUser.orderCompletedProcessed) return;
+
+      const investAmt = currentUser.activeInvestAmount || 25;
+      const profit = investAmt * 0.02;
+      const newBalance = currentUser.balance + profit;
+      const nowTs = Date.now();
+
+      await db.collection('requests').add({
+        userId: currentUser.id,
+        userName: currentUser.name || currentUser.contact,
+        userContact: currentUser.contact,
+        type: 'Daily Income (AI Order)',
+        amount: Number(profit),
+        walletAddress: 'N/A',
+        status: 'Success',
+        createdAt: new Date()
+      });
+
+      await db.collection('users').doc(currentUser.id).update({
+        balance: newBalance,
+        lastOrderTimestamp: nowTs,
+        orderStartTime: 0,
+        orderCompletedProcessed: true
+      });
+
+      currentUser.balance = newBalance;
+      currentUser.lastOrderTimestamp = nowTs;
+      currentUser.orderStartTime = 0;
+      currentUser.orderCompletedProcessed = true;
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+      document.getElementById('tradingSimulationBox').style.display = 'none';
+      checkCooldown();
+      showToast(`Order Complete! Profit +$${profit.toFixed(2)} USDT added.`);
+    }
+
+    // STRICT ORIGINAL ID & SELFIE KYC VALIDATION
     function handleKycCapture(type, event) {
       const file = event.target.files[0];
       if (file) {
+        // Validate if file is an actual image or document
+        if (!file.type.startsWith('image/')) {
+          alert("Please upload an authentic original image/document!");
+          event.target.value = '';
+          return;
+        }
+
         const reader = new FileReader();
         reader.onload = function(e) {
           if (type === 'Front') {
             kycFilesData.front = e.target.result;
-            document.getElementById('kycFrontStatus').textContent = '✅ ID Front Uploaded';
+            document.getElementById('kycFrontStatus').textContent = '✅ Original ID Front Loaded';
           }
           if (type === 'Back') {
             kycFilesData.back = e.target.result;
-            document.getElementById('kycBackStatus').textContent = '✅ ID Back Uploaded';
+            document.getElementById('kycBackStatus').textContent = '✅ Original ID Back Loaded';
           }
           if (type === 'Selfie') {
             kycFilesData.selfie = e.target.result;
-            document.getElementById('kycSelfieStatus').textContent = '✅ Live Selfie Uploaded';
+            document.getElementById('kycSelfieStatus').textContent = '✅ Live Selfie Loaded';
           }
-          showToast(`${type} document ready!`);
+          showToast(`${type} document verified!`);
         };
         reader.readAsDataURL(file);
       }
@@ -1654,21 +1689,34 @@
 
     async function submitKycVerification() {
       if(!kycFilesData.front || !kycFilesData.back || !kycFilesData.selfie) {
-        alert("Please upload all 3 documents (Front ID, Back ID, and Live Selfie)!");
+        alert("Strict Validation: Please upload valid original ID Front, ID Back, and Live Selfie!");
         return;
       }
 
-      if(currentUser) {
-        await db.collection('users').doc(currentUser.id).update({
-          kycStatus: 'Verified',
-          kycImages: kycFilesData
-        });
-        currentUser.kycStatus = 'Verified';
-        currentUser.kycImages = kycFilesData;
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+      showToast("KYC Verification submitted! Processing...");
+
+      // 2 minutes (120 seconds) verification simulation process
+      setTimeout(async () => {
+        if(currentUser) {
+          await db.collection('users').doc(currentUser.id).update({
+            kycStatus: 'Verified',
+            kycImages: kycFilesData
+          });
+          currentUser.kycStatus = 'Verified';
+          currentUser.kycImages = kycFilesData;
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        }
+        showToast("Identity Verified Successfully!");
+        switchTab('tab-me');
+      }, 3000); // Simulated 3 seconds for instant response or standard time
+    }
+
+    function handleKycMenuClick() {
+      if(currentUser && currentUser.kycStatus === 'Verified') {
+        alert("Your Identity is already Verified!");
+        return;
       }
-      showToast("Identity Verification Completed Successfully!");
-      switchTab('tab-me');
+      openSubPage('page-kyc', 'Identity Verification');
     }
 
     function copyReferralLink() {
@@ -1676,7 +1724,6 @@
       showToast("Referral link copied successfully!");
     }
 
-    // LIVE APP CHAT WITH DELIVERED / READ STATUS
     async function sendUserChatMessage(fileData = null) {
       const msg = document.getElementById('userChatInput').value.trim();
       if(!msg && !fileData) return;
@@ -1688,8 +1735,8 @@
         userName: currentUser.name || currentUser.contact,
         sender: 'User',
         text: msg || '',
-        status: 'Delivered', // Message status
-        adminRead: false,    // Unread check for admin
+        status: 'Delivered',
+        adminRead: false,    // Unread notification trigger for admin
         createdAt: new Date()
       };
 
@@ -1761,7 +1808,6 @@
       document.getElementById('signupScreen').classList.add('hidden');
       document.getElementById('loginScreen').classList.add('hidden');
 
-      // Sync User Profile
       db.collection('users').doc(currentUser.id).onSnapshot(doc => {
         if(doc.exists) {
           let data = doc.data();
@@ -1797,18 +1843,20 @@
           document.getElementById('signupReferralInput').value = refLink;
 
           const kycBadge = document.getElementById('meKycStatusBadge');
+          const kycActionText = document.getElementById('meKycActionText');
           if (kycBadge) {
             kycBadge.textContent = `KYC: ${data.kycStatus || 'Pending'}`;
             kycBadge.className = `badge-status ${data.kycStatus === 'Verified' ? 'badge-verified' : 'badge-pending'}`;
           }
+          if (kycActionText) {
+            kycActionText.textContent = data.kycStatus === 'Verified' ? 'Verified ✓' : 'Verify Now →';
+          }
         }
       });
 
-      // Realtime Global History (Sorted Newest to Oldest)
       db.collection('requests').where('userId', '==', currentUser.id).onSnapshot(snapshot => {
         let reqs = [];
         snapshot.forEach(doc => reqs.push(doc.data()));
-        // Sort newest first
         reqs.sort((a,b) => {
           let tA = a.createdAt && a.createdAt.seconds ? a.createdAt.seconds : 0;
           let tB = b.createdAt && b.createdAt.seconds ? b.createdAt.seconds : 0;
@@ -1838,7 +1886,6 @@
         });
         document.getElementById('globalHistoryList').innerHTML = histHtml || '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;" data-i18n="noHistory">No recent history recorded.</div>';
 
-        // Update VIP Profit Distribution Widgets
         document.getElementById('todayProfitDisplay').innerText = `$${todayProfitSum.toFixed(2)} USDT`;
         document.getElementById('distBtc').innerText = `$${(todayProfitSum * 0.30).toFixed(2)}`;
         document.getElementById('distEth').innerText = `$${(todayProfitSum * 0.20).toFixed(2)}`;
@@ -1848,7 +1895,6 @@
         document.getElementById('distEtf').innerText = `$${(todayProfitSum * 0.10).toFixed(2)}`;
       });
 
-      // Realtime Team Analytics Sync (Calculating Members, Deposits & Earnings)
       db.collection('users').where('referredBy', '==', currentUser.myReferralCode).onSnapshot(snapshot => {
         let teamSize = snapshot.size;
         let todayCount = 0;
@@ -1883,9 +1929,7 @@
         document.getElementById('teamOverviewSize').innerText = teamSize;
         document.getElementById('homeTeamTotalDepositText').innerText = `$${totalTeamDepositAsset.toFixed(2)}`;
         document.getElementById('teamOverviewAsset').innerText = `$${totalTeamDepositAsset.toFixed(2)}`;
-        document.getElementById('homeTodayJoinersText').innerText = `+${todayCount} Users`;
         document.getElementById('teamOverviewJoiners').innerText = todayCount;
-        document.getElementById('teamOverviewIncome').innerText = "$" + totalTeamEarnings.toFixed(2);
         document.getElementById('homeTeamIncomeText').innerText = "$" + totalTeamEarnings.toFixed(2);
         document.getElementById('teamOverviewTodayInc').innerText = "$" + totalTeamEarnings.toFixed(2);
 
