@@ -1664,9 +1664,8 @@
           document.getElementById('meUsernameDisplay').innerText = data.name || "User";
           document.getElementById('meUserIdDisplay').innerText = "ID: " + (data.myReferralCode || 'N/A');
 
-          // Generate dynamic URL based on current host
-          let baseHost = window.location.origin + window.location.pathname;
-          let refLink = `${baseHost}?ref=${data.myReferralCode}`;
+          // Custom Domain Referral Link with dynamic ref query parameter
+          let refLink = `https://dollar-investment-offical.github.io/https-dollar-investment-app.com-signup-ref-User-391126/?ref=${data.myReferralCode}`;
           document.getElementById('homeReferralLinkText').innerText = refLink;
           document.getElementById('signupReferralInput').value = refLink;
 
