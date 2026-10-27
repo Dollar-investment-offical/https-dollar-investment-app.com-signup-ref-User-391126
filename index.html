@@ -702,7 +702,7 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* Live Chat UI Elements */
+    /* Live Chat UI & File Attachment Styling */
     .chat-box {
       height: 260px;
       overflow-y: auto;
@@ -721,6 +721,7 @@
       border-radius: 12px;
       font-size: 13px;
       line-height: 1.4;
+      word-break: break-word;
     }
     .msg-user {
       align-self: flex-end;
@@ -733,6 +734,19 @@
       background: rgba(0,210,255,0.2);
       border: 1px solid var(--accent-cyan);
       color: #fff;
+    }
+    .chat-file-img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-top: 6px;
+      display: block;
+    }
+    .chat-file-link {
+      color: #00d2ff;
+      text-decoration: underline;
+      font-weight: bold;
+      display: inline-block;
+      margin-top: 4px;
     }
   </style>
 </head>
@@ -870,7 +884,7 @@
           <div class="quick-icon-wrapper">👥</div>
           <div class="quick-label" data-i18n="inviteLabel">Invite</div>
         </div>
-        <!-- App Support replaces Tasks -->
+        <!-- App Support -->
         <div class="quick-item" onclick="openSubPage('page-cs', 'Live Support Hub')">
           <div class="quick-icon-wrapper">🎧</div>
           <div class="quick-label">App Support</div>
@@ -930,7 +944,7 @@
         </div>
         <div class="spec-row">
           <span data-i18n="feeStatus">Withdrawal Fee Status:</span>
-          <span class="spec-value green" id="freeWithdrawStatusText" data-i18n="feeStandard">Standard 9% Fee (Free after 25 days)</span>
+          <span class="spec-value green" id="freeWithdrawStatusText">Calculating Fee Rules...</span>
         </div>
       </div>
 
@@ -1017,7 +1031,6 @@
         </div>
       </div>
 
-      <!-- Updated Team Stat Cards with Required Options -->
       <div class="balance-card">
         <div style="font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 14px;" data-i18n="teamDataOverview">📊 Team Data Overview</div>
         <div class="team-grid-4">
@@ -1118,7 +1131,7 @@
       </div>
 
       <div class="investment-card" style="background: rgba(0,0,0,0.4); padding: 14px; margin-bottom: 18px;">
-        <div class="spec-row"><span data-i18n="standardFee">Standard Fee:</span><span class="spec-value" id="withdrawalFeeNotice" data-i18n="feeDeduction">9% Deduction</span></div>
+        <div class="spec-row"><span data-i18n="standardFee">Standard Fee:</span><span class="spec-value" id="withdrawalFeeNotice">Calculating Fee...</span></div>
         <div class="spec-row"><span data-i18n="estProcessing">Estimated Processing Time:</span><span class="spec-value green" data-i18n="processingTimeText">10 minutes to 3 business days</span></div>
       </div>
 
@@ -1164,19 +1177,22 @@
       </div>
     </div>
 
-    <!-- SUB-PAGE: CUSTOMER SERVICE & LIVE CHAT -->
+    <!-- SUB-PAGE: CUSTOMER SERVICE & LIVE CHAT (WITH FILE ATTACHMENT) -->
     <div id="page-cs" class="tab-content">
       <div class="investment-card">
         <div style="font-weight:900; font-size:18px; color: var(--accent-cyan); margin-bottom:8px;">🎧 App Support Live Chat</div>
-        <div style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">Chat directly with Master Admin Support in real-time.</div>
+        <div style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">Chat directly with Master Admin Support in real-time. You can send messages, images, PDFs & documents.</div>
 
         <div class="chat-box" id="userChatBox">
           <div style="text-align:center; color:var(--text-muted); font-size:12px;">Loading chat history...</div>
         </div>
 
-        <div style="display:flex; gap:8px;">
-          <input type="text" id="userChatInput" class="amount-input" placeholder="Type message to admin..." style="padding:10px 14px; font-size:13px;">
-          <button class="btn-gradient" style="width:100px; padding:10px; font-size:13px;" onclick="sendUserChatMessage()">Send</button>
+        <input type="file" id="userChatFileInput" accept="image/*,.pdf,.doc,.docx,.txt" style="display:none;" onchange="handleUserFileUpload(event)">
+
+        <div style="display:flex; gap:6px;">
+          <button style="background: rgba(255,255,255,0.1); border: 1px solid var(--accent-cyan); color: #fff; padding: 0 12px; border-radius: 12px; font-size: 18px; cursor: pointer;" onclick="document.getElementById('userChatFileInput').click()">📎</button>
+          <input type="text" id="userChatInput" class="amount-input" placeholder="Type message..." style="padding:10px 14px; font-size:13px;">
+          <button class="btn-gradient" style="width:80px; padding:10px; font-size:13px;" onclick="sendUserChatMessage()">Send</button>
         </div>
       </div>
     </div>
@@ -1226,6 +1242,7 @@
         <div style="margin-top: 16px; margin-bottom: 22px;">
           <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;" data-i18n="enterDepositAmt">Enter Deposit Amount ($)</div>
           <input type="number" id="depositAmountInput" class="amount-input" placeholder="Min $25 USDT" value="25">
+          <div style="font-size:11px; color:var(--accent-yellow); font-weight:700; margin-top:4px;">* Note: Standard 9% Fee will be deducted on deposit credit.</div>
         </div>
 
         <button class="btn-gradient" onclick="submitDepositPayment()" data-i18n="confirmDepositBtn">Confirm & Deposit</button>
@@ -1353,7 +1370,7 @@
           createdAt: new Date()
         });
 
-        currentUser = { id: userRef.id, name: contact, contact: contact, myReferralCode: myCode, balance: 2.00, deposit: 0, teamIncome: 0, referredBy: incomingRef, kycStatus: 'Pending' };
+        currentUser = { id: userRef.id, name: contact, contact: contact, myReferralCode: myCode, balance: 2.00, deposit: 0, teamIncome: 0, referredBy: incomingRef, kycStatus: 'Pending', createdAt: new Date() };
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
         showToast("Account created successfully! $2 USDT Bonus credited.");
@@ -1440,9 +1457,13 @@
       showToast("Deposit address copied!");
     }
 
+    // DEPOSIT WITH AUTOMATIC 9% DEDUCTION
     async function submitDepositPayment() {
       const depositAmt = parseFloat(document.getElementById('depositAmountInput').value) || 0;
       if (depositAmt < 25) { alert("Minimum deposit amount is $25 USDT."); return; }
+
+      // 9% Deducted Net Amount
+      const netDeposit = depositAmt * 0.91;
 
       try {
         await db.collection('requests').add({
@@ -1450,18 +1471,20 @@
           userName: currentUser.name || currentUser.contact,
           userContact: currentUser.contact,
           type: 'Deposit',
-          amount: Number(depositAmt),
+          grossAmount: Number(depositAmt),
+          amount: Number(netDeposit), // 9% Deducted Net Deposit Amount
           status: 'Processing',
           createdAt: new Date()
         });
 
         closeDepositModal();
-        showToast("Deposit Request Submitted for Approval!");
+        showToast(`Deposit Request Submitted! Net Amount after 9% fee: $${netDeposit.toFixed(2)} USDT`);
       } catch(err) {
         alert("Deposit submission failed.");
       }
     }
 
+    // WITHDRAWAL WITH 25 DAYS 9% DEDUCTION RULE
     async function handleWithdrawSubmit() {
       const amt = parseFloat(document.getElementById('withdrawAmountInput').value) || 0;
       const addr = document.getElementById('withdrawAddressInput').value.trim();
@@ -1470,19 +1493,28 @@
       if (!addr) { alert("Please enter a valid wallet address."); return; }
       if (amt > currentUser.balance) { alert("Insufficient account balance."); return; }
 
+      // Calculate Days Joined
+      let createdDate = currentUser.createdAt && currentUser.createdAt.seconds ? new Date(currentUser.createdAt.seconds * 1000) : new Date();
+      let diffDays = Math.floor((new Date() - createdDate) / (1000 * 60 * 60 * 24));
+      
+      let isWithin25Days = diffDays < 25;
+      let netWithdrawAmount = isWithin25Days ? (amt * 0.91) : amt; // 9% Fee if < 25 Days
+
       try {
         await db.collection('requests').add({
           userId: currentUser.id,
           userName: currentUser.name || currentUser.contact,
           userContact: currentUser.contact,
           type: 'Withdrawal',
-          amount: Number(amt),
+          grossAmount: Number(amt),
+          amount: Number(netWithdrawAmount), // Net 9% Deducted amount if within 25 days
+          isFeeDeducted: isWithin25Days,
           walletAddress: addr,
           status: 'Processing',
           createdAt: new Date()
         });
 
-        showToast("Withdrawal Request Submitted!");
+        showToast(`Withdrawal Request Submitted! Net Amount: $${netWithdrawAmount.toFixed(2)} USDT`);
         switchTab('tab-home');
       } catch(err) {
         alert("Withdrawal submission failed.");
@@ -1598,20 +1630,46 @@
       showToast("Referral link copied successfully!");
     }
 
-    // Live App Chat Message Send
-    async function sendUserChatMessage() {
+    // LIVE APP CHAT WITH IMAGE & DOCUMENT FILE ATTACHMENTS
+    async function sendUserChatMessage(fileData = null) {
       const msg = document.getElementById('userChatInput').value.trim();
-      if(!msg || !currentUser) return;
+      if(!msg && !fileData) return;
+      if(!currentUser) return;
 
-      await db.collection('chats').add({
+      let chatObj = {
         userId: currentUser.id,
         userContact: currentUser.contact,
         userName: currentUser.name || currentUser.contact,
         sender: 'User',
-        text: msg,
+        text: msg || '',
         createdAt: new Date()
-      });
+      };
+
+      if(fileData) {
+        chatObj.fileUrl = fileData.url;
+        chatObj.fileName = fileData.name;
+        chatObj.fileType = fileData.type;
+      }
+
+      await db.collection('chats').add(chatObj);
       document.getElementById('userChatInput').value = '';
+    }
+
+    function handleUserFileUpload(e) {
+      const file = e.target.files[0];
+      if(!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const base64Url = evt.target.result;
+        sendUserChatMessage({
+          url: base64Url,
+          name: file.name,
+          type: file.type.includes('image') ? 'image' : 'document'
+        });
+        showToast("File sent to support!");
+      };
+      reader.readAsDataURL(file);
     }
 
     // Realtime Live App Chat Sync
@@ -1626,7 +1684,17 @@
         msgs.forEach(m => {
           let sideClass = m.sender === 'User' ? 'msg-user' : 'msg-admin';
           let label = m.sender === 'User' ? 'You' : 'Admin';
-          chatHtml += `<div class="msg-bubble ${sideClass}"><b>${label}:</b> ${m.text}</div>`;
+          
+          let fileHtml = "";
+          if(m.fileUrl) {
+            if(m.fileType === 'image') {
+              fileHtml = `<br><a href="${m.fileUrl}" target="_blank"><img src="${m.fileUrl}" class="chat-file-img"/></a>`;
+            } else {
+              fileHtml = `<br><a href="${m.fileUrl}" download="${m.fileName || 'document'}" class="chat-file-link">📄 Download Document (${m.fileName || 'file'})</a>`;
+            }
+          }
+
+          chatHtml += `<div class="msg-bubble ${sideClass}"><b>${label}:</b> ${m.text || ''}${fileHtml}</div>`;
         });
         const box = document.getElementById('userChatBox');
         if(box) {
@@ -1664,7 +1732,20 @@
           document.getElementById('meUsernameDisplay').innerText = data.name || "User";
           document.getElementById('meUserIdDisplay').innerText = "ID: " + (data.myReferralCode || 'N/A');
 
-          // Custom Domain Referral Link with dynamic ref query parameter
+          // 25 Days Joined Fee Notice Calculation
+          let createdDate = data.createdAt && data.createdAt.seconds ? new Date(data.createdAt.seconds * 1000) : new Date();
+          let diffDays = Math.floor((new Date() - createdDate) / (1000 * 60 * 60 * 24));
+          document.getElementById('daysJoinedText').innerText = `${diffDays} / 25 Days`;
+
+          if(diffDays >= 25) {
+            document.getElementById('freeWithdrawStatusText').innerText = "🎉 0% Fee Privilege Active (Free)";
+            document.getElementById('withdrawalFeeNotice').innerText = "0% (Free Withdrawal Active)";
+          } else {
+            document.getElementById('freeWithdrawStatusText').innerText = `Standard 9% Fee (${25 - diffDays} days remaining for Free)`;
+            document.getElementById('withdrawalFeeNotice').innerText = "9% Deduction (Prior to 25 Days)";
+          }
+
+          // Dynamic Referral Link
           let refLink = `https://dollar-investment-offical.github.io/https-dollar-investment-app.com-signup-ref-User-391126/?ref=${data.myReferralCode}`;
           document.getElementById('homeReferralLinkText').innerText = refLink;
           document.getElementById('signupReferralInput').value = refLink;
