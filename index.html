@@ -983,7 +983,7 @@
           <div class="pct-btn" onclick="selectInvestmentPct(25)">25%</div>
           <div class="pct-btn" onclick="selectInvestmentPct(50)">50%</div>
           <div class="pct-btn" onclick="selectInvestmentPct(75)">75%</div>
-          <div class="pct-btn" onclick="selectInvestmentPct(100)">100%</div>
+          <div class="pct-btn active" onclick="selectInvestmentPct(100)">100%</div>
         </div>
 
         <button class="btn-gradient" id="btnCreateOrder" onclick="startAIOrderProcess()" data-i18n="createOrderBtn">Create Order (1~4 mins)</button>
@@ -1457,6 +1457,17 @@
       if (navBtn) navBtn.classList.add('active');
       document.getElementById('universalHeader').style.display = 'none';
       document.getElementById('mainHeader').style.display = 'flex';
+
+      // Agar VIP tab open ho toh default investment amount 100% total balance par set ho jaye
+      if (tabId === 'tab-vip' && currentUser) {
+        const investInput = document.getElementById('homeInvestInput');
+        if (investInput) {
+          investInput.value = (currentUser.balance || 0).toFixed(2);
+        }
+        document.querySelectorAll('.pct-btn').forEach(b => b.classList.remove('active'));
+        const btn100 = document.querySelector('.pct-btn:last-child');
+        if (btn100) btn100.classList.add('active');
+      }
     }
 
     function openSubPage(pageId, title) {
@@ -1549,7 +1560,6 @@
       event.target.classList.add('active');
       const targetInput = document.getElementById('homeInvestInput');
       targetInput.value = ((currentUser ? currentUser.balance : 0) * (pct / 100)).toFixed(2);
-      // Persist chosen percentage to prevent reset on navigation/refresh
       localStorage.setItem('savedInvestPct', pct);
     }
 
@@ -1600,7 +1610,7 @@
 
     async function startAIOrderProcess() {
       const investAmt = parseFloat(document.getElementById('homeInvestInput').value) || 0;
-      if (investAmt < 25) { alert("Minimum investment amount is $25 USDT."); return; }
+      if (investAmt <= 0) { alert("Please enter a valid investment amount."); return; }
       if (investAmt > currentUser.balance) { alert("Investment amount exceeds available balance."); return; }
 
       const now = Date.now();
@@ -1610,7 +1620,6 @@
         return;
       }
 
-      // Save order start timestamp persistently in DB
       await db.collection('users').doc(currentUser.id).update({
         orderStartTime: now,
         orderCompletedProcessed: false,
@@ -1629,8 +1638,10 @@
     async function completeActiveOrder() {
       if(currentUser.orderCompletedProcessed) return;
 
-      const investAmt = currentUser.activeInvestAmount || 25;
-      const profit = investAmt * 0.02; // 2% daily profit (1.50% to 2%)
+      const investAmt = currentUser.activeInvestAmount || (currentUser.balance || 25);
+      // Profit between 1.50% to 2% (e.g. 1.75% avg or exact random between 1.50 and 2.00, let's use 1.75% or 2%)
+      const profitRate = 0.015 + Math.random() * 0.005; // 1.5% to 2.0%
+      const profit = investAmt * profitRate;
       const newBalance = currentUser.balance + profit;
       const nowTs = Date.now();
 
@@ -1937,7 +1948,7 @@
                        </div>`;
         });
 
-        document.getElementById('homeTeamSizeText').innerText = `${teamSize} Members`;
+        document.getElementById('homeTeamSizeTest').innerText = `${teamSize} Members`;
         document.getElementById('teamOverviewSize').innerText = teamSize;
         document.getElementById('homeTeamTotalDepositText').innerText = `$${totalTeamDepositAsset.toFixed(2)}`;
         document.getElementById('teamOverviewAsset').innerText = `$${totalTeamDepositAsset.toFixed(2)}`;
