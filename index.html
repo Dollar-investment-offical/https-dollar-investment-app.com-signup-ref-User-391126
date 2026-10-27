@@ -53,7 +53,6 @@
       box-shadow: 0 0 40px rgba(0,245,118,0.15);
     }
 
-    /* Universal Header */
     .universal-header {
       display: flex;
       align-items: center;
@@ -81,7 +80,6 @@
       gap: 4px;
     }
 
-    /* Auth Screens */
     .auth-screen {
       position: fixed;
       top: 0;
@@ -489,7 +487,6 @@
     .nav-item.active { color: var(--accent-green); text-shadow: 0 0 10px rgba(0,245,118,0.6); }
     .nav-icon { font-size: 22px; }
 
-    /* Modal Styling */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -772,7 +769,6 @@
 
   <div class="app-container">
     
-    <!-- Top Header Bar -->
     <header class="top-bar" id="mainHeader">
       <div class="brand-logo">
         <div class="brand-icon">$</div>
@@ -798,14 +794,12 @@
       </div>
     </header>
 
-    <!-- Sub-page Navigation Header -->
     <header class="universal-header" id="universalHeader" style="display: none;">
       <button class="nav-back-btn" onclick="navigateBack()" data-i18n="backBtn">← Back</button>
       <div style="font-size: 16px; font-weight: 800; color: #fff;" id="universalHeaderTitle">Subpage</div>
       <div style="width: 50px;"></div>
     </header>
 
-    <!-- Toast Notification -->
     <div id="toast" class="toast">Action completed!</div>
 
     <!-- TAB 1: HOME -->
@@ -815,7 +809,6 @@
         <div class="ticker-text" data-i18n="tickerText">🔥 Welcome to Dollar Investment! Over 34,000+ Active Members Worldwide. Fully Registered & Certified in Canada. Min Deposit $25, Min Withdrawal $50.</div>
       </div>
 
-      <!-- Home Total Assets Display -->
       <div class="balance-card">
         <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;" data-i18n="totalAssets">Total Assets (USDT)</div>
         <div class="balance-amount" id="homeTotalAssetsDisplay">2.00</div>
@@ -941,7 +934,6 @@
           </div>
         </div>
 
-        <!-- Quick Percentage Selectors -->
         <div class="pct-selector-grid">
           <div class="pct-btn" onclick="selectInvestmentPct(25)">25%</div>
           <div class="pct-btn" onclick="selectInvestmentPct(50)">50%</div>
@@ -955,7 +947,6 @@
         </div>
       </div>
 
-      <!-- Strategy Live Simulation Box -->
       <div id="tradingSimulationBox" class="investment-card" style="display:none; text-align:center;">
         <div style="font-size:15px; font-weight:900; color:var(--accent-green); margin-bottom:12px;" data-i18n="aiInProgress">⚡ AI Strategy Arbitrage in Progress...</div>
         <div class="spinning-ring" style="margin-bottom:14px;">
@@ -1226,7 +1217,6 @@
   </div>
 
   <script>
-    // Dictionary for Multi-language Support
     const translations = {
       EN: {
         brandTitle: "Dollar Investment",
@@ -1585,7 +1575,7 @@
         alreadyAcc: "ইতিমধ্যে একটি অ্যাকাউন্ট আছে?",
         loginLink: "লগ ইন",
         loginTitle: "স্বাগতম",
-        loginSubtitle: "নিরাপদে আপনার অ্যাকাউন্টে লগ ইন করুন",
+        loginSubtitle: "নিরাপده আপনার অ্যাকাউন্টে লগ ইন করুন",
         userLoginLabel: "ব্যবহারকারী (ইমেল বা ফোন)",
         savePassLabel: "পাসওয়ার্ড এবং আইডি সংরক্ষণ করুন",
         loginBtn: "লগ ইন",
@@ -2500,8 +2490,6 @@
     function changeLanguage(langCode) {
       currentLang = langCode;
       const dict = translations[langCode] || translations['EN'];
-      
-      // Update all elements with data-i18n attribute
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (dict[key]) {
@@ -2532,11 +2520,7 @@
     function loadState() {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        try {
-          appData = JSON.parse(saved);
-        } catch (e) {
-          console.error("Failed to parse stored state");
-        }
+        try { appData = JSON.parse(saved); } catch (e) {}
       } else {
         const globalSeq = parseInt(localStorage.getItem('dollar_global_id_seq') || '34001');
         appData.userId = globalSeq;
@@ -2551,25 +2535,6 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       loadState();
-      const baseRefLink = window.location.origin + window.location.pathname;
-      const refLink = baseRefLink + '?ref=' + encodeURIComponent(appData.userId);
-      
-      const refInput = document.getElementById('signupReferralInput');
-      if (refInput) refInput.value = refLink;
-      
-      const refText = document.getElementById('homeReferralLinkText');
-      if (refText) refText.textContent = 'https://dollar-investment-offical.github.io/https-dollar-investment-app.com-signup-ref-User-391126/';
-
-      const savedUser = localStorage.getItem('dollar_saved_user');
-      const savedPass = localStorage.getItem('dollar_saved_pass');
-
-      if (savedUser && savedPass) {
-        const uInp = document.getElementById('loginUser');
-        const pInp = document.getElementById('loginPassword');
-        if (uInp) uInp.value = savedUser;
-        if (pInp) pInp.value = savedPass;
-      }
-
       updateUI();
       checkCooldown();
       setInterval(checkCooldown, 1000);
@@ -2598,98 +2563,54 @@
     }
 
     function showLoginScreen() {
-      const su = document.getElementById('signupScreen');
-      const li = document.getElementById('loginScreen');
-      if (su) su.classList.add('hidden');
-      if (li) li.classList.remove('hidden');
+      document.getElementById('signupScreen').classList.add('hidden');
+      document.getElementById('loginScreen').classList.remove('hidden');
     }
 
     function showSignupScreen() {
-      const li = document.getElementById('loginScreen');
-      const su = document.getElementById('signupScreen');
-      if (li) li.classList.add('hidden');
-      if (su) su.classList.remove('hidden');
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('signupScreen').classList.remove('hidden');
     }
 
     function handleSignUp() {
-      const emailElem = document.getElementById('signupEmailPhone');
-      const passElem = document.getElementById('signupPassword');
-      const confirmElem = document.getElementById('signupConfirmPassword');
+      const email = document.getElementById('signupEmailPhone').value.trim();
+      const pass = document.getElementById('signupPassword').value;
+      const confirmPass = document.getElementById('signupConfirmPassword').value;
 
-      const email = emailElem ? emailElem.value.trim() : '';
-      const pass = passElem ? passElem.value : '';
-      const confirmPass = confirmElem ? confirmElem.value : '';
-
-      if (!email || !pass) {
-        alert("Please fill in email/phone and password.");
-        return;
-      }
-
-      if (pass !== confirmPass) {
-        alert("Passwords do not match.");
-        return;
-      }
+      if (!email || !pass) { alert("Please fill in email/phone and password."); return; }
+      if (pass !== confirmPass) { alert("Passwords do not match."); return; }
 
       appData.user = email;
-      if (typeof appData.balance !== 'number') appData.balance = 0;
+      if (!appData.balance) appData.balance = 0;
       if (!appData.signupBonusCredited) {
         appData.balance += 2.00;
         appData.signupBonusCredited = true;
-        if (!appData.historyRecords) appData.historyRecords = [];
         appData.historyRecords.unshift({
           type: 'Signup Welcome Bonus', amount: 2.00, status: 'Success',
           time: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
         });
       }
-      // A referral ID is captured from ?ref=... . Linking different users and paying
-      // commissions requires a server-side account database; browser storage alone cannot do that safely.
-      const referralId = new URLSearchParams(window.location.search).get('ref');
-      if (referralId && String(referralId) !== String(appData.userId)) appData.referredBy = referralId;
-      if (!appData.teamMembers) appData.teamMembers = [];
 
       saveState();
-
-      localStorage.setItem('dollar_saved_user', email);
-      localStorage.setItem('dollar_saved_pass', pass);
-
       showToast("Account created successfully! $2 USDT Bonus credited.");
-      
-      const su = document.getElementById('signupScreen');
-      const li = document.getElementById('loginScreen');
-      if (su) su.classList.add('hidden');
-      if (li) li.classList.add('hidden');
+      document.getElementById('signupScreen').classList.add('hidden');
+      document.getElementById('loginScreen').classList.add('hidden');
       updateUI();
     }
 
     function handleLogIn() {
-      const userElem = document.getElementById('loginUser');
-      const passElem = document.getElementById('loginPassword');
+      const user = document.getElementById('loginUser').value.trim();
+      const pass = document.getElementById('loginPassword').value;
 
-      const user = userElem ? userElem.value.trim() : '';
-      const pass = passElem ? passElem.value : '';
-
-      if (!user || !pass) {
-        alert("Please enter credentials.");
-        return;
-      }
+      if (!user || !pass) { alert("Please enter credentials."); return; }
 
       appData.user = user;
-      if (!appData.balance || appData.balance < 2) {
-        appData.balance = 2.00;
-      }
+      if (!appData.balance || appData.balance < 2) appData.balance = 2.00;
 
       saveState();
-
-      localStorage.setItem('dollar_saved_user', user);
-      localStorage.setItem('dollar_saved_pass', pass);
-
       showToast("Logged in successfully!");
-      
-      const su = document.getElementById('signupScreen');
-      const li = document.getElementById('loginScreen');
-      if (su) su.classList.add('hidden');
-      if (li) li.classList.add('hidden');
-      
+      document.getElementById('signupScreen').classList.add('hidden');
+      document.getElementById('loginScreen').classList.add('hidden');
       updateUI();
     }
 
@@ -2699,10 +2620,8 @@
     }
 
     function handleDeleteAccount() {
-      if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+      if (confirm("Are you sure you want to delete your account?")) {
         localStorage.removeItem(STORAGE_KEY);
-        localStorage.removeItem('dollar_saved_user');
-        localStorage.removeItem('dollar_saved_pass');
         showToast("Account deleted.");
         setTimeout(() => location.reload(), 1000);
       }
@@ -2711,13 +2630,9 @@
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-
-      const targetTab = document.getElementById(tabId);
-      if (targetTab) targetTab.classList.add('active');
-
+      document.getElementById(tabId).classList.add('active');
       const navBtn = document.getElementById(tabId.replace('tab-', 'nav-'));
       if (navBtn) navBtn.classList.add('active');
-
       document.getElementById('universalHeader').style.display = 'none';
       document.getElementById('mainHeader').style.display = 'flex';
       updateUI();
@@ -2725,17 +2640,13 @@
 
     function openSubPage(pageId, title) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      const sub = document.getElementById(pageId);
-      if (sub) sub.classList.add('active');
+      document.getElementById(pageId).classList.add('active');
       document.getElementById('mainHeader').style.display = 'none';
       document.getElementById('universalHeaderTitle').textContent = title;
       document.getElementById('universalHeader').style.display = 'flex';
     }
 
-    function navigateBack() {
-      switchTab('tab-home');
-    }
-
+    function navigateBack() { switchTab('tab-home'); }
     function openDepositModal() { document.getElementById('depositModal').classList.add('active'); }
     function closeDepositModal() { document.getElementById('depositModal').classList.remove('active'); }
 
@@ -2749,112 +2660,67 @@
     }
 
     function copyDepositAddress() {
-      const addr = document.getElementById('depositWalletAddress').textContent;
-      navigator.clipboard.writeText(addr);
+      navigator.clipboard.writeText(document.getElementById('depositWalletAddress').textContent);
       showToast("Deposit address copied!");
     }
 
     function submitDepositPayment() {
       const depositAmt = parseFloat(document.getElementById('depositAmountInput').value) || 0;
-      if (!Number.isFinite(depositAmt) || depositAmt < 25) {
-        alert("Minimum deposit amount is $25 USDT.");
-        return;
-      }
+      if (depositAmt < 25) { alert("Minimum deposit amount is $25 USDT."); return; }
       const fee = Number((depositAmt * 0.09).toFixed(2));
       const netAmount = Number((depositAmt - fee).toFixed(2));
       closeDepositModal();
-      const now = new Date();
-      const timeStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-      const record = {
-        id: 'dep_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+      
+      appData.historyRecords.unshift({
+        id: 'dep_' + Date.now(),
         type: 'Deposit (9% fee deducted)',
         amount: netAmount,
         grossAmount: depositAmt,
         fee: fee,
         netAmount: netAmount,
         status: 'Pending Verification',
-        time: timeStr,
-        note: 'Gross: ' + depositAmt.toFixed(2) + ' USDT; 9% fee: ' + fee.toFixed(2) + ' USDT; net: ' + netAmount.toFixed(2) + ' USDT'
-      };
-      if (!appData.historyRecords) appData.historyRecords = [];
-      appData.historyRecords.unshift(record);
+        time: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+      });
       saveState();
-      renderHistory();
       updateUI();
-      showToast('Deposit request saved as PENDING. Expected review: 5 minutes to 1 hour. Funds will not be credited until payment is verified.');
-      alert('Deposit request submitted. Status: Pending Verification. Expected review time is 5 minutes to 1 hour. Net credit after 9% fee: ' + netAmount.toFixed(2) + ' USDT. No balance or referral reward is credited until a trusted payment verifier confirms the transaction.');
-    }
-
-    // Called only by a trusted backend after on-chain/payment verification.
-    // Do not call this from a public button or a client-side timer.
-    function applyVerifiedDeposit(recordId, verifiedByServer) {
-      if (verifiedByServer !== true) return false;
-      const record = (appData.historyRecords || []).find(r => r.id === recordId);
-      if (!record || record.status !== 'Pending Verification') return false;
-      record.status = 'Success';
-      appData.balance = Number((appData.balance + Number(record.netAmount || record.amount || 0)).toFixed(2));
-      record.verifiedAt = new Date().toISOString();
-      saveState();
-      renderHistory();
-      updateUI();
-      return true;
+      alert('Deposit request submitted. Status: Pending Verification. Expected review time is 5 minutes to 1 hour.');
     }
 
     function handleWithdrawSubmit() {
       const amt = parseFloat(document.getElementById('withdrawAmountInput').value) || 0;
       const addr = document.getElementById('withdrawAddressInput').value.trim();
 
-      if (amt < 50) {
-        alert("Minimum withdrawal amount is $50 USDT.");
-        return;
-      }
-
-      if (!addr) {
-        alert("Please enter a valid wallet address.");
-        return;
-      }
-
-      if (amt > appData.balance) {
-        alert("Insufficient account balance.");
-        return;
-      }
+      if (amt < 50) { alert("Minimum withdrawal amount is $50 USDT."); return; }
+      if (!addr) { alert("Please enter a valid wallet address."); return; }
+      if (amt > appData.balance) { alert("Insufficient account balance."); return; }
 
       const daysJoined = Math.floor((Date.now() - appData.joinTimestamp) / (1000 * 60 * 60 * 24));
       const feePct = daysJoined >= 25 ? 0.00 : 0.09;
-      const feeAmt = amt * feePct;
-      const finalAmt = amt - feeAmt;
+      const finalAmt = amt - (amt * feePct);
 
       appData.balance -= amt;
-
-      const now = new Date();
-      const timeStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-
-      if (!appData.historyRecords) appData.historyRecords = [];
       appData.historyRecords.unshift({
         type: `Withdrawal (${(feePct*100)}% Fee)`,
         amount: finalAmt,
         status: "Processing (10m - 3 Days)",
-        time: timeStr
+        time: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
       });
 
       saveState();
-      renderHistory();
       updateUI();
-      showToast(`Withdrawal of $${finalAmt.toFixed(2)} USDT submitted! Processing time: 10 minutes to 3 business days.`);
+      showToast(`Withdrawal of $${finalAmt.toFixed(2)} USDT submitted!`);
       switchTab('tab-home');
     }
 
     function selectInvestmentPct(pct) {
       document.querySelectorAll('.pct-btn').forEach(b => b.classList.remove('active'));
       if (event && event.target) event.target.classList.add('active');
-      const calcAmt = (appData.balance * (pct / 100)).toFixed(2);
-      document.getElementById('homeInvestInput').value = calcAmt;
+      document.getElementById('homeInvestInput').value = (appData.balance * (pct / 100)).toFixed(2);
     }
 
     function checkCooldown() {
       const elapsed = Date.now() - (appData.lastOrderTimestamp || 0);
       const cooldownMs = 24 * 60 * 60 * 1000;
-
       const notice = document.getElementById('cooldownNotice');
       const timer = document.getElementById('cooldownTimer');
       const btn = document.getElementById('btnCreateOrder');
@@ -2867,48 +2733,28 @@
 
         if (notice) notice.style.display = 'block';
         if (timer) timer.textContent = `${hours}:${mins}:${secs}`;
-        if (btn) {
-          btn.disabled = true;
-          btn.style.opacity = '0.5';
-        }
+        if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
       } else {
         if (notice) notice.style.display = 'none';
-        if (btn) {
-          btn.disabled = false;
-          btn.style.opacity = '1';
-        }
+        if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
       }
     }
 
     function startAIOrderProcess() {
       const investAmt = parseFloat(document.getElementById('homeInvestInput').value) || 0;
-
-      if (investAmt < 25) {
-        alert("Minimum investment amount is $25 USDT.");
-        return;
-      }
-
-      if (investAmt > appData.balance) {
-        alert("Investment amount exceeds available balance.");
-        return;
-      }
+      if (investAmt < 25) { alert("Minimum investment amount is $25 USDT."); return; }
+      if (investAmt > appData.balance) { alert("Investment amount exceeds available balance."); return; }
 
       document.getElementById('tradingSimulationBox').style.display = 'block';
       document.getElementById('btnCreateOrder').disabled = true;
 
-      const pairs = ["BTC/USDT", "ETH/USDT", "CRUDE_OIL/USDT"];
       let countdown = 180;
-
       const timerInterval = setInterval(() => {
         countdown--;
         const m = Math.floor(countdown / 60).toString().padStart(2, '0');
         const s = (countdown % 60).toString().padStart(2, '0');
         const tDisp = document.getElementById('timerDisplay');
         if (tDisp) tDisp.textContent = `${m}:${s}`;
-
-        const randomPair = pairs[Math.floor(Math.random() * pairs.length)];
-        const pairStat = document.getElementById('livePairStatus');
-        if (pairStat) pairStat.textContent = `Executing Smart Strategy Arbitrage on ${randomPair}...`;
 
         if (countdown <= 0) {
           clearInterval(timerInterval);
@@ -2918,22 +2764,17 @@
           appData.balance += profit;
           appData.lastOrderTimestamp = Date.now();
 
-          const now = new Date();
-          const timeStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-
-          if (!appData.historyRecords) appData.historyRecords = [];
           appData.historyRecords.unshift({
             type: "AI Strategy Trading Return (+2%)",
             amount: profit,
             status: "Success",
-            time: timeStr
+            time: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
           });
 
           saveState();
-          renderHistory();
           updateUI();
           checkCooldown();
-          showToast(`Order Complete! Profit +$${profit.toFixed(2)} USDT added to balance.`);
+          showToast(`Order Complete! Profit +$${profit.toFixed(2)} USDT added.`);
         }
       }, 1000);
     }
@@ -2945,21 +2786,10 @@
     }
 
     function handleKycCapture(type, event) {
-      const file = event.target.files[0];
-      if (file) {
-        if (type === 'Front') {
-          appData.kycFrontUploaded = true;
-          document.getElementById('kycFrontStatus').textContent = '✅ ID Front Captured Successfully';
-          document.getElementById('kycFrontStatus').style.color = 'var(--accent-green)';
-        } else if (type === 'Back') {
-          appData.kycBackUploaded = true;
-          document.getElementById('kycBackStatus').textContent = '✅ ID Back Captured Successfully';
-          document.getElementById('kycBackStatus').style.color = 'var(--accent-green)';
-        } else if (type === 'Selfie') {
-          appData.kycSelfieUploaded = true;
-          document.getElementById('kycSelfieStatus').textContent = '✅ Live Selfie Captured Successfully';
-          document.getElementById('kycSelfieStatus').style.color = 'var(--accent-green)';
-        }
+      if (event.target.files[0]) {
+        if (type === 'Front') { appData.kycFrontUploaded = true; document.getElementById('kycFrontStatus').textContent = '✅ ID Front Captured Successfully'; document.getElementById('kycFrontStatus').style.color = 'var(--accent-green)'; }
+        if (type === 'Back') { appData.kycBackUploaded = true; document.getElementById('kycBackStatus').textContent = '✅ ID Back Captured Successfully'; document.getElementById('kycBackStatus').style.color = 'var(--accent-green)'; }
+        if (type === 'Selfie') { appData.kycSelfieUploaded = true; document.getElementById('kycSelfieStatus').textContent = '✅ Live Selfie Captured Successfully'; document.getElementById('kycSelfieStatus').style.color = 'var(--accent-green)'; }
         saveState();
         showToast(`${type} image captured successfully!`);
       }
@@ -2967,147 +2797,41 @@
 
     function submitKycVerification() {
       if (!appData.kycFrontUploaded || !appData.kycBackUploaded || !appData.kycSelfieUploaded) {
-        alert("⚠️ Mandatory Notice: Please capture and upload all 3 documents (ID Front, ID Back, and Live Selfie) using the camera before submitting verification.");
+        alert("⚠️ Please capture and upload all 3 documents (ID Front, ID Back, Live Selfie).");
         return;
       }
-
       appData.kycStatus = 'Verified';
       saveState();
       updateUI();
-      showToast("Identity Verification Completed Successfully: Verified!");
+      showToast("Identity Verification Completed Successfully!");
       switchTab('tab-me');
     }
 
     function copyReferralLink() {
-      const linkText = document.getElementById('homeReferralLinkText').textContent;
-      navigator.clipboard.writeText(linkText);
+      navigator.clipboard.writeText(document.getElementById('homeReferralLinkText').textContent);
       showToast("Referral link copied successfully!");
-    }
-
-    function renderHistory() {
-      const container = document.getElementById('globalHistoryList');
-      if (!container) return;
-      if (!appData.historyRecords || appData.historyRecords.length === 0) {
-        container.innerHTML = '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;" data-i18n="noHistory">No recent history recorded.</div>';
-        changeLanguage(currentLang);
-        return;
-      }
-
-      let html = '';
-      appData.historyRecords.forEach(r => {
-        const isGreen = r.status.includes('Success') || r.type.includes('Return') || r.type.includes('Bonus');
-        const badgeColor = isGreen ? 'var(--accent-green)' : 'var(--accent-yellow)';
-        html += `
-          <div class="list-item">
-            <div>
-              <div style="font-weight:800; color:#fff;">${r.type}</div>
-              <div style="font-size:11px; color:var(--text-muted); font-weight:600;">${r.time}</div>
-              ${r.note ? `<div style="font-size:10px; color:var(--text-muted); margin-top:3px;">${r.note}</div>` : ''}
-            </div>
-            <div style="text-align:right;">
-              <div style="font-weight:900; color:#fff;">$${Number(r.amount || 0).toFixed(2)} USDT</div>
-              <div style="font-weight:800; color:${badgeColor}; font-size:11px;">${r.status}</div>
-            </div>
-          </div>
-        `;
-      });
-      container.innerHTML = html;
-    }
-
-    function renderTeamMembers() {
-      const container = document.getElementById('teamMemberList');
-      if (!container) return;
-      if (!appData.teamMembers || appData.teamMembers.length === 0) {
-        container.innerHTML = '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:12px;" data-i18n="noTeamMembers">No team members registered under your link yet. Share your link to earn 10% deposit commissions!</div>';
-        changeLanguage(currentLang);
-        return;
-      }
-
-      let html = '';
-      appData.teamMembers.forEach((m, idx) => {
-        html += `
-          <div class="list-item">
-            <div>
-              <div style="font-weight:800; color:var(--accent-cyan);">Member #${391127 + idx} (${m.name})</div>
-              <div style="font-size:11px; color:var(--text-muted);">Joined: ${m.time}</div>
-            </div>
-            <div style="text-align:right;">
-              <div style="font-weight:900; color:var(--accent-green);">Active Chain User</div>
-              <div style="font-size:11px; color:#ffd166;">10% Commission Active</div>
-            </div>
-          </div>
-        `;
-      });
-      container.innerHTML = html;
     }
 
     function updateUI() {
       const balanceVal = appData.balance || 0;
-      const refEarnedVal = appData.referralEarned || 0;
-
       const setT = (id, txt) => { const e = document.getElementById(id); if (e) e.textContent = txt; };
-      const setV = (id, txt) => { const e = document.getElementById(id); if (e) e.value = txt; };
-
+      
       setT('homeTotalAssetsDisplay', balanceVal.toFixed(2));
       setT('totalBalanceDisplay', balanceVal.toFixed(2));
       setT('flexibleFundsDisplay', balanceVal.toFixed(2) + " USDT");
-      setV('homeInvestInput', balanceVal.toFixed(2));
 
-      setT('homeReferralEarnedDisplay', "$" + refEarnedVal.toFixed(2));
-      setT('assetsReferralEarnedDisplay', "$" + refEarnedVal.toFixed(2));
-      setT('assetReferralFundDisplay', refEarnedVal.toFixed(2) + " USDT");
-
-      const daysJoined = Math.floor((Date.now() - (appData.joinTimestamp || Date.now())) / (1000 * 60 * 60 * 24));
-      setT('daysJoinedText', `${daysJoined} / 25 Days`);
-      if (daysJoined >= 25) {
-        setT('freeWithdrawStatusText', "🎉 Free Withdrawal Unlocked (0% Fee)");
-        setT('withdrawalFeeNotice', "0% Deduction (Free Privilege Active)");
-      }
-
-      setT('meUsernameDisplay', appData.user || "Dollar-User");
-      setT('meUserIdDisplay', `ID: ${appData.userId || 34001}`);
-      
       const kycBadge = document.getElementById('meKycStatusBadge');
       if (kycBadge) {
         kycBadge.textContent = `KYC: ${appData.kycStatus || 'Pending'}`;
         kycBadge.className = `badge-status ${appData.kycStatus === 'Verified' ? 'badge-verified' : 'badge-pending'}`;
       }
 
-      if (appData.kycFrontUploaded) {
-        const kf = document.getElementById('kycFrontStatus');
-        if (kf) { kf.textContent = '✅ ID Front Captured Successfully'; kf.style.color = 'var(--accent-green)'; }
-      }
-      if (appData.kycBackUploaded) {
-        const kb = document.getElementById('kycBackStatus');
-        if (kb) { kb.textContent = '✅ ID Back Captured Successfully'; kb.style.color = 'var(--accent-green)'; }
-      }
-      if (appData.kycSelfieUploaded) {
-        const ks = document.getElementById('kycSelfieStatus');
-        if (ks) { ks.textContent = '✅ Live Selfie Captured Successfully'; ks.style.color = 'var(--accent-green)'; }
-      }
-
-      const teamSize = appData.teamMembers ? appData.teamMembers.length : 0;
-      setT('homeTeamSizeText', `${teamSize} Members`);
-      setT('teamOverviewSize', `${teamSize} Members`);
-      setT('teamOverviewIncome', `$${refEarnedVal.toFixed(2)}`);
-      setT('homeTodayJoinersText', `+${teamSize} Users`);
-
-      for (let i = 1; i <= 7; i++) {
-        const card = document.getElementById(`gridCard${i}`);
-        if (card) card.classList.remove('active');
-      }
-
-      if (teamSize >= 16 && document.getElementById('gridCard7')) document.getElementById('gridCard7').classList.add('active');
-      else if (teamSize >= 14 && document.getElementById('gridCard6')) document.getElementById('gridCard6').classList.add('active');
-      else if (teamSize >= 12 && document.getElementById('gridCard5')) document.getElementById('gridCard5').classList.add('active');
-      else if (teamSize >= 10 && document.getElementById('gridCard4')) document.getElementById('gridCard4').classList.add('active');
-      else if (teamSize >= 8 && document.getElementById('gridCard3')) document.getElementById('gridCard3').classList.add('active');
-      else if (teamSize >= 6 && document.getElementById('gridCard2')) document.getElementById('gridCard2').classList.add('active');
-      else if (teamSize >= 4 && document.getElementById('gridCard1')) document.getElementById('gridCard1').classList.add('active');
-
-      renderHistory();
-      renderTeamMembers();
-      changeLanguage(currentLang);
+      let histHtml = '';
+      (appData.historyRecords || []).forEach(r => {
+        histHtml += `<div class="list-item"><div><div style="font-weight:800; color:#fff;">${r.type}</div><div style="font-size:11px; color:var(--text-muted);">${r.time}</div></div><div style="text-align:right;"><div style="font-weight:900; color:#fff;">$${Number(r.amount || 0).toFixed(2)} USDT</div><div style="font-weight:800; color:var(--accent-green); font-size:11px;">${r.status}</div></div></div>`;
+      });
+      const histElem = document.getElementById('globalHistoryList');
+      if (histElem) histElem.innerHTML = histHtml || '<div style="color:var(--text-muted); text-align:center; padding:10px;">No recent history recorded.</div>';
     }
   </script>
 </body>
