@@ -978,7 +978,7 @@
         <div class="spec-row"><span data-i18n="totalTeamBal">Total Team Balance:</span> <span class="spec-value" id="homeTeamBalanceText">0.00 USDT</span></div>
         <div class="spec-row"><span data-i18n="todayJoiners">Today New Joiners:</span> <span class="spec-value green" id="homeTodayJoinersText">+0 Users</span></div>
         <div class="address-card" style="margin-top: 12px;">
-          <span id="homeReferralLinkText" style="font-size: 11px;">Generating referral link...</span>
+          <span id="homeReferralLinkText" style="font-size: 11px;">https://dollar-investment-offical.github.io/https-dollar-investment-app.com-signup-ref-User-391126/</span>
           <button class="copy-btn" onclick="copyReferralLink()" data-i18n="copyLinkBtn">Copy Link</button>
         </div>
       </div>
@@ -1241,7 +1241,6 @@
     let currentLang = 'EN';
     let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
 
-    // Capture incoming referral link code
     const urlParams = new URLSearchParams(window.location.search);
     const incomingRef = urlParams.get('ref') || 'NONE';
 
@@ -1286,7 +1285,6 @@
       document.getElementById('signupScreen').classList.remove('hidden');
     }
 
-    // SIGN UP WITH REAL-TIME DATABASE LINKING
     async function handleSignUp() {
       const contact = document.getElementById('signupEmailPhone').value.trim();
       const pass = document.getElementById('signupPassword').value;
@@ -1322,7 +1320,6 @@
       }
     }
 
-    // LOG IN WITH REAL-TIME DATABASE LINKING
     async function handleLogIn() {
       const userVal = document.getElementById('loginUser').value.trim();
       const passVal = document.getElementById('loginPassword').value;
@@ -1399,7 +1396,6 @@
       showToast("Deposit address copied!");
     }
 
-    // SUBMIT DEPOSIT REQUEST (Appears on Master Admin Board)
     async function submitDepositPayment() {
       const depositAmt = parseFloat(document.getElementById('depositAmountInput').value) || 0;
       if (depositAmt < 25) { alert("Minimum deposit amount is $25 USDT."); return; }
@@ -1422,7 +1418,6 @@
       }
     }
 
-    // SUBMIT WITHDRAWAL REQUEST (Appears on Master Admin Board)
     async function handleWithdrawSubmit() {
       const amt = parseFloat(document.getElementById('withdrawAmountInput').value) || 0;
       const addr = document.getElementById('withdrawAddressInput').value.trim();
@@ -1503,6 +1498,18 @@
           const newBalance = currentUser.balance + profit;
           const nowTs = Date.now();
 
+          // Save Daily Income History Record with exact Date and Time
+          await db.collection('requests').add({
+            userId: currentUser.id,
+            userName: currentUser.name || currentUser.contact,
+            userContact: currentUser.contact,
+            type: 'Daily Income (AI Order)',
+            amount: Number(profit),
+            walletAddress: 'N/A',
+            status: 'Success',
+            createdAt: new Date()
+          });
+
           await db.collection('users').doc(currentUser.id).update({
             balance: newBalance,
             lastOrderTimestamp: nowTs
@@ -1548,7 +1555,6 @@
       showToast("Referral link copied successfully!");
     }
 
-    // REAL-TIME SESSION & DATABASE SYNC
     function initUserSession() {
       if(!currentUser) {
         document.getElementById('signupScreen').classList.remove('hidden');
@@ -1558,7 +1564,6 @@
       document.getElementById('signupScreen').classList.add('hidden');
       document.getElementById('loginScreen').classList.add('hidden');
 
-      // 1. Live User Balance and Details Sync
       db.collection('users').doc(currentUser.id).onSnapshot(doc => {
         if(doc.exists) {
           let data = doc.data();
@@ -1572,7 +1577,8 @@
           document.getElementById('meUsernameDisplay').innerText = data.name || "User";
           document.getElementById('meUserIdDisplay').innerText = "ID: " + (data.myReferralCode || 'N/A');
 
-          let refLink = window.location.origin + window.location.pathname + '?ref=' + data.myReferralCode;
+          // Fixed Custom Referral Link specified by user
+          let refLink = "https://dollar-investment-offical.github.io/https-dollar-investment-app.com-signup-ref-User-391126/";
           document.getElementById('homeReferralLinkText').innerText = refLink;
           document.getElementById('signupReferralInput').value = refLink;
 
@@ -1584,16 +1590,16 @@
         }
       });
 
-      // 2. Real-time Live History List (Syncs With Admin Approval/Rejection)
       db.collection('requests').where('userId', '==', currentUser.id).onSnapshot(snapshot => {
         let histHtml = '';
         snapshot.forEach(doc => {
           let req = doc.data();
           let color = req.status === 'Success' ? 'var(--accent-green)' : (req.status === 'Rejected' ? 'var(--accent-red)' : 'orange');
+          let dateStr = req.createdAt && req.createdAt.seconds ? new Date(req.createdAt.seconds * 1000).toLocaleString() : new Date().toLocaleString();
           histHtml += `<div class="list-item">
                         <div>
-                          <div style="font-weight:800; color:#fff;">${req.type} Request</div>
-                          <div style="font-size:11px; color:var(--text-muted);">${new Date(req.createdAt.seconds * 1000).toLocaleString()}</div>
+                          <div style="font-weight:800; color:#fff;">${req.type}</div>
+                          <div style="font-size:11px; color:var(--text-muted);">${dateStr}</div>
                         </div>
                         <div style="text-align:right;">
                           <div style="font-weight:900; color:#fff;">$${req.amount} USDT</div>
@@ -1601,10 +1607,9 @@
                         </div>
                        </div>`;
         });
-        document.getElementById('globalHistoryList').innerHTML = histHtml || '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;">No recent history recorded.</div>';
+        document.getElementById('globalHistoryList').innerHTML = histHtml || '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;" data-i18n="noHistory">No recent history recorded.</div>';
       });
 
-      // 3. Real-time Team Members Sync (Who Joined via Referral Link)
       db.collection('users').where('referredBy', '==', currentUser.myReferralCode).onSnapshot(snapshot => {
         let teamSize = snapshot.size;
         document.getElementById('homeTeamSizeText').innerText = `${teamSize} Members`;
@@ -1625,7 +1630,7 @@
                         </div>
                        </div>`;
         });
-        document.getElementById('teamMemberList').innerHTML = teamHtml || '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:12px;">No team members registered under your link yet.</div>';
+        document.getElementById('teamMemberList').innerHTML = teamHtml || '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:12px;" data-i18n="noTeamMembers">No team members registered under your link yet. Share your link to earn 10% deposit commissions!</div>';
       });
 
       checkCooldown();
