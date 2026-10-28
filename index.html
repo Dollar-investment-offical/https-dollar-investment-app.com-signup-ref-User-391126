@@ -996,7 +996,7 @@
         <div class="input-group">
           <div class="input-label">
             <span data-i18n="investAmount">Investment Amount</span>
-            <span>Min: $25</span>
+            <span>Min: $20</span>
           </div>
           <div class="amount-input-wrapper">
             <input type="number" id="homeInvestInput" class="amount-input" value="2.00">
@@ -1378,96 +1378,81 @@
     const urlParams = new URLSearchParams(window.location.search);
     const incomingRef = urlParams.get('ref') || 'NONE';
 
-    // 5,000+ Global Names Generator Engine (Europe, Asia, Middle East - Boys & Girls)
-    const firstNamesGlobal = [
-      // European Names
-      "Lucas", "Emma", "Liam", "Olivia", "Noah", "Sophia", "Oliver", "Amelia", "Elijah", "Mia",
-      "Mateo", "Charlotte", "Leo", "Harper", "Benjamin", "Evelyn", "Ethan", "Abigail", "Alexander", "Emily",
-      "Gabriel", "Elizabeth", "Julian", "Sofia", "Christian", "Aria", "Nathan", "Scarlett", "Aaron", "Victoria",
-      // Middle Eastern Names
-      "Mohammed", "Fatima", "Ahmed", "Zainab", "Omar", "Mariam", "Youssef", "Aisha", "Hamza", "Noor",
-      "Ali", "Khadija", "Hassan", "Sara", "Ibrahim", "Layla", "Tariq", "Yasmin", "Zaid", "Amira",
-      "Mustafa", "Dania", "Bilal", "Rania", "Khalid", "Salma", "Amir", "Reem", "Fهد", "Nour",
-      // Asian Names
-      "Hiroshi", "Mei", "Wei", "Aarav", "Priya", "Jian", "Ananya", "Min-ho", "Ji-woo", "Rohan",
-      "Arjun", "Sneha", "Tatsuya", "Sakura", "Kenji", "Hana", "Rahul", "Pooja", "Vikram", "Deepika",
-      "Chen", "Li", "Jun", "Jing", "Tao", "Yang", "Sunil", "Anil", "Kavita", "Ritu",
-      // Additional Global Names
-      "Mateusz", "Zofia", "Jan", "Julia", "Jakub", "Maja", "Kacper", "Hanna", "Szymon", "Lena",
-      "Giovanni", "Giulia", "Francesco", "Aurora", "Alessandro", "Alice", "Leonardo", "Sofia", "Mattia", "Beatrice",
-      "Jean", "Chloé", "Louis", "Jade", "Gabriel", "Louise", "Jules", "Emma", "Raphaël", "Alice",
-      "Carlos", "Lucia", "Mateo", "Sofia", "Alejandro", "Valentina", "Diego", "Camila", "Daniel", "Valeria"
+    const firstNamesBoys = [
+      "James", "John", "Robert", "Michael", "William", "David", "Richard", "Joseph", "Thomas", "Charles",
+      "Christopher", "Daniel", "Matthew", "Anthony", "Mark", "Donald", "Steven", "Paul", "Andrew", "Joshua",
+      "Kenneth", "Kevin", "Brian", "George", "Timothy", "Ronald", "Edward", "Jason", "Jeffrey", "Ryan",
+      "Jacob", "Gary", "Nicholas", "Eric", "Jonathan", "Stephen", "Larry", "Justin", "Scott", "Brandon",
+      "Benjamin", "Samuel", "Gregory", "Alexander", "Frank", "Patrick", "Raymond", "Jack", "Dennis", "Jerry",
+      "Tariq", "Zaid", "Omar", "Youssef", "Hamza", "Bilal", "Ali", "Hassan", "Hussein", "Mustafa",
+      "Sanjay", "Rahul", "Amit", "Vikram", "Arjun", "Rohan", "Rajesh", "Sunil", "Anil", "Deepak",
+      "Wei", "Ming", "Jun", "Jie", "Tao", "Chen", "Hao", "Lei", "Yang", "Long",
+      "Carlos", "Juan", "Luis", "Pedro", "Diego", "Mateo", "Santiago", "Alejandro", "Gabriel", "Fernando"
     ];
 
-    const lastNamesGlobal = [
+    const firstNamesGirls = [
+      "Mary", "Patricia", "Jennifer", "Linda", "Elizabeth", "Barbara", "Susan", "Jessica", "Sarah", "Karen",
+      "Lisa", "Nancy", "Betty", "Margaret", "Sandra", "Ashley", "Kimberly", "Emily", "Donna", "Michelle",
+      "Carol", "Amanda", "Dorothy", "Melissa", "Deborah", "Stephanie", "Rebecca", "Sharon", "Laura", "Cynthia",
+      "Kathleen", "Amy", "Angela", "Shirley", "Anna", "Brenda", "Pamela", "Emma", "Nicole", "Helen",
+      "Samantha", "Katherine", "Christine", "Debra", "Rachel", "Carolyn", "Janet", "Maria", "Heather", "Diane",
+      "Fatima", "Aisha", "Zahra", "Maryam", "Zainab", "Nur", "Khadija", "Layla", "Yara", "Amira",
+      "Priya", "Ananya", "Pooja", "Sunita", "Anita", "Deepika", "Kavita", "Ritu", "Neha", "Sneha", "Kiran",
+      "Mei", "Li", "Xiuying", "Jing", "Yan", "Huan", "Ting", "Ling", "Fang", "Na",
+      "Sofia", "Camila", "Valeria", "Mariana", "Isabella", "Lucia", "Martina", "Elena", "Paula", "Carmen"
+    ];
+
+    const lastNames = [
       "Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez",
       "Hernandez", "Lopez", "Gonzalez", "Wilson", "Anderson", "Thomas", "Taylor", "Moore", "Jackson", "Martin",
       "Lee", "Perez", "Thompson", "White", "Harris", "Sanchez", "Clark", "Ramirez", "Lewis", "Robinson",
       "Walker", "Young", "Allen", "King", "Wright", "Scott", "Torres", "Nguyen", "Hill", "Flores",
+      "Green", "Adams", "Nelson", "Baker", "Hall", "Rivera", "Campbell", "Mitchell", "Carter", "Roberts",
       "Khan", "Ali", "Ahmed", "Syed", "Shah", "Malik", "Hussain", "Chaudhry", "Raza", "Sheikh",
       "Sharma", "Verma", "Gupta", "Patel", "Singh", "Kumar", "Reddy", "Joshi", "Mehta", "Rao",
-      "Wang", "Li", "Zhang", "Liu", "Chen", "Yang", "Huang", "Zhao", "Wu", "Zhou",
-      "Rossi", "Russo", "Ferrari", "Esposito", "Bianchi", "Romano", "Colombo", "Ricci", "Marino", "Greco",
-      "Dubois", "Martin", "Bernard", "Thomas", "Robert", "Petit", "Durand", "Leroy", "Moreau", "Simon",
-      "Müller", "Schmidt", "Schneider", "Fischer", "Weber", "Meyer", "Wagner", "Becker", "Schulz", "Hoffmann"
+      "Wang", "Li", "Zhang", "Liu", "Chen", "Yang", "Huang", "Zhao", "Wu", "Zhou"
     ];
 
-    let usedGlobalNameIndices = new Set();
-    const TOTAL_GLOBAL_NAMES = 5000;
+    let usedNameIndices = new Set();
+    const TOTAL_UNIQUE_TARGET = 30000;
 
-    function generate5000GlobalUniqueName() {
-      if (usedGlobalNameIndices.size >= TOTAL_GLOBAL_NAMES) {
-        usedGlobalNameIndices.clear();
+    function generateUniqueGlobalName() {
+      if (usedNameIndices.size >= TOTAL_UNIQUE_TARGET) {
+        usedNameIndices.clear();
       }
-      let randFName = firstNamesGlobal[Math.floor(Math.random() * firstNamesGlobal.length)];
-      let randLName = lastNamesGlobal[Math.floor(Math.random() * lastNamesGlobal.length)];
-      let suffixId = Math.floor(100 + Math.random() * 8900);
-      let uniqueKey = `${randFName} ${randLName} #${suffixId}`;
-
-      while (usedGlobalNameIndices.has(uniqueKey)) {
-        randFName = firstNamesGlobal[Math.floor(Math.random() * firstNamesGlobal.length)];
-        randLName = lastNamesGlobal[Math.floor(Math.random() * lastNamesGlobal.length)];
-        suffixId = Math.floor(100 + Math.random() * 8900);
-        uniqueKey = `${randFName} ${randLName} #${suffixId}`;
+      let isBoy = Math.random() > 0.5;
+      let fList = isBoy ? firstNamesBoys : firstNamesGirls;
+      let randFName = fList[Math.floor(Math.random() * fList.length)];
+      let randLName = lastNames[Math.floor(Math.random() * lastNames.length)];
+      let numSuffix = Math.floor(10 + Math.random() * 990);
+      let fullName = `${randFName} ${randLName} #${numSuffix}`;
+      while(usedNameIndices.has(fullName)) {
+        randFName = fList[Math.floor(Math.random() * fList.length)];
+        randLName = lastNames[Math.floor(Math.random() * lastNames.length)];
+        numSuffix = Math.floor(10 + Math.random() * 990);
+        fullName = `${randFName} ${randLName} #${numSuffix}`;
       }
-
-      usedGlobalNameIndices.add(uniqueKey);
+      usedNameIndices.add(fullName);
       return `${randFName} ${randLName}`;
     }
 
-    // 500+ Professional & Appreciation Community Chat Text Templates (Simple & Professional English)
-    const professionalCommunityMessages = [
-      "I received my withdrawal instantly today. Thank you Dollar Investment team!",
-      "I added 3 friends to my team and received my referral bonus right away.",
-      "This platform is extremely transparent and reliable. Always getting daily profits.",
-      "Just received my USDT withdrawal in my TRC20 wallet. Super fast processing!",
-      "I am very happy with the AI trading strategy. Consistent returns every single day.",
-      "Best financial platform of 2026! Customer support is also very helpful.",
-      "Deposited $100 and already earned my daily arbitrage return smoothly.",
-      "Wonderful experience with Dollar Investment. Highly recommended to everyone!",
-      "Received my withdrawal within 10 minutes. 100% genuine and trustworthy app.",
-      "My team members just made their deposits and my 10% commission was credited instantly.",
-      "Amazing AI strategy! Earned stable daily profit without any hassle.",
-      "So glad I joined Dollar Investment. Truly regulated and professional platform.",
-      "Just completed my 25th day and now my withdrawals are completely fee-free!",
-      "Very smooth UI and lightning fast deposits and withdrawals. Love this app.",
-      "Thank you admin for creating such a wonderful platform for steady earnings.",
-      "I recommended this app to my colleagues and everyone is loving the daily profits.",
-      "Superb experience! Got my payout directly to my crypto wallet without any delay.",
-      "The automated arbitrage engine works flawlessly. Very satisfied member.",
-      "Earned $50 profit today from the AI strategy executor. Amazing platform!",
-      "Quick response from support and seamless withdrawal experience today."
+    const positivePraiseTemplates = [
+      "i recived my withdrawal thanks dollar investment",
+      "i am add 5 peoples thanks i recived my referrel bonus",
+      "i am very happy to earn daily",
+      "i am recived my amount , thnaks for quick response",
+      "i am very glad to join dollar investment, its transparent platfrom",
+      "my referrel recived withdrawal, i am desposit 1000 dollar and today earn 25 dollar amazaing, amazing app",
+      "Best platform ever! Customer support responded in less than 2 minutes. Very satisfied!",
+      "Received instant withdrawal in TRC20 wallet. Thank you Dollar Investment team!",
+      "Super transparent platform! The AI trading strategy gives consistent daily profit.",
+      "Got my 10% referral bonus credited immediately. Love this app!",
+      "Master admin support is very fast and helpful. Highly recommended app!",
+      "I deposited $500 yesterday and received my profit smoothly today. Amazing system!",
+      "Very glad to be a member of Dollar Investment. Canada regulated and trustworthy!",
+      "Withdrawal process is seamless. 100% genuine app!",
+      "Kudos to the app support team for helping me with KYC verification so quickly!"
     ];
-
-    // Generate 500+ expanded variations programmatically for richness
-    const expandedCommunityTemplates = [...professionalCommunityMessages];
-    const actionPrefixes = ["Just got", "Successfully received", "Very happy I got", "Extremely pleased with", "Always getting"];
-    const payoutSuffixes = ["with zero issues.", "within minutes.", "directly to my wallet.", "smoothly today.", "as expected!"];
-    
-    for (let i = 0; i < 480; i++) {
-      let baseText = professionalCommunityMessages[i % professionalCommunityMessages.length];
-      expandedCommunityTemplates.push(`${baseText} (Verified Member #${Math.floor(1000 + Math.random() * 9000)})`);
-    }
 
     function changeLanguage(langCode) {
       currentLang = langCode;
@@ -1695,11 +1680,13 @@
           grossAmount: Number(depositAmt),
           amount: Number(netDeposit),
           status: 'Processing',
-          createdAt: new Date()
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
 
         closeDepositModal();
         showToast(`Deposit Request Submitted! Net Amount after 9% fee: $${netDeposit.toFixed(2)} USDT`);
+        // Automatic back to home tab upon successful deposit confirmation
+        switchTab('tab-home');
       } catch(err) {
         alert("Deposit submission failed.");
       }
@@ -1736,7 +1723,7 @@
           walletAddress: addr,
           isFeeDeducted: isWithin25Days,
           status: 'Processing',
-          createdAt: new Date()
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
 
         await db.collection('users').doc(currentUser.id).update({
@@ -1828,8 +1815,14 @@
 
     async function startAIOrderProcess() {
       if (!currentUser) { alert('Please log in first.'); return; }
-
-      // KYC restriction removed completely: any user can create order without verification notifications
+      
+      const balance = Number(currentUser.balance || 0);
+      
+      // Strict validation: Total Assets Balance must be at least $20 USDT to create an order
+      if (balance < 20) {
+        alert('Create Order Failed: Your Total Assets Balance must be at least $20 USDT!');
+        return;
+      }
 
       const now = Date.now();
       if (currentUser.orderStartTime && !currentUser.orderCompletedProcessed) {
@@ -1838,12 +1831,17 @@
       if (currentUser.lastOrderTimestamp && now - currentUser.lastOrderTimestamp < 86400000) {
         alert('You can only create one order every 24 hours!'); checkCooldown(); return;
       }
-      const balance = Number(currentUser.balance || 0);
+      
       const input = document.getElementById('homeInvestInput');
       let investAmt = input && input.value !== '' ? Number(input.value) : balance;
       
       if (!Number.isFinite(investAmt) || investAmt <= 0) { alert('Please enter a valid amount.'); return; }
       
+      if (investAmt < 20) {
+        alert('Create Order Failed: Minimum investment amount must be at least $20 USDT!');
+        return;
+      }
+
       if (!isPctSelected && investAmt > balance) {
         alert('Order cannot be created! Typed amount exceeds your total asset balance.');
         return;
@@ -1885,7 +1883,7 @@
           await db.collection('requests').add({
             userId: currentUser.id, userName: currentUser.name || currentUser.contact,
             userContact: currentUser.contact, type: 'today ai profit',
-            amount: profit, walletAddress: 'N/A', status: 'Success', createdAt: new Date()
+            amount: profit, walletAddress: 'N/A', status: 'Success', createdAt: firebase.firestore.FieldValue.serverTimestamp()
           });
           await db.collection('users').doc(currentUser.id).update({
             balance: newBalance, todayOrderProfit: profit, lastOrderProfit: profit,
@@ -1936,51 +1934,28 @@
         return;
       }
 
-      showToast("Identity verification in progress...");
-
-      try {
-        if(currentUser) {
-          await db.collection('users').doc(currentUser.id).update({
-            kycStatus: 'Pending',
-            kycImages: kycFilesData
-          });
-          currentUser.kycStatus = 'Pending';
-          currentUser.kycImages = kycFilesData;
-          localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        }
-      } catch(err) {
-        console.error(err);
-      }
-
-      switchTab('tab-me');
+      showToast("KYC Verification submitted! Processing...");
 
       setTimeout(async () => {
         if(currentUser) {
-          try {
-            await db.collection('users').doc(currentUser.id).update({
-              kycStatus: 'Approved',
-              kycImages: kycFilesData
-            });
-            currentUser.kycStatus = 'Approved';
-            currentUser.kycImages = kycFilesData;
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            
-            const kycBadge = document.getElementById('meKycStatusBadge');
-            const kycActionText = document.getElementById('meKycActionText');
-            if (kycBadge) {
-              kycBadge.textContent = "KYC: Approved";
-              kycBadge.className = "badge-status badge-verified";
-            }
-            if (kycActionText) {
-              kycActionText.textContent = "Verified ✓";
-            }
-            showToast("Identity verification Approved successfully!");
-          } catch(e) { console.warn(e); }
+          await db.collection('users').doc(currentUser.id).update({
+            kycStatus: 'Verified',
+            kycImages: kycFilesData
+          });
+          currentUser.kycStatus = 'Verified';
+          currentUser.kycImages = kycFilesData;
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
         }
-      }, 45000);
+        showToast("Identity Verified Successfully!");
+        switchTab('tab-me');
+      }, 3000);
     }
 
     function handleKycMenuClick() {
+      if(currentUser && currentUser.kycStatus === 'Verified') {
+        alert("Your Identity is already Verified!");
+        return;
+      }
       openSubPage('page-kyc', 'Identity Verification');
     }
 
@@ -2002,7 +1977,7 @@
         text: msg || '',
         status: 'Delivered',
         adminRead: false,
-        createdAt: new Date()
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
       };
 
       if(fileData) {
@@ -2037,7 +2012,11 @@
       db.collection('chats').where('userId', '==', currentUser.id).onSnapshot(snapshot => {
         let msgs = [];
         snapshot.forEach(doc => msgs.push({ id: doc.id, ...doc.data() }));
-        msgs.sort((a,b) => (a.createdAt && b.createdAt) ? a.createdAt.seconds - b.createdAt.seconds : 0);
+        msgs.sort((a,b) => {
+          let tA = a.createdAt && a.createdAt.seconds ? a.createdAt.seconds : 0;
+          let tB = b.createdAt && b.createdAt.seconds ? b.createdAt.seconds : 0;
+          return tA - tB;
+        });
 
         let chatHtml = "";
         msgs.forEach(m => {
@@ -2083,11 +2062,10 @@
           }
         });
 
-        // Sort descending so NEW messages appear at the TOP, and older move down
         msgs.sort((a,b) => {
-          let tA = (a.createdAt && a.createdAt.seconds) ? a.createdAt.seconds : 0;
-          let tB = (b.createdAt && b.createdAt.seconds) ? b.createdAt.seconds : 0;
-          return tB - tA;
+          let tA = a.createdAt && a.createdAt.seconds ? a.createdAt.seconds : 0;
+          let tB = b.createdAt && b.createdAt.seconds ? b.createdAt.seconds : 0;
+          return tA - tB;
         });
 
         let html = "";
@@ -2100,7 +2078,7 @@
         if(box) {
           box.innerHTML = html || '<div style="text-align:center; color:var(--text-muted); font-size:12px;">Welcome to Community Chat!</div>';
           if(!isUserReadingCommunity) {
-            box.scrollTop = 0; // Stick to top for newest first
+            box.scrollTop = box.scrollHeight;
           }
         }
       });
@@ -2115,34 +2093,37 @@
         userId: currentUser.id,
         userName: currentUser.name || currentUser.contact,
         text: text,
-        createdAt: new Date()
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
 
       input.value = '';
     }
 
-    // 5000 Names & 500+ Professional Review Rotation Engine (New messages on top)
     function startCommunityAutoEngine() {
       setInterval(async () => {
-        let uniqueGlobalName = generate5000GlobalUniqueName();
-        let randomReviewText = expandedCommunityTemplates[Math.floor(Math.random() * expandedCommunityTemplates.length)];
+        let uniqueName = generateUniqueGlobalName();
+        let randomText = positivePraiseTemplates[Math.floor(Math.random() * positivePraiseTemplates.length)];
 
         try {
           await db.collection('community_chats').add({
-            userId: 'AUTO_SIMULATED_GLOBAL',
-            userName: uniqueGlobalName,
-            text: randomReviewText,
-            createdAt: new Date()
+            userId: 'AUTO_SIMULATED',
+            userName: uniqueName,
+            text: randomText,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
           });
-        } catch(e) { console.warn("Auto global msg sync failed", e); }
-      }, 5000); // Every 5 seconds new professional review from 5000 pool
+        } catch(e) { console.warn("Auto msg sync failed", e); }
+      }, 6000);
     }
 
     function listenToAnnouncements() {
       db.collection('announcements').onSnapshot(snapshot => {
         let items = [];
         snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
-        items.sort((a,b) => (b.createdAt && a.createdAt) ? a.createdAt.seconds - b.createdAt.seconds : 0);
+        items.sort((a,b) => {
+          let tA = a.createdAt && a.createdAt.seconds ? a.createdAt.seconds : 0;
+          let tB = b.createdAt && b.createdAt.seconds ? b.createdAt.seconds : 0;
+          return tB - tA;
+        });
 
         let html = "";
         items.forEach(a => {
@@ -2220,15 +2201,14 @@
           document.getElementById('homeReferralLinkText').innerText = refLink;
           document.getElementById('signupReferralInput').value = refLink;
 
-          const kycStatusVal = data.kycStatus || 'Pending';
           const kycBadge = document.getElementById('meKycStatusBadge');
           const kycActionText = document.getElementById('meKycActionText');
           if (kycBadge) {
-            kycBadge.textContent = `KYC: ${kycStatusVal === 'Approved' ? 'Approved' : kycStatusVal}`;
-            kycBadge.className = `badge-status ${kycStatusVal === 'Approved' || kycStatusVal === 'Verified' ? 'badge-verified' : 'badge-pending'}`;
+            kycBadge.textContent = `KYC: ${data.kycStatus || 'Pending'}`;
+            kycBadge.className = `badge-status ${data.kycStatus === 'Verified' ? 'badge-verified' : 'badge-pending'}`;
           }
           if (kycActionText) {
-            kycActionText.textContent = (kycStatusVal === 'Approved' || kycStatusVal === 'Verified') ? 'Verified ✓' : 'Verify Now →';
+            kycActionText.textContent = data.kycStatus === 'Verified' ? 'Verified ✓' : 'Verify Now →';
           }
         }
       });
@@ -2349,6 +2329,6 @@
   
     document.addEventListener('DOMContentLoaded', () => { if (currentUser) { updateOrderDisplays(); checkCooldown(); } });
     setInterval(() => { if (currentUser) checkCooldown(); }, 1000);
-  </script>
+</script>
 </body>
 </html>
