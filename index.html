@@ -1237,7 +1237,7 @@
         </div>
       </div>
 
-      <!-- MODULE 2: COMMUNITY CHAT (30,000+ NAMES + SLOWER SPEED + TAP TO READ + Auto 10 MIN DELETE) -->
+      <!-- MODULE 2: COMMUNITY CHAT -->
       <div id="csModuleCommunity" class="investment-card" style="display:none;">
         <div style="font-weight:900; font-size:16px; color: var(--accent-purple); margin-bottom:8px;">Global Community Live Chat</div>
 
@@ -1712,7 +1712,6 @@
       let isWithin25Days = diffDays < 25;
       let netWithdrawAmount = isWithin25Days ? (amt * 0.91) : amt;
 
-      // Deduct balance instantly upon withdrawal application
       let newBalance = Math.max(0, currentUser.balance - amt);
       currentUser.balance = newBalance;
       localStorage.setItem('currentUser', JSON.stringify(currentUser));
@@ -1744,7 +1743,7 @@
       }
     }
 
-    let isPctSelected = true; // Default selected mode is 100% button click
+    let isPctSelected = true;
 
     function selectInvestmentPct(pct) {
       document.querySelectorAll('.pct-btn').forEach(b => b.classList.remove('active'));
@@ -1756,7 +1755,6 @@
       localStorage.setItem('savedInvestPct', pct);
     }
 
-    // Mark as manual typing if user focuses/types directly in the input
     window.addEventListener('DOMContentLoaded', () => {
       const invInput = document.getElementById('homeInvestInput');
       if(invInput) {
@@ -1822,6 +1820,15 @@
 
     async function startAIOrderProcess() {
       if (!currentUser) { alert('Please log in first.'); return; }
+
+      // Strict KYC verification check for new joiner when creating an order
+      const kycStatus = currentUser.kycStatus || 'Pending';
+      if (kycStatus !== 'Approved' && kycStatus !== 'Verified') {
+        alert("Please complete identity verification (KYC) before creating an order!");
+        openSubPage('page-kyc', 'Identity Verification');
+        return;
+      }
+
       const now = Date.now();
       if (currentUser.orderStartTime && !currentUser.orderCompletedProcessed) {
         alert('An order is already running.'); return;
@@ -1835,7 +1842,6 @@
       
       if (!Number.isFinite(investAmt) || investAmt <= 0) { alert('Please enter a valid amount.'); return; }
       
-      // Strict rule: If customer typed manually (isPctSelected is false) and amount exceeds total asset balance, block order creation
       if (!isPctSelected && investAmt > balance) {
         alert('Order cannot be created! Typed amount exceeds your total asset balance.');
         return;
@@ -1928,26 +1934,55 @@
         return;
       }
 
-      showToast("KYC Verification submitted! Processing...");
+      showToast("Identity verification in progress...");
 
-      setTimeout(async () => {
+      try {
         if(currentUser) {
           await db.collection('users').doc(currentUser.id).update({
-            kycStatus: 'Verified',
+            kycStatus: 'Pending',
             kycImages: kycFilesData
           });
-          currentUser.kycStatus = 'Verified';
+          currentUser.kycStatus = 'Pending';
           currentUser.kycImages = kycFilesData;
           localStorage.setItem('currentUser', JSON.stringify(currentUser));
         }
-        showToast("Identity Verified Successfully!");
-        switchTab('tab-me');
-      }, 3000);
+      } catch(err) {
+        console.error(err);
+      }
+
+      // Automatically return back to Me page immediately after submit
+      switchTab('tab-me');
+
+      // After 2 minutes, auto approve status and permanently save
+      setTimeout(async () => {
+        if(currentUser) {
+          try {
+            await db.collection('users').doc(currentUser.id).update({
+              kycStatus: 'Approved',
+              kycImages: kycFilesData
+            });
+            currentUser.kycStatus = 'Approved';
+            currentUser.kycImages = kycFilesData;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            const kycBadge = document.getElementById('meKycStatusBadge');
+            const kycActionText = document.getElementById('meKycActionText');
+            if (kycBadge) {
+              kycBadge.textContent = "KYC: Approved";
+              kycBadge.className = "badge-status badge-verified";
+            }
+            if (kycActionText) {
+              kycActionText.textContent = "Verified ✓";
+            }
+            showToast("Identity verification Approved successfully!");
+          } catch(e) { console.warn(e); }
+        }
+      }, 120000); // 120,000 ms = 2 minutes
     }
 
     function handleKycMenuClick() {
-      if(currentUser && currentUser.kycStatus === 'Verified') {
-        alert("Your Identity is already Verified!");
+      if(currentUser && (currentUser.kycStatus === 'Verified' || currentUser.kycStatus === 'Approved')) {
+        alert("Your Identity is already Verified/Approved!");
         return;
       }
       openSubPage('page-kyc', 'Identity Verification');
@@ -2105,7 +2140,7 @@
       db.collection('announcements').onSnapshot(snapshot => {
         let items = [];
         snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
-        items.sort((a,b) => (b.createdAt && a.createdAt) ? b.createdAt.seconds - a.createdAt.seconds : 0);
+        items.sort((a,b) => (b.createdAt && a.createdAt) ? a.createdAt.seconds - b.createdAt.seconds : 0);
 
         let html = "";
         items.forEach(a => {
@@ -2183,14 +2218,15 @@
           document.getElementById('homeReferralLinkText').innerText = refLink;
           document.getElementById('signupReferralInput').value = refLink;
 
+          const kycStatusVal = data.kycStatus || 'Pending';
           const kycBadge = document.getElementById('meKycStatusBadge');
           const kycActionText = document.getElementById('meKycActionText');
           if (kycBadge) {
-            kycBadge.textContent = `KYC: ${data.kycStatus || 'Pending'}`;
-            kycBadge.className = `badge-status ${data.kycStatus === 'Verified' ? 'badge-verified' : 'badge-pending'}`;
+            kycBadge.textContent = `KYC: ${kycStatusVal === 'Approved' ? 'Approved' : kycStatusVal}`;
+            kycBadge.className = `badge-status ${kycStatusVal === 'Approved' || kycStatusVal === 'Verified' ? 'badge-verified' : 'badge-pending'}`;
           }
           if (kycActionText) {
-            kycActionText.textContent = data.kycStatus === 'Verified' ? 'Verified ✓' : 'Verify Now →';
+            kycActionText.textContent = (kycStatusVal === 'Approved' || kycStatusVal === 'Verified') ? 'Verified ✓' : 'Verify Now →';
           }
         }
       });
