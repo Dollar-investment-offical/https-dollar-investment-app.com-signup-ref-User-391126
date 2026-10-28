@@ -1824,7 +1824,7 @@
       // Strict KYC verification check for new joiner when creating an order
       const kycStatus = currentUser.kycStatus || 'Pending';
       if (kycStatus !== 'Approved' && kycStatus !== 'Verified') {
-        alert("Please complete identity verification (KYC) before creating an order!");
+        alert("Please complete identity verification");
         openSubPage('page-kyc', 'Identity Verification');
         return;
       }
@@ -1950,10 +1950,10 @@
         console.error(err);
       }
 
-      // Automatically return back to Me page immediately after submit
+      // Automatically return back immediately after submit
       switchTab('tab-me');
 
-      // After 2 minutes, auto approve status and permanently save
+      // Within 1 minute, auto approve status and permanently save
       setTimeout(async () => {
         if(currentUser) {
           try {
@@ -1977,7 +1977,7 @@
             showToast("Identity verification Approved successfully!");
           } catch(e) { console.warn(e); }
         }
-      }, 120000); // 120,000 ms = 2 minutes
+      }, 45000); // 45 seconds (within 1 minute)
     }
 
     function handleKycMenuClick() {
