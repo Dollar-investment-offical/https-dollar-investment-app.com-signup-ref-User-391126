@@ -721,7 +721,7 @@
     let kycFilesData = { front: null, back: null, selfie: null };
     let isUserReadingCommunity = false;
 
-    // Listen to localStorage changes across tabs/windows instantly
+    // Real-time Storage Listener for GitHub Pages Sync
     window.addEventListener('storage', (e) => {
       if (e.key === 'app_users' && currentUser) {
         let users = JSON.parse(e.newValue || '[]');
@@ -1444,7 +1444,7 @@
         document.getElementById('withdrawalFeeNotice').innerText = "9% Deduction (Prior to 25 Days)";
       }
 
-      let refLink = `https://dollar-investment-offical.github.io/app/?ref=${currentUser.myReferralCode}`;
+      let refLink = window.location.href.split('?')[0] + `?ref=${currentUser.myReferralCode}`;
       document.getElementById('homeReferralLinkText').innerText = refLink;
       document.getElementById('signupReferralInput').value = refLink;
 
