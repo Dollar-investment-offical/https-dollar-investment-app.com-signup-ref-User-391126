@@ -721,7 +721,6 @@
     let kycFilesData = { front: null, back: null, selfie: null };
     let isUserReadingCommunity = false;
 
-    // Real-time Storage Listener for GitHub Pages Sync
     window.addEventListener('storage', (e) => {
       if (e.key === 'app_users' && currentUser) {
         let users = JSON.parse(e.newValue || '[]');
@@ -822,7 +821,8 @@
       let existing = users.find(u => u.contact === contact);
       if(existing) { alert("User with this email/phone already exists!"); return; }
 
-      const myCode = 'REF-' + Math.floor(100000 + Math.random() * 900000);
+      const randomCodeNum = Math.floor(100000 + Math.random() * 900000);
+      const myCode = 'User-' + randomCodeNum;
       const now = new Date().toISOString();
 
       let newUser = {
@@ -1444,7 +1444,8 @@
         document.getElementById('withdrawalFeeNotice').innerText = "9% Deduction (Prior to 25 Days)";
       }
 
-      let refLink = window.location.href.split('?')[0] + `?ref=${currentUser.myReferralCode}`;
+      // CUSTOM INVITE LINK FORMAT REQUIREMENT
+      let refLink = `https://dollar-investment-offical.github.io/https-dollar-investment-app.com-signup-ref-${currentUser.myReferralCode}/`;
       document.getElementById('homeReferralLinkText').innerText = refLink;
       document.getElementById('signupReferralInput').value = refLink;
 
