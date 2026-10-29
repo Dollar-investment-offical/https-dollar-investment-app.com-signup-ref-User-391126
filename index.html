@@ -4,24 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Dollar Investment - Global AI Platform</title>
-  
-  <!-- Firebase App & Firestore SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyA5oJWpqCwjvdW_PwPL80bfYyeIFWl4tg4",
-      authDomain: "dollar-investment-28635.firebaseapp.com",
-      projectId: "dollar-investment-28635",
-      storageBucket: "dollar-investment-28635.firebasestorage.app",
-      messagingSenderId: "668549100555",
-      appId: "1:668549100555:web:a58bdbac32887c0498830e",
-      measurementId: "G-XSYDGFW2E2"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-  </script>
-
   <style>
     :root {
       --bg-dark: #070b12;
@@ -355,6 +337,7 @@
 
       <div style="font-size: 18px; font-weight: 900; margin-bottom: 16px; color: var(--accent-cyan);" data-i18n="aiStrategyHeader">⚡ Dollar Investment AI Strategy</div>
 
+      <!-- Today Profit & Daily Breakdown Header -->
       <div class="investment-card" style="border-color: var(--accent-cyan); background: linear-gradient(135deg, rgba(0,210,255,0.08), rgba(17,24,35,1));">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
           <span style="font-weight:900; font-size:14px; color:var(--accent-cyan);">📈 Today Profit Summary</span>
@@ -427,7 +410,7 @@
         <div class="spec-row"><span>Total Team Deposit Asset:</span> <span class="spec-value green" id="homeTeamTotalDepositText">$0.00</span></div>
         <div class="spec-row"><span>Total Team Income & Earnings:</span> <span class="spec-value green" id="homeTeamIncomeText">$0.00</span></div>
         <div class="address-card" style="margin-top: 12px;">
-          <span id="homeReferralLinkText" style="font-size: 11px;">https://dollar-investment-offical.github.io/https-dollar-investment-app.com-signup-ref-User-391126/</span>
+          <span id="homeReferralLinkText" style="font-size: 11px;">Generating referral link...</span>
           <button class="copy-btn" onclick="copyReferralLink()" data-i18n="copyLinkBtn">Copy Link</button>
         </div>
       </div>
@@ -738,6 +721,18 @@
     let kycFilesData = { front: null, back: null, selfie: null };
     let isUserReadingCommunity = false;
 
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'app_users' && currentUser) {
+        let users = JSON.parse(e.newValue || '[]');
+        let fresh = users.find(u => u.id === currentUser.id);
+        if (fresh) {
+          currentUser = fresh;
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
+          initUserSession();
+        }
+      }
+    });
+
     const urlParams = new URLSearchParams(window.location.search);
     const incomingRef = urlParams.get('ref') || 'NONE';
 
@@ -814,8 +809,7 @@
       }
     });
 
-    // FIRESTORE SIGN UP
-    async function handleSignUp() {
+    function handleSignUp() {
       const contact = document.getElementById('signupEmailPhone').value.trim();
       const pass = document.getElementById('signupPassword').value;
       const confirmPass = document.getElementById('signupConfirmPassword').value;
@@ -823,13 +817,16 @@
       if (!contact || !pass) { alert("Please fill in email/phone and password."); return; }
       if (pass !== confirmPass) { alert("Passwords do not match."); return; }
 
+      let users = JSON.parse(localStorage.getItem('app_users') || '[]');
+      let existing = users.find(u => u.contact === contact);
+      if(existing) { alert("User with this email/phone already exists!"); return; }
+
       const randomCodeNum = Math.floor(100000 + Math.random() * 900000);
       const myCode = 'User-' + randomCodeNum;
       const now = new Date().toISOString();
-      const userId = 'user_' + Date.now();
 
       let newUser = {
-        id: userId,
+        id: 'user_' + Date.now(),
         name: contact.split('@')[0] || contact,
         contact: contact,
         password: pass,
@@ -847,66 +844,54 @@
         createdAt: now
       };
 
-      try {
-        // Save User in Firestore
-        await db.collection('app_users').doc(userId).set(newUser);
+      users.push(newUser);
+      localStorage.setItem('app_users', JSON.stringify(users));
 
-        // Save Bonus Request in Firestore
-        await db.collection('app_requests').add({
-          id: 'req_' + Date.now(),
-          userId: newUser.id,
-          userName: newUser.name,
-          userContact: contact,
-          type: 'Sign Up Bonus',
-          grossAmount: 2.00,
-          amount: 2.00,
-          status: 'Success',
-          createdAt: now
-        });
+      let reqs = JSON.parse(localStorage.getItem('app_requests') || '[]');
+      reqs.push({
+        id: 'req_' + Date.now(),
+        userId: newUser.id,
+        userName: newUser.name,
+        userContact: contact,
+        type: 'Sign Up Bonus',
+        grossAmount: 2.00,
+        amount: 2.00,
+        status: 'Success',
+        createdAt: now
+      });
+      localStorage.setItem('app_requests', JSON.stringify(reqs));
 
-        // Save Welcome Chat in Firestore
-        await db.collection('app_chats').add({
-          id: 'chat_' + Date.now(),
-          userId: newUser.id,
-          userContact: contact,
-          userName: newUser.name,
-          sender: 'Admin',
-          text: `Welcome ${newUser.name}! How can we assist you with your dollar investment today?`,
-          adminRead: true,
-          createdAt: now
-        });
+      let chats = JSON.parse(localStorage.getItem('app_chats') || '[]');
+      chats.push({
+        id: 'chat_' + Date.now(),
+        userId: newUser.id,
+        userContact: contact,
+        userName: newUser.name,
+        sender: 'Admin',
+        text: `Welcome ${newUser.name}! How can we assist you with your dollar investment today?`,
+        adminRead: true,
+        createdAt: now
+      });
+      localStorage.setItem('app_chats', JSON.stringify(chats));
 
-        currentUser = newUser;
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+      currentUser = newUser;
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
-        showToast("Account created successfully! $2 USDT Bonus credited.");
-        initUserSession();
-      } catch (error) {
-        console.error("Error signing up:", error);
-        alert("Signup failed. Check internet connection.");
-      }
+      showToast("Account created successfully! $2 USDT Bonus credited.");
+      initUserSession();
     }
 
-    // FIRESTORE LOGIN
-    async function handleLogIn() {
+    function handleLogIn() {
       const userVal = document.getElementById('loginUser').value.trim();
       const passVal = document.getElementById('loginPassword').value;
       const rememberMe = document.getElementById('rememberMeCheck').checked;
 
       if (!userVal || !passVal) { alert("Please enter credentials."); return; }
 
-      try {
-        const snapshot = await db.collection('app_users').where('contact', '==', userVal).get();
-        if(snapshot.empty) {
-          alert("Account not found!");
-          return;
-        }
+      let users = JSON.parse(localStorage.getItem('app_users') || '[]');
+      let found = users.find(u => u.contact === userVal);
 
-        let found = null;
-        snapshot.forEach(doc => {
-          found = doc.data();
-        });
-
+      if(found) {
         if(found.isBlocked) { alert("Your account has been blocked by Admin!"); return; }
         if(found.password === passVal) {
           currentUser = found;
@@ -923,9 +908,8 @@
         } else {
           alert("Incorrect password!");
         }
-      } catch (error) {
-        console.error("Error logging in:", error);
-        alert("Login failed. Check internet connection.");
+      } else {
+        alert("Account not found!");
       }
     }
 
@@ -935,12 +919,12 @@
       location.reload();
     }
 
-    async function handleDeleteAccount() {
+    function handleDeleteAccount() {
       if (confirm("Are you sure you want to delete your account?")) {
         if(currentUser) {
-          try {
-            await db.collection('app_users').doc(currentUser.id).delete();
-          } catch(e) { console.error(e); }
+          let users = JSON.parse(localStorage.getItem('app_users') || '[]');
+          users = users.filter(u => u.id !== currentUser.id);
+          localStorage.setItem('app_users', JSON.stringify(users));
         }
         handleLogout();
       }
@@ -997,36 +981,31 @@
       showToast("Deposit address copied!");
     }
 
-    // FIRESTORE DEPOSIT SUBMIT
-    async function submitDepositPayment() {
+    function submitDepositPayment() {
       const depositAmt = parseFloat(document.getElementById('depositAmountInput').value) || 0;
       if (depositAmt < 25) { alert("Minimum deposit amount is $25 USDT."); return; }
       const netDeposit = depositAmt * 0.91;
 
-      try {
-        await db.collection('app_requests').add({
-          id: 'req_' + Date.now(),
-          userId: currentUser.id,
-          userName: currentUser.name || currentUser.contact,
-          userContact: currentUser.contact,
-          type: 'Deposit',
-          grossAmount: Number(depositAmt),
-          amount: Number(netDeposit),
-          status: 'Processing',
-          createdAt: new Date().toISOString()
-        });
+      let reqs = JSON.parse(localStorage.getItem('app_requests') || '[]');
+      reqs.push({
+        id: 'req_' + Date.now(),
+        userId: currentUser.id,
+        userName: currentUser.name || currentUser.contact,
+        userContact: currentUser.contact,
+        type: 'Deposit',
+        grossAmount: Number(depositAmt),
+        amount: Number(netDeposit),
+        status: 'Processing',
+        createdAt: new Date().toISOString()
+      });
+      localStorage.setItem('app_requests', JSON.stringify(reqs));
 
-        closeDepositModal();
-        showToast(`Deposit Request Submitted! Net Amount after 9% fee: $${netDeposit.toFixed(2)} USDT`);
-        switchTab('tab-home');
-      } catch (error) {
-        console.error("Deposit submission error:", error);
-        alert("Failed to submit deposit. Try again.");
-      }
+      closeDepositModal();
+      showToast(`Deposit Request Submitted! Net Amount after 9% fee: $${netDeposit.toFixed(2)} USDT`);
+      switchTab('tab-home');
     }
 
-    // FIRESTORE WITHDRAWAL SUBMIT
-    async function handleWithdrawSubmit() {
+    function handleWithdrawSubmit() {
       const amt = parseFloat(document.getElementById('withdrawAmountInput').value) || 0;
       const addr = document.getElementById('withdrawAddressInput').value.trim();
       const network = document.getElementById('withdrawNetwork').value;
@@ -1040,34 +1019,34 @@
       let isWithin25Days = diffDays < 25;
       let netWithdrawAmount = isWithin25Days ? (amt * 0.91) : amt;
 
-      currentUser.balance = Math.max(0, currentUser.balance - amt);
+      let newBalance = Math.max(0, currentUser.balance - amt);
+      currentUser.balance = newBalance;
       
-      try {
-        await db.collection('app_users').doc(currentUser.id).update({ balance: currentUser.balance });
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+      let users = JSON.parse(localStorage.getItem('app_users') || '[]');
+      users = users.map(u => u.id === currentUser.id ? currentUser : u);
+      localStorage.setItem('app_users', JSON.stringify(users));
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
-        await db.collection('app_requests').add({
-          id: 'req_' + Date.now(),
-          userId: currentUser.id,
-          userName: currentUser.name || currentUser.contact,
-          userContact: currentUser.contact,
-          type: 'Withdrawal',
-          grossAmount: Number(amt),
-          amount: Number(netWithdrawAmount),
-          network: network,
-          walletAddress: addr,
-          isFeeDeducted: isWithin25Days,
-          status: 'Processing',
-          createdAt: new Date().toISOString()
-        });
+      let reqs = JSON.parse(localStorage.getItem('app_requests') || '[]');
+      reqs.push({
+        id: 'req_' + Date.now(),
+        userId: currentUser.id,
+        userName: currentUser.name || currentUser.contact,
+        userContact: currentUser.contact,
+        type: 'Withdrawal',
+        grossAmount: Number(amt),
+        amount: Number(netWithdrawAmount),
+        network: network,
+        walletAddress: addr,
+        isFeeDeducted: isWithin25Days,
+        status: 'Processing',
+        createdAt: new Date().toISOString()
+      });
+      localStorage.setItem('app_requests', JSON.stringify(reqs));
 
-        updateOrderDisplays();
-        showToast(`Withdrawal Request Submitted! Balance deducted: $${amt.toFixed(2)} USDT`);
-        switchTab('tab-home');
-      } catch (error) {
-        console.error("Withdrawal error:", error);
-        alert("Failed to submit withdrawal request.");
-      }
+      updateOrderDisplays();
+      showToast(`Withdrawal Request Submitted! Balance deducted: $${amt.toFixed(2)} USDT`);
+      switchTab('tab-home');
     }
 
     let isPctSelected = true;
@@ -1146,7 +1125,7 @@
       updateOrderDisplays();
     }
 
-    async function startAIOrderProcess() {
+    function startAIOrderProcess() {
       if (!currentUser) { alert('Please log in first.'); return; }
       const balance = Number(currentUser.balance || 0);
       if (balance < 20) { alert('Create Order Failed: Your Total Assets Balance must be at least $20 USDT!'); return; }
@@ -1166,20 +1145,16 @@
       currentUser.orderCompletedProcessed = false;
       currentUser.activeInvestAmount = investAmt;
       
-      try {
-        await db.collection('app_users').doc(currentUser.id).update({
-          orderStartTime: currentUser.orderStartTime,
-          orderCompletedProcessed: currentUser.orderCompletedProcessed,
-          activeInvestAmount: currentUser.activeInvestAmount
-        });
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-      } catch(e) { console.error(e); }
+      let users = JSON.parse(localStorage.getItem('app_users') || '[]');
+      users = users.map(u => u.id === currentUser.id ? currentUser : u);
+      localStorage.setItem('app_users', JSON.stringify(users));
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
       checkCooldown();
       showToast('Order started. It will finish in 3 minutes.');
     }
 
-    async function completeActiveOrder() {
+    function completeActiveOrder() {
       if (!currentUser || currentUser.orderCompletedProcessed) return;
       const investAmt = Number(currentUser.activeInvestAmount || currentUser.balance || 0);
       const profit = Math.round(investAmt * 0.02 * 100) / 100;
@@ -1193,29 +1168,24 @@
       currentUser.orderStartTime = 0;
       currentUser.orderCompletedProcessed = true;
 
-      try {
-        await db.collection('app_users').doc(currentUser.id).update({
-          balance: currentUser.balance,
-          todayOrderProfit: currentUser.todayOrderProfit,
-          lastOrderProfit: currentUser.lastOrderProfit,
-          lastOrderTimestamp: currentUser.lastOrderTimestamp,
-          orderStartTime: currentUser.orderStartTime,
-          orderCompletedProcessed: currentUser.orderCompletedProcessed
-        });
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+      let users = JSON.parse(localStorage.getItem('app_users') || '[]');
+      users = users.map(u => u.id === currentUser.id ? currentUser : u);
+      localStorage.setItem('app_users', JSON.stringify(users));
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
-        await db.collection('app_requests').add({
-          id: 'req_' + Date.now(),
-          userId: currentUser.id,
-          userName: currentUser.name || currentUser.contact,
-          userContact: currentUser.contact,
-          type: 'today ai profit',
-          amount: profit,
-          walletAddress: 'N/A',
-          status: 'Success',
-          createdAt: new Date().toISOString()
-        });
-      } catch(e) { console.error(e); }
+      let reqs = JSON.parse(localStorage.getItem('app_requests') || '[]');
+      reqs.push({
+        id: 'req_' + Date.now(),
+        userId: currentUser.id,
+        userName: currentUser.name || currentUser.contact,
+        userContact: currentUser.contact,
+        type: 'today ai profit',
+        amount: profit,
+        walletAddress: 'N/A',
+        status: 'Success',
+        createdAt: new Date().toISOString()
+      });
+      localStorage.setItem('app_requests', JSON.stringify(reqs));
 
       updateOrderDisplays();
       const input = document.getElementById('homeInvestInput');
@@ -1240,23 +1210,20 @@
       }
     }
 
-    async function submitKycVerification() {
+    function submitKycVerification() {
       if(!kycFilesData.front || !kycFilesData.back || !kycFilesData.selfie) {
         alert("Strict Validation: Please upload valid original ID Front, ID Back, and Live Selfie!");
         return;
       }
       showToast("KYC Verification submitted! Processing...");
-      setTimeout(async () => {
+      setTimeout(() => {
         if(currentUser) {
           currentUser.kycStatus = 'Verified';
           currentUser.kycImages = kycFilesData;
-          try {
-            await db.collection('app_users').doc(currentUser.id).update({
-              kycStatus: currentUser.kycStatus,
-              kycImages: currentUser.kycImages
-            });
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-          } catch(e) { console.error(e); }
+          let users = JSON.parse(localStorage.getItem('app_users') || '[]');
+          users = users.map(u => u.id === currentUser.id ? currentUser : u);
+          localStorage.setItem('app_users', JSON.stringify(users));
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
         }
         showToast("Identity Verified Successfully!");
         switchTab('tab-me');
@@ -1273,12 +1240,12 @@
       showToast("Referral link copied successfully!");
     }
 
-    // FIRESTORE CHAT SEND
-    async function sendUserChatMessage(fileData = null) {
+    function sendUserChatMessage(fileData = null) {
       const msg = document.getElementById('userChatInput').value.trim();
       if(!msg && !fileData) return;
       if(!currentUser) return;
 
+      let chats = JSON.parse(localStorage.getItem('app_chats') || '[]');
       let chatObj = {
         id: 'chat_' + Date.now(),
         userId: currentUser.id,
@@ -1297,11 +1264,10 @@
         chatObj.fileType = fileData.type;
       }
 
-      try {
-        await db.collection('app_chats').add(chatObj);
-        document.getElementById('userChatInput').value = '';
-        fetchUserChatsRealtime();
-      } catch(e) { console.error(e); }
+      chats.push(chatObj);
+      localStorage.setItem('app_chats', JSON.stringify(chats));
+      document.getElementById('userChatInput').value = '';
+      renderUserChats();
     }
 
     function handleUserFileUpload(e) {
@@ -1315,100 +1281,125 @@
       reader.readAsDataURL(file);
     }
 
-    function fetchUserChatsRealtime() {
+    function renderUserChats() {
       if(!currentUser) return;
-      db.collection('app_chats').where('userId', '==', currentUser.id).onSnapshot(snapshot => {
-        let chats = [];
-        snapshot.forEach(doc => chats.push(doc.data()));
-        chats.sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
+      let chats = JSON.parse(localStorage.getItem('app_chats') || '[]').filter(c => c.userId === currentUser.id);
+      chats.sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
 
-        let chatHtml = "";
-        chats.forEach(m => {
-          let sideClass = m.sender === 'User' ? 'msg-user' : 'msg-admin';
-          let label = m.sender === 'User' ? 'You' : 'Admin';
-          let fileHtml = "";
-          if(m.fileUrl) {
-            if(m.fileType === 'image') {
-              fileHtml = `<br><a href="${m.fileUrl}" target="_blank"><img src="${m.fileUrl}" class="chat-file-img"/></a>`;
-            } else {
-              fileHtml = `<br><a href="${m.fileUrl}" download="${m.fileName || 'document'}" class="chat-file-link">📄 Download Document (${m.fileName || 'file'})</a>`;
-            }
+      let chatHtml = "";
+      chats.forEach(m => {
+        let sideClass = m.sender === 'User' ? 'msg-user' : 'msg-admin';
+        let label = m.sender === 'User' ? 'You' : 'Admin';
+        let fileHtml = "";
+        if(m.fileUrl) {
+          if(m.fileType === 'image') {
+            fileHtml = `<br><a href="${m.fileUrl}" target="_blank"><img src="${m.fileUrl}" class="chat-file-img"/></a>`;
+          } else {
+            fileHtml = `<br><a href="${m.fileUrl}" download="${m.fileName || 'document'}" class="chat-file-link">📄 Download Document (${m.fileName || 'file'})</a>`;
           }
-          let statusHtml = m.sender === 'User' ? `<div class="msg-status">✓✓ Delivered</div>` : '';
-          chatHtml += `<div class="msg-bubble ${sideClass}"><b>${label}:</b> ${m.text || ''}${fileHtml}${statusHtml}</div>`;
-        });
-        const box = document.getElementById('userChatBox');
-        if(box) {
-          box.innerHTML = chatHtml || '<div style="text-align:center; color:var(--text-muted); font-size:12px;">Start conversation with support...</div>';
-          box.scrollTop = box.scrollHeight;
         }
+        let statusHtml = m.sender === 'User' ? `<div class="msg-status">✓✓ Delivered</div>` : '';
+        chatHtml += `<div class="msg-bubble ${sideClass}"><b>${label}:</b> ${m.text || ''}${fileHtml}${statusHtml}</div>`;
       });
+      const box = document.getElementById('userChatBox');
+      if(box) {
+        box.innerHTML = chatHtml || '<div style="text-align:center; color:var(--text-muted); font-size:12px;">Start conversation with support...</div>';
+        box.scrollTop = box.scrollHeight;
+      }
     }
 
     function renderCommunityChat() {
-      db.collection('app_community').orderBy('createdAt', 'desc').limit(100).onSnapshot(snapshot => {
-        let comms = [];
-        snapshot.forEach(doc => comms.push(doc.data()));
-
-        let html = "";
-        comms.forEach(m => {
-          let dateStr = new Date(m.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-          html += `<div class="msg-bubble msg-community"><b>${m.userName}:</b> ${m.text} <span style="font-size:9px; opacity:0.7; float:right;">${dateStr}</span></div>`;
-        });
-        const box = document.getElementById('communityChatBox');
-        if(box && !isUserReadingCommunity) {
-          box.innerHTML = html;
+      let comms = JSON.parse(localStorage.getItem('app_community') || '[]');
+      
+      if(comms.length === 0) {
+        for(let i=0; i<150; i++) {
+          let randUserObj = globalNamesList[Math.floor(Math.random() * globalNamesList.length)];
+          let randPraise = positivePraiseTemplates[Math.floor(Math.random() * positivePraiseTemplates.length)];
+          let randomIdNum = Math.floor(100000 + Math.random() * 900000);
+          comms.push({
+            id: 'comm_init_' + i,
+            userName: `${randUserObj.name} (#${randomIdNum})`,
+            text: randPraise,
+            createdAt: new Date(Date.now() - (i * 1300)).toISOString()
+          });
         }
+        localStorage.setItem('app_community', JSON.stringify(comms));
+      }
+
+      comms.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      let html = "";
+      comms.forEach(m => {
+        let dateStr = new Date(m.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        html += `<div class="msg-bubble msg-community"><b>${m.userName}:</b> ${m.text} <span style="font-size:9px; opacity:0.7; float:right;">${dateStr}</span></div>`;
       });
+      const box = document.getElementById('communityChatBox');
+      if(box && !isUserReadingCommunity) {
+        box.innerHTML = html;
+      }
     }
 
-    async function sendCommunityMessage() {
+    setInterval(() => {
+      let comms = JSON.parse(localStorage.getItem('app_community') || '[]');
+      let randUserObj = globalNamesList[Math.floor(Math.random() * globalNamesList.length)];
+      let randPraise = positivePraiseTemplates[Math.floor(Math.random() * positivePraiseTemplates.length)];
+      let randomIdNum = Math.floor(100000 + Math.random() * 900000);
+      
+      comms.unshift({
+        id: 'comm_' + Date.now(),
+        userName: `${randUserObj.name} (#${randomIdNum})`,
+        text: randPraise,
+        createdAt: new Date().toISOString()
+      });
+
+      if(comms.length > 5000) comms.pop();
+      localStorage.setItem('app_community', JSON.stringify(comms));
+      renderCommunityChat();
+    }, 1333);
+
+    function sendCommunityMessage() {
       const input = document.getElementById('communityInput');
       const text = input.value.trim();
       if(!text || !currentUser) return;
 
-      try {
-        await db.collection('app_community').add({
-          id: 'comm_' + Date.now(),
-          userId: currentUser.id,
-          userName: `${currentUser.name || currentUser.contact} (#${Math.floor(1000 + Math.random() * 9000)})`,
-          text: text,
-          createdAt: new Date().toISOString()
-        });
-        input.value = '';
-        showToast("Feedback posted to community!");
-      } catch(e) { console.error(e); }
+      let comms = JSON.parse(localStorage.getItem('app_community') || '[]');
+      comms.unshift({
+        id: 'comm_' + Date.now(),
+        userId: currentUser.id,
+        userName: `${currentUser.name || currentUser.contact} (#${Math.floor(1000 + Math.random() * 9000)})`,
+        text: text,
+        createdAt: new Date().toISOString()
+      });
+      localStorage.setItem('app_community', JSON.stringify(comms));
+      input.value = '';
+      renderCommunityChat();
+      showToast("Feedback posted to community!");
     }
 
     function renderAnnouncements() {
-      db.collection('app_announcements').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
-        let items = [];
-        snapshot.forEach(doc => items.push(doc.data()));
-        let html = "";
-        items.forEach(a => {
-          let dateStr = new Date(a.createdAt).toLocaleString();
-          let imgHtml = a.imageUrl ? `<br><img src="${a.imageUrl}" style="max-width:100%; border-radius:10px; margin-top:8px;"/>` : '';
-          html += `<div style="background:rgba(0,0,0,0.4); border:1px solid var(--accent-yellow); border-radius:12px; padding:12px; margin-bottom:10px;">
-            <div style="font-size:11px; color:var(--accent-yellow); font-weight:800;">📢 ${dateStr}</div>
-            <div style="font-size:13px; color:#fff; margin-top:6px; font-weight:600;">${a.text || ''}</div>
-            ${imgHtml}
-          </div>`;
-        });
-        const container = document.getElementById('announcementsList');
-        if(container) container.innerHTML = html || '<div style="color:var(--text-muted); font-size:12px; text-align:center;">No announcements published yet.</div>';
+      let items = JSON.parse(localStorage.getItem('app_announcements') || '[]');
+      let html = "";
+      items.forEach(a => {
+        let dateStr = new Date(a.createdAt).toLocaleString();
+        let imgHtml = a.imageUrl ? `<br><img src="${a.imageUrl}" style="max-width:100%; border-radius:10px; margin-top:8px;"/>` : '';
+        html += `<div style="background:rgba(0,0,0,0.4); border:1px solid var(--accent-yellow); border-radius:12px; padding:12px; margin-bottom:10px;">
+          <div style="font-size:11px; color:var(--accent-yellow); font-weight:800;">📢 ${dateStr}</div>
+          <div style="font-size:13px; color:#fff; margin-top:6px; font-weight:600;">${a.text || ''}</div>
+          ${imgHtml}
+        </div>`;
       });
+      const container = document.getElementById('announcementsList');
+      if(container) container.innerHTML = html || '<div style="color:var(--text-muted); font-size:12px; text-align:center;">No announcements published yet.</div>';
     }
 
     function renderGuideVideo() {
-      db.collection('app_guide').doc('latest').onSnapshot(doc => {
-        const container = document.getElementById('userGuideVideoContainer');
-        if(doc.exists && doc.data().videoUrl) {
-          let guide = doc.data();
-          container.innerHTML = `<video controls style="width:100%; border-radius:12px; border:1px solid var(--accent-green);"><source src="${guide.videoUrl}" type="video/mp4">Your browser does not support HTML5 video.</video>`;
-        } else {
-          container.innerHTML = `<div style="color:var(--text-muted); font-size:12px; padding:20px; border:1px dashed var(--bg-card-border); border-radius:12px;">🎥 Video guide will be available shortly.</div>`;
-        }
-      });
+      let guide = JSON.parse(localStorage.getItem('app_guide') || 'null');
+      const container = document.getElementById('userGuideVideoContainer');
+      if(guide && guide.videoUrl) {
+        container.innerHTML = `<video controls style="width:100%; border-radius:12px; border:1px solid var(--accent-green);"><source src="${guide.videoUrl}" type="video/mp4">Your browser does not support HTML5 video.</video>`;
+      } else {
+        container.innerHTML = `<div style="color:var(--text-muted); font-size:12px; padding:20px; border:1px dashed var(--bg-card-border); border-radius:12px;">🎥 Video guide will be available shortly.</div>`;
+      }
     }
 
     function initUserSession() {
@@ -1420,87 +1411,88 @@
       document.getElementById('signupScreen').classList.add('hidden');
       document.getElementById('loginScreen').classList.add('hidden');
 
-      db.collection('app_users').doc(currentUser.id).onSnapshot(doc => {
-        if(doc.exists) {
-          let fresh = doc.data();
-          if(fresh.isBlocked) { alert("Your account has been blocked by Admin!"); handleLogout(); return; }
-          currentUser = fresh;
-          localStorage.setItem('currentUser', JSON.stringify(currentUser));
+      let users = JSON.parse(localStorage.getItem('app_users') || '[]');
+      let fresh = users.find(u => u.id === currentUser.id);
+      
+      if(fresh) {
+        if(fresh.isBlocked) { alert("Your account has been blocked by Admin!"); handleLogout(); return; }
+        currentUser = fresh;
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+      }
 
-          const balanceVal = Number(currentUser.balance || 0);
-          const teamInc = Number(currentUser.teamIncome || 0);
-          document.getElementById('homeTotalAssetsDisplay').innerText = balanceVal.toFixed(2);
-          document.getElementById('totalBalanceDisplay').innerText = balanceVal.toFixed(2);
-          document.getElementById('flexibleFundsDisplay').innerText = balanceVal.toFixed(2) + " USDT";
-          document.getElementById('homeReferralEarnedDisplay').innerText = "$" + teamInc.toFixed(2);
-          document.getElementById('assetsReferralEarnedDisplay').innerText = "$" + teamInc.toFixed(2);
-          document.getElementById('assetReferralFundDisplay').innerText = teamInc.toFixed(2) + " USDT";
+      const balanceVal = Number(currentUser.balance || 0);
+      const teamInc = Number(currentUser.teamIncome || 0);
+      document.getElementById('homeTotalAssetsDisplay').innerText = balanceVal.toFixed(2);
+      document.getElementById('totalBalanceDisplay').innerText = balanceVal.toFixed(2);
+      document.getElementById('flexibleFundsDisplay').innerText = balanceVal.toFixed(2) + " USDT";
+      document.getElementById('homeReferralEarnedDisplay').innerText = "$" + teamInc.toFixed(2);
+      document.getElementById('assetsReferralEarnedDisplay').innerText = "$" + teamInc.toFixed(2);
+      document.getElementById('assetReferralFundDisplay').innerText = teamInc.toFixed(2) + " USDT";
 
-          document.getElementById('meUsernameDisplay').innerText = currentUser.name || "User";
-          document.getElementById('meUserIdDisplay').innerText = "ID: " + (currentUser.myReferralCode || 'N/A');
+      document.getElementById('meUsernameDisplay').innerText = currentUser.name || "User";
+      document.getElementById('meUserIdDisplay').innerText = "ID: " + (currentUser.myReferralCode || 'N/A');
 
-          let createdDate = currentUser.createdAt ? new Date(currentUser.createdAt) : new Date();
-          let diffDays = Math.floor((new Date() - createdDate) / (1000 * 60 * 60 * 24));
-          document.getElementById('daysJoinedText').innerText = `${diffDays} / 25 Days`;
+      let createdDate = currentUser.createdAt ? new Date(currentUser.createdAt) : new Date();
+      let diffDays = Math.floor((new Date() - createdDate) / (1000 * 60 * 60 * 24));
+      document.getElementById('daysJoinedText').innerText = `${diffDays} / 25 Days`;
 
-          if(diffDays >= 25) {
-            document.getElementById('freeWithdrawStatusText').innerText = "🎉 0% Fee Privilege Active (Free)";
-            document.getElementById('withdrawalFeeNotice').innerText = "0% (Free Withdrawal Active)";
-          } else {
-            document.getElementById('freeWithdrawStatusText').innerText = `Standard 9% Fee (${Math.max(0, 25 - diffDays)} days remaining for Free)`;
-            document.getElementById('withdrawalFeeNotice').innerText = "9% Deduction (Prior to 25 Days)";
-          }
+      if(diffDays >= 25) {
+        document.getElementById('freeWithdrawStatusText').innerText = "🎉 0% Fee Privilege Active (Free)";
+        document.getElementById('withdrawalFeeNotice').innerText = "0% (Free Withdrawal Active)";
+      } else {
+        document.getElementById('freeWithdrawStatusText').innerText = `Standard 9% Fee (${Math.max(0, 25 - diffDays)} days remaining for Free)`;
+        document.getElementById('withdrawalFeeNotice').innerText = "9% Deduction (Prior to 25 Days)";
+      }
 
-          const permanentLink = "https://dollar-investment-offical.github.io/https-dollar-investment-app.com-signup-ref-User-391126/";
-          document.getElementById('homeReferralLinkText').innerText = permanentLink;
-          const signupRefInput = document.getElementById('signupReferralInput');
-          if (signupRefInput) signupRefInput.value = permanentLink;
+      // CUSTOM INVITE LINK FORMAT REQUIREMENT
+      let refLink = `https://dollar-investment-offical.github.io/https-dollar-investment-app.com-signup-ref-${currentUser.myReferralCode}/`;
+      document.getElementById('homeReferralLinkText').innerText = refLink;
+      document.getElementById('signupReferralInput').value = refLink;
 
-          const kycBadge = document.getElementById('meKycStatusBadge');
-          const kycActionText = document.getElementById('meKycActionText');
-          if (kycBadge) {
-            kycBadge.textContent = `KYC: ${currentUser.kycStatus || 'Pending'}`;
-            kycBadge.className = `badge-status ${currentUser.kycStatus === 'Verified' ? 'badge-verified' : 'badge-pending'}`;
-          }
-          if (kycActionText) {
-            kycActionText.textContent = currentUser.kycStatus === 'Verified' ? 'Verified ✓' : 'Verify Now →';
-          }
-        }
+      const kycBadge = document.getElementById('meKycStatusBadge');
+      const kycActionText = document.getElementById('meKycActionText');
+      if (kycBadge) {
+        kycBadge.textContent = `KYC: ${currentUser.kycStatus || 'Pending'}`;
+        kycBadge.className = `badge-status ${currentUser.kycStatus === 'Verified' ? 'badge-verified' : 'badge-pending'}`;
+      }
+      if (kycActionText) {
+        kycActionText.textContent = currentUser.kycStatus === 'Verified' ? 'Verified ✓' : 'Verify Now →';
+      }
+
+      let reqs = JSON.parse(localStorage.getItem('app_requests') || '[]').filter(r => r.userId === currentUser.id);
+      reqs.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      let histHtml = '';
+      reqs.forEach(req => {
+        let color = req.status === 'Success' ? 'var(--accent-green)' : (req.status === 'Rejected' ? 'var(--accent-red)' : 'orange');
+        let dateStr = new Date(req.createdAt).toLocaleString();
+        let displayType = req.type || 'Transaction';
+
+        let amtVal = req.amount !== undefined ? req.amount : req.grossAmount;
+        histHtml += `<div class="list-item">
+                      <div>
+                        <div style="font-weight:800; color:#fff;">${displayType}</div>
+                        <div style="font-size:11px; color:var(--text-muted);">${dateStr}</div>
+                      </div>
+                      <div style="text-align:right;">
+                        <div style="font-weight:900; color:#fff;">$${Number(amtVal).toFixed(2)} USDT</div>
+                        <div style="font-weight:800; color:${color}; font-size:11px;">${req.status || 'Success'}</div>
+                      </div>
+                     </div>`;
       });
+      document.getElementById('globalHistoryList').innerHTML = histHtml || '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;">No recent history recorded.</div>';
 
-      // Fetch user requests for history
-      db.collection('app_requests').where('userId', '==', currentUser.id).onSnapshot(snapshot => {
-        let reqs = [];
-        snapshot.forEach(doc => reqs.push(doc.data()));
-        reqs.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-        let histHtml = '';
-        reqs.forEach(req => {
-          let color = req.status === 'Success' ? 'var(--accent-green)' : (req.status === 'Rejected' ? 'var(--accent-red)' : 'orange');
-          let dateStr = new Date(req.createdAt).toLocaleString();
-          let displayType = req.type || 'Transaction';
-
-          let amtVal = req.amount !== undefined ? req.amount : req.grossAmount;
-          histHtml += `<div class="list-item">
-                        <div>
-                          <div style="font-weight:800; color:#fff;">${displayType}</div>
-                          <div style="font-size:11px; color:var(--text-muted);">${dateStr}</div>
-                        </div>
-                        <div style="text-align:right;">
-                          <div style="font-weight:900; color:#fff;">$${Number(amtVal).toFixed(2)} USDT</div>
-                          <div style="font-weight:800; color:${color}; font-size:11px;">${req.status || 'Success'}</div>
-                        </div>
-                       </div>`;
-        });
-        document.getElementById('globalHistoryList').innerHTML = histHtml || '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;">No recent history recorded.</div>';
-      });
-
-      fetchUserChatsRealtime();
+      renderUserChats();
       renderCommunityChat();
       renderAnnouncements();
       renderGuideVideo();
       checkCooldown();
     }
+
+    setInterval(() => {
+      if(currentUser) initUserSession();
+      renderCommunityChat();
+    }, 1000);
 
     window.onload = function() {
       if(currentUser) {
