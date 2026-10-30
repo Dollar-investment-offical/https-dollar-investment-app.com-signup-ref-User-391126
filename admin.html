@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Control Board - Dollar Investment</title>
+  <style>
+    :root {
+      --bg-dark: #070b12;
+      --bg-card: #111823;
+      --bg-card-border: #1e293b;
+      --accent-green: #00f576;
+      --accent-cyan: #00d2ff;
+      --accent-red: #ff3366;
+      --accent-yellow: #ffd60a;
+      --accent-purple: #9d4edd;
+      --text-main: #ffffff;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg-dark); color: var(--text-main); padding: 20px; }
+    h1 { color: var(--accent-green); margin-bottom: 8px; font-size: 24px; }
+    h2 { color: var(--accent-cyan); margin: 24px 0 12px 0; font-size: 18px; display:flex; justify-content:space-between; align-items:center; }
+    .table-container { overflow-x: auto; background: var(--bg-card); border: 1px solid var(--bg-card-border); border-radius: 12px; padding: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); margin-bottom:20px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td { padding: 12px; border-bottom: 1px solid var(--bg-card-border); font-size: 13px; }
+    th { background: rgba(0,210,255,0.1); color: var(--accent-cyan); font-weight: 800; }
+    td { color: #e2e8f0; }
+    .btn-acc { background: var(--accent-green); color: #000; font-weight: 900; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; margin-right: 4px; }
+    .btn-rej { background: var(--accent-red); color: #fff; font-weight: 900; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+    .btn-action { background: rgba(255,255,255,0.1); color: #fff; font-weight: 700; border: 1px solid rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; margin-right: 4px; }
+    .btn-bulk-delete { background: var(--accent-red); color:#fff; border:none; padding:6px 14px; border-radius:6px; font-weight:800; font-size:12px; cursor:pointer; }
+    .badge { padding: 4px 8px; border-radius: 6px; font-weight: 800; font-size: 11px; display: inline-block; }
+    .badge-processing { background: rgba(255, 193, 7, 0.2); color: #ffd166; }
+    .badge-success { background: rgba(0, 245, 118, 0.2); color: var(--accent-green); }
+    .badge-rejected { background: rgba(255, 51, 102, 0.2); color: var(--accent-red); }
+
+    .chat-admin-grid { display: grid; grid-template-columns: 320px 1fr; gap: 14px; }
+    .user-list-box { background: var(--bg-card); border: 1px solid var(--bg-card-border); border-radius: 12px; max-height: 420px; overflow-y: auto; }
+    .user-chat-item { padding: 12px 14px; border-bottom: 1px solid var(--bg-card-border); cursor: pointer; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+    .user-chat-item:hover, .user-chat-item.active { background: rgba(0,245,118,0.1); color: var(--accent-green); }
+    .unread-dot { background: var(--accent-red); color: #fff; font-size: 10px; font-weight: 900; padding: 2px 6px; border-radius: 10px; }
+    
+    .admin-chat-area { background: var(--bg-card); border: 1px solid var(--bg-card-border); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; height: 420px; }
+    .admin-chat-msgs { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+    .chat-in { display: flex; gap: 6px; }
+    .chat-in input[type="text"] { width:70%; padding:10px; border-radius:6px; border:1px solid #333; background: rgba(0,0,0,0.5); color: #fff; } 
+    .chat-in button { padding:10px 16px; background:var(--accent-cyan); border:none; font-weight:800; border-radius:6px; cursor:pointer; color: #000; }
+    .chat-file-img { max-width: 150px; border-radius: 6px; margin-top: 4px; display: block; }
+    .chat-file-link { color: #00d2ff; text-decoration: underline; font-weight: bold; font-size: 12px; }
+    
+    .admin-control-box { background: var(--bg-card); border: 1px solid var(--bg-card-border); border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+    .input-field { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #333; background: rgba(0,0,0,0.5); color: #fff; margin-bottom: 10px; }
+    
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 5000; display: none; align-items: center; justify-content: center; }
+    .modal-overlay.active { display: flex; }
+    .modal-card { background: #111823; border: 2px solid var(--accent-cyan); border-radius: 16px; width: 90%; max-width: 500px; padding: 24px; max-height: 85vh; overflow-y: auto; color: #fff; }
+    .close-modal { float: right; background: rgba(255,255,255,0.1); border: none; color: #fff; width: 30px; height: 30px; border-radius: 50%; font-weight: 900; cursor: pointer; }
+    .digital-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 13px; }
+    .digital-val { color: var(--accent-green); font-weight: 800; }
+  </style>
+</head>
+<body>
+
+  <h1>Admin Master Control Board (GitHub Sync Ready)</h1>
+  <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">Professional management of users, live requests, interactive chats, total asset balances, and announcements.</p>
+
+  <h2>
+    <span>1. Support Live Chat Center (1-on-1 with New Joiners & User IDs)</span>
+    <div>
+      <input type="checkbox" id="selectAllChats" onclick="toggleSelectAll('chat-check', this.checked)">
+      <label for="selectAllChats" style="font-size:12px; color:var(--text-muted); font-weight:600; margin-right:8px;">Select All</label>
+      <button class="btn-bulk-delete" onclick="bulkDeleteSelectedChats()">Delete Selected Chats</button>
+    </div>
+  </h2>
+  <div class="chat-admin-grid">
+    <div class="user-list-box" id="adminUserChatList">
+      <div style="padding:12px; color:var(--text-muted);">Loading active chats...</div>
+    </div>
+    <div class="admin-chat-area">
+      <div style="font-weight:800; color:var(--accent-cyan); margin-bottom:8px;" id="selectedChatTitle">Select a user to chat</div>
+      <div class="admin-chat-msgs" id="adminChatMsgs"></div>
+      
+      <input type="file" id="adminChatFileInput" accept="image/*,.pdf,.doc,.docx,.txt" style="display:none;" onchange="handleAdminFileUpload(event)">
+
+      <div class="chat-in">
+        <button style="background: rgba(255,255,255,0.1); border: 1px solid var(--accent-cyan); color: #fff; font-size:16px;" onclick="document.getElementById('adminChatFileInput').click()">📎</button>
+        <input type="text" id="adminReplyInput" placeholder="Type reply to user...">
+        <button onclick="sendAdminReply()">Reply</button>
+      </div>
+    </div>
+  </div>
+
+  <h2><span>📢 Admin Announcement & 🎥 User Guide Video Upload</span></h2>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px;">
+    <div class="admin-control-box">
+      <h3 style="font-size: 14px; color: var(--accent-yellow); margin-bottom: 10px;">Post Admin Announcement</h3>
+      <input type="text" id="announceText" class="input-field" placeholder="Enter announcement details...">
+      <input type="file" id="announceImageFile" accept="image/*" class="input-field" onchange="handleAnnounceImg(event)">
+      <button class="btn-acc" style="width: 100%; padding: 10px;" onclick="publishAnnouncement()">Publish Announcement</button>
+    </div>
+
+    <div class="admin-control-box">
+      <h3 style="font-size: 14px; color: var(--accent-green); margin-bottom: 10px;">Upload User Guide Video</h3>
+      <input type="file" id="guideVideoFileInput" accept="video/mp4,video/*" class="input-field" onchange="handleGuideVideoUpload(event)">
+      <input type="text" id="guideVideoUrlInput" class="input-field" placeholder="Or paste Direct MP4 Video URL...">
+      <button class="btn-acc" style="width: 100%; padding: 10px;" onclick="saveGuideVideoUrl()">Save / Update Video Guide</button>
+    </div>
+  </div>
+
+  <h2>
+    <span>2. User Management & Balance Control / Hold Column</span>
+    <div>
+      <input type="checkbox" id="selectAllUsers" onclick="toggleSelectAll('user-check', this.checked)">
+      <label for="selectAllUsers" style="font-size:12px; color:var(--text-muted); font-weight:600; margin-right:8px;">Select All</label>
+      <button class="btn-bulk-delete" onclick="bulkDeleteSelectedUsers()">Delete Selected Users</button>
+    </div>
+  </h2>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th><input type="checkbox" disabled></th>
+          <th>User Info & ID</th>
+          <th>Total Asset / Hold Balance ($)</th>
+          <th>Deposit Stats</th>
+          <th>Withdrawal Stats</th>
+          <th>Team Stats & Earnings</th>
+          <th>Digital Icon</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="adminUsersTable">
+        <tr><td colspan="8" style="text-align: center; color: var(--text-muted);">Loading users data...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>
+    <span>3. Live Requests (Deposit & Withdrawal Processing with Auto-Refund on Rejection)</span>
+    <div>
+      <input type="checkbox" id="selectAllRequests" onclick="toggleSelectAll('req-check', this.checked)">
+      <label for="selectAllRequests" style="font-size:12px; color:var(--text-muted); font-weight:600; margin-right:8px;">Select All</label>
+      <button class="btn-bulk-delete" onclick="bulkDeleteSelectedRequests()">Delete Selected Requests</button>
+    </div>
+  </h2>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th><input type="checkbox" disabled></th>
+          <th>User Name</th>
+          <th>Contact</th>
+          <th>Type</th>
+          <th>Gross / Net Amount ($)</th>
+          <th>Network & Wallet Address</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="adminRequestsTable">
+        <tr><td colspan="8" style="text-align: center; color: var(--text-muted);">Loading requests...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="digitalModal" class="modal-overlay">
+    <div class="modal-card">
+      <button class="close-modal" onclick="closeDigitalModal()">✕</button>
+      <h3 style="color:var(--accent-green); margin-bottom:14px; font-size:16px;">📊 User Digital Record Details</h3>
+      <div id="digitalModalContent"></div>
+    </div>
+  </div>
+
+  <script>
+    let selectedChatUserId = null;
+    let selectedChatUserContact = null;
+    let announcementImgBase64 = null;
+
+    function toggleSelectAll(className, isChecked) {
+      document.querySelectorAll(`.${className}`).forEach(cb => cb.checked = isChecked);
+    }
+
+    function loadAdminUsers() {
+      let allusers = JSON.parse(localStorage.getItem('app_users') || '[]');
+      let allreqs = JSON.parse(localStorage.getItem('app_requests') || '[]');
+      allusers.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      let rows = "";
+      allusers.forEach(u => {
+        let userReqs = allreqs.filter(r => r.userId === u.id);
+        let deposits = userReqs.filter(r => r.type === 'Deposit' && r.status === 'Success');
+        let totalDepAmt = deposits.reduce((sum, r) => sum + Number(r.amount || 0), 0);
+        let withdrawals = userReqs.filter(r => r.type === 'Withdrawal' && r.status === 'Success');
+        let totalWdAmt = withdrawals.reduce((sum, r) => sum + Number(r.grossAmount || r.amount || 0), 0);
+
+        let teamMembers = allusers.filter(x => x.referredBy === u.myReferralCode || x.referredBy === u.id);
+        let teamSize = teamMembers.length;
+        let teamTotalDeposit = teamMembers.reduce((sum, x) => sum + Number(x.creditedDeposit || x.deposit || 0), 0);
+
+        let blockStatusBtn = u.isBlocked ? 
+          `<button class="btn-action" style="background:var(--accent-red); color:#fff;" onclick="toggleBlockUser('${u.id}', false)">Unblock</button>` : 
+          `<button class="btn-action" onclick="toggleBlockUser('${u.id}', true)">Block</button>`;
+
+        rows += `<tr>
+          <td><input type="checkbox" class="user-check" value="${u.id}"/></td>
+          <td><b>${u.name || 'User'}</b><br><span style="font-size:11px; color:var(--text-muted);">${u.contact || 'N/A'}</span><br><span style="font-size:10px; color:var(--accent-cyan);">ID: ${u.myReferralCode || 'N/A'}</span></td>
+          <td>
+            <div style="display:flex; flex-direction:column; gap:4px;">
+              <b style="color:var(--accent-cyan);">$${Number(u.balance || 0).toFixed(2)} USDT</b>
+              <div style="display:flex; gap:4px; align-items:center;">
+                <input type="number" id="custBal_${u.id}" value="${Number(u.balance || 0).toFixed(2)}" style="width:80px; padding:4px; background:#000; color:#fff; border:1px solid #333; border-radius:4px;">
+                <button class="btn-action" style="background:var(--accent-green); color:#000;" onclick="saveCustomerBalance('${u.id}')">Set</button>
+                <button class="btn-action" style="background:var(--accent-yellow); color:#000;" onclick="adjustCustomerBalance('${u.id}', 0)">Hold/Zero</button>
+              </div>
+            </div>
+          </td>
+          <td><b>Total:</b> $${totalDepAmt.toFixed(2)} (${deposits.length} times)</td>
+          <td><b>Total:</b> $${totalWdAmt.toFixed(2)} (${withdrawals.length} times)</td>
+          <td><b>Team Size:</b> ${teamSize}<br><b>Team Asset:</b> $${teamTotalDeposit.toFixed(2)}<br><b>Ref Income:</b> $${Number(u.teamIncome || 0).toFixed(2)}</td>
+          <td>
+            <button class="btn-action" style="background:var(--accent-purple); color:#fff; font-size:16px; padding:6px 10px;" onclick="openDigitalModal('${u.id}')" title="View Digital Record">💠</button>
+          </td>
+          <td>
+            ${blockStatusBtn}
+            <button class="btn-rej" style="padding:4px 8px; font-size:11px;" onclick="deleteUserAccount('${u.id}')">Delete ID</button>
+          </td>
+        </tr>`;
+      });
+      document.getElementById('adminUsersTable').innerHTML = rows || '<tr><td colspan="8" style="text-align:center;">No users registered yet.</td></tr>';
+    }
+
+    function openDigitalModal(userId) {
+      let users = JSON.parse(localStorage.getItem('app_users') || '[]');
+      let u = users.find(x => x.id === userId);
+      if(!u) return;
+
+      let teamMembers = users.filter(x => x.referredBy === u.myReferralCode || x.referredBy === u.id);
+      let teamSize = teamMembers.length;
+      let teamTotalDeposit = teamMembers.reduce((sum, x) => sum + Number(x.creditedDeposit || x.deposit || 0), 0);
+
+      let regDate = u.createdAt ? new Date(u.createdAt).toLocaleString() : 'N/A';
+      let html = `
+        <div class="digital-row"><span>New Joiner ID:</span> <span class="digital-val">${u.myReferralCode || u.id}</span></div>
+        <div class="digital-row"><span>Email / Number:</span> <span class="digital-val">${u.contact || 'N/A'}</span></div>
+        <div class="digital-row"><span>Referred By:</span> <span class="digital-val">${u.referredBy || 'Direct'}</span></div>
+        <div class="digital-row"><span>Date & Time Joined:</span> <span class="digital-val">${regDate}</span></div>
+        <div class="digital-row"><span>Team Size:</span> <span class="digital-val">${teamSize} Members</span></div>
+        <div class="digital-row"><span>Team Assets:</span> <span class="digital-val">$${teamTotalDeposit.toFixed(2)} USDT</span></div>
+        <div class="digital-row"><span>User Assets (Total Balance):</span> <span class="digital-val">$${Number(u.balance || 0).toFixed(2)} USDT</span></div>
+        <div class="digital-row"><span>Referral Bonus Earned:</span> <span class="digital-val">$${Number(u.teamIncome || 0).toFixed(2)} USDT</span></div>
+        <div class="digital-row"><span>User Daily Profit:</span> <span class="digital-val">$${Number(u.todayOrderProfit || 0).toFixed(2)} USDT</span></div>
+        
+        <div style="margin-top:16px; border-top:1px solid rgba(255,255,255,0.1); padding-top:12px;">
+          <h4 style="font-size:14px; color:var(--accent-cyan); margin-bottom:8px;">🛠️ Manual Asset Add / Manage Button</h4>
+          <div style="display:flex; gap:8px;">
+            <input type="number" id="manualAddAmt_${u.id}" placeholder="Enter amount ($)" style="flex:1; padding:8px; background:#000; color:#fff; border:1px solid #333; border-radius:6px;">
+            <button class="btn-acc" onclick="manualAddUserAsset('${u.id}')">Add Amount</button>
+          </div>
+        </div>
+      `;
+      document.getElementById('digitalModalContent').innerHTML = html;
+      document.getElementById('digitalModal').classList.add('active');
+    }
+
+    function closeDigitalModal() {
+      document.getElementById('digitalModal').classList.remove('active');
+    }
+
+    function manualAddUserAsset(userId) {
+      let addVal = parseFloat(document.getElementById(`manualAddAmt_${userId}`).value) || 0;
+      if(addVal <= 0) { alert("Please enter a valid amount to add."); return; }
+
+      let users = JSON.parse(localStorage.getItem('app_users') || '[]');
+      users = users.map(u => {
+        if(u.id === userId) {
+          return {...u, balance: Math.round(((Number(u.balance || 0)) + addVal) * 100) / 100};
+        }
+        return u;
+      });
+      localStorage.setItem('app_users', JSON.stringify(users));
+      loadAdminUsers();
+      alert(`Successfully added $${addVal.toFixed(2)} USDT to user's asset balance!`);
+      closeDigitalModal();
+    }
+
+    function saveCustomerBalance(userId) {
+      let val = parseFloat(document.getElementById(`custBal_${userId}`).value) || 0;
+      let users = JSON.parse(localStorage.getItem('app_users') || '[]');
+      users = users.map(u => u.id === userId ? {...u, balance: val} : u);
+      localStorage.setItem('app_users', JSON.stringify(users));
+      loadAdminUsers();
+      alert(`Customer Total Asset Balance updated to $${val.toFixed(2)} USDT!`);
+    }
+
+    function adjustCustomerBalance(userId, newAmt) {
+      let users = JSON.parse(localStorage.getItem('app_users') || '[]');
+      users = users.map(u => u.id === userId ? {...u, balance: newAmt} : u);
+      localStorage.setItem('app_users', JSON.stringify(users));
+      loadAdminUsers();
+      alert("Customer Total Asset Balance held/set to 0.00 USDT!");
+    }
+
+    function toggleBlockUser(userId, blockState) {
+      let users = JSON.parse(localStorage.getItem('app_users') || '[]');
+      users = users.map(u => u.id === userId ? {...u, isBlocked: blockState} : u);
+      localStorage.setItem('app_users', JSON.stringify(users));
+      loadAdminUsers();
+    }
+
+    function deleteUserAccount(userId) {
+      if(confirm("Are you sure you want to permanently delete this user ID?")) {
+        let users = JSON.parse(localStorage.getItem('app_users') || '[]');
+        users = users.filter(u => u.id !== userId);
+        localStorage.setItem('app_users', JSON.stringify(users));
+        loadAdminUsers();
+      }
+    }
+
+    function bulkDeleteSelectedUsers() {
+      const selected = Array.from(document.querySelectorAll('.user-check:checked')).map(cb => cb.value);
+      if(selected.length === 0) { alert("Please select users to delete!"); return; }
+      if(confirm(`Delete ${selected.length} selected users?`)) {
+        let users = JSON.parse(localStorage.getItem('app_users') || '[]').filter(u => !selected.includes(u.id));
+        localStorage.setItem('app_users', JSON.stringify(users));
+        loadAdminUsers();
+      }
+    }
+
+    function loadAdminRequests() {
+      let reqs = JSON.parse(localStorage.getItem('app_requests') || '[]');
+      reqs.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      let rows = "";
+      reqs.forEach(req => {
+        let badgeClass = req.status === 'Success' ? 'badge-success' : (req.status === 'Rejected' ? 'badge-rejected' : 'badge-processing');
+        let amtDisplay = `$${Number(req.amount || 0).toFixed(2)}`;
+        if(req.grossAmount) {
+          amtDisplay = `Gross: $${Number(req.grossAmount || 0).toFixed(2)} | <b style="color:var(--accent-green)">Net: $${Number(req.amount || 0).toFixed(2)}</b>`;
+        }
+        let walletNetHtml = req.walletAddress ? `<b>Network:</b> <span style="color:var(--accent-yellow); font-weight:800;">${req.network || 'TRC20'}</span><br><b>Address:</b> <span style="font-family:monospace; color:var(--accent-green);">${req.walletAddress}</span>` : 'N/A';
+
+        rows += `<tr>
+          <td><input type="checkbox" class="req-check" value="${req.id}"/></td>
+          <td><b>${req.userName || 'User'}</b></td>
+          <td>${req.userContact || 'N/A'}</td>
+          <td><b>${req.type}</b></td>
+          <td>${amtDisplay}</td>
+          <td>${walletNetHtml}</td>
+          <td><span class="badge ${badgeClass}">${req.status}</span></td>
+          <td>
+            ${req.status === 'Processing' ? `
+              <button class="btn-acc" onclick="updateRequestStatus('${req.id}', 'Success', '${req.userId}', '${req.type}', ${req.amount}, ${req.grossAmount || req.amount})">Accept</button>
+              <button class="btn-rej" onclick="updateRequestStatus('${req.id}', 'Rejected', '${req.userId}', '${req.type}', ${req.amount}, ${req.grossAmount || req.amount})">Reject</button>
+            ` : 'Done'}
+          </td>
+        </tr>`;
+      });
+      document.getElementById('adminRequestsTable').innerHTML = rows || '<tr><td colspan="8" style="text-align:center;">No requests found.</td></tr>';
+    }
+
+    function updateRequestStatus(reqId, newStatus, userId, type, netAmount, grossAmount) {
+      let reqs = JSON.parse(localStorage.getItem('app_requests') || '[]');
+      let users = JSON.parse(localStorage.getItem('app_users') || '[]');
+
+      let targetReq = reqs.find(r => r.id === reqId);
+      if(!targetReq) return;
+
+      targetReq.status = newStatus;
+
+      let targetUser = users.find(u => u.id === userId || u.id === targetReq.userId);
+
+      if(newStatus === 'Success' && type === 'Deposit') {
+        let netToAdd = Number(netAmount);
+        let grossDep = Number(grossAmount || targetReq.grossAmount || netAmount);
+
+        if(targetUser) {
+          targetUser.balance = Math.round(((Number(targetUser.balance || 0)) + netToAdd) * 100) / 100;
+          targetUser.deposit = Math.round(((Number(targetUser.deposit || 0)) + netToAdd) * 100) / 100;
+          targetUser.creditedDeposit = Math.round(((Number(targetUser.creditedDeposit || 0)) + netToAdd) * 100) / 100;
+
+          if (targetUser.referredBy && targetUser.referredBy !== 'NONE') {
+            let referrer = users.find(u => u.myReferralCode === targetUser.referredBy || u.id === targetUser.referredBy);
+            if (referrer) {
+              let bonusAmt = Math.round((grossDep * 0.10) * 100) / 100;
+              referrer.balance = Math.round(((Number(referrer.balance || 0)) + bonusAmt) * 100) / 100;
+              referrer.teamIncome = Math.round(((Number(referrer.teamIncome || 0)) + bonusAmt) * 100) / 100;
+
+              reqs.push({
+                id: 'req_ref_' + Date.now(),
+                userId: referrer.id,
+                userName: referrer.name || referrer.contact,
+                userContact: referrer.contact,
+                type: `10% Referral Bonus (${targetUser.name || targetUser.contact})`,
+                grossAmount: bonusAmt,
+                amount: bonusAmt,
+                status: 'Success',
+                createdAt: new Date().toISOString()
+              });
+            }
+          }
+        }
+      }
+
+      if(newStatus === 'Rejected' && type === 'Withdrawal') {
+        let refundAmount = Number(grossAmount || targetReq.grossAmount || targetReq.amount || 0);
+        if(targetUser) {
+          targetUser.balance = Math.round(((Number(targetUser.balance || 0)) + refundAmount) * 100) / 100;
+        }
+      }
+
+      localStorage.setItem('app_users', JSON.stringify(users));
+      localStorage.setItem('app_requests', JSON.stringify(reqs));
+      
+      loadAdminRequests();
+      loadAdminUsers();
+      alert(`Request marked as ${newStatus}! User balance and referral bonus updated successfully.`);
+    }
+
+    function bulkDeleteSelectedRequests() {
+      const selected = Array.from(document.querySelectorAll('.req-check:checked')).map(cb => cb.value);
+      if(selected.length === 0) { alert("Please select requests to delete!"); return; }
+      if(confirm(`Delete ${selected.length} selected requests?`)) {
+        let reqs = JSON.parse(localStorage.getItem('app_requests') || '[]').filter(r => !selected.includes(r.id));
+        localStorage.setItem('app_requests', JSON.stringify(reqs));
+        loadAdminRequests();
+      }
+    }
+
+    function loadAdminChatList() {
+      let chats = JSON.parse(localStorage.getItem('app_chats') || '[]');
+      let users = JSON.parse(localStorage.getItem('app_users') || '[]');
+      let usersMap = {};
+
+      users.forEach(u => {
+        usersMap[u.id] = { name: `${u.name || u.contact} (ID: ${u.myReferralCode || u.id})`, unread: 0 };
+      });
+
+      chats.forEach(c => {
+        if(!usersMap[c.userId]) {
+          usersMap[c.userId] = { name: `${c.userName || c.userContact} (ID: ${c.userId})`, unread: 0 };
+        }
+        if(c.sender === 'User' && !c.adminRead) {
+          usersMap[c.userId].unread += 1;
+        }
+      });
+
+      let html = "";
+      Object.keys(usersMap).forEach(uid => {
+        let unreadBadge = usersMap[uid].unread > 0 ? `<span class="unread-dot">${usersMap[uid].unread} Unread</span>` : '';
+        let activeClass = selectedChatUserId === uid ? 'active' : '';
+        html += `<div class="user-chat-item ${activeClass}">
+          <input type="checkbox" class="chat-check" value="${uid}"/>
+          <span onclick="selectUserChat('${uid}', '${usersMap[uid].name}')" style="cursor:pointer; flex:1; margin-left:6px;">💬 ${usersMap[uid].name}</span>
+          ${unreadBadge}
+        </div>`;
+      });
+      document.getElementById('adminUserChatList').innerHTML = html || '<div style="padding:12px; color:var(--text-muted);">No support chats active.</div>';
+    }
+
+    function selectUserChat(uid, contact) {
+      selectedChatUserId = uid;
+      selectedChatUserContact = contact;
+      document.getElementById('selectedChatTitle').innerText = `Chatting with User: ${contact}`;
+
+      let chats = JSON.parse(localStorage.getItem('app_chats') || '[]');
+      chats = chats.map(c => c.userId === uid && c.sender === 'User' ? {...c, adminRead: true} : c);
+      localStorage.setItem('app_chats', JSON.stringify(chats));
+
+      loadAdminChatList();
+      renderAdminChatMsgs();
+    }
+
+    function renderAdminChatMsgs() {
+      if(!selectedChatUserId) return;
+      let chats = JSON.parse(localStorage.getItem('app_chats') || '[]').filter(c => c.userId === selectedChatUserId);
+      chats.sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+      let chatHtml = "";
+      chats.forEach(m => {
+        let side = m.sender === 'Admin' ? 'color:var(--accent-cyan); text-align:right;' : 'color:var(--accent-green);';
+        let fileHtml = "";
+        if(m.fileUrl) {
+          if(m.fileType === 'image') {
+            fileHtml = `<br><a href="${m.fileUrl}" target="_blank"><img src="${m.fileUrl}" class="chat-file-img"/></a>`;
+          } else {
+            fileHtml = `<br><a href="${m.fileUrl}" download="${m.fileName || 'file'}" class="chat-file-link">📄 Download Document (${m.fileName || 'file'})</a>`;
+          }
+        }
+        chatHtml += `<div style="${side} margin-bottom:8px;">
+          <b>${m.sender}:</b> ${m.text || ''}${fileHtml}
+          <button class="btn-action" style="background:var(--accent-red); color:#fff; font-size:9px; padding:2px 4px; margin-left:6px;" onclick="deleteChatMessage('${m.id}')">Delete Msg</button>
+        </div>`;
+      });
+      document.getElementById('adminChatMsgs').innerHTML = chatHtml;
+    }
+
+    function deleteChatMessage(msgId) {
+      if(confirm("Delete this message?")) {
+        let chats = JSON.parse(localStorage.getItem('app_chats') || '[]').filter(c => c.id !== msgId);
+        localStorage.setItem('app_chats', JSON.stringify(chats));
+        renderAdminChatMsgs();
+      }
+    }
+
+    function bulkDeleteSelectedChats() {
+      const selected = Array.from(document.querySelectorAll('.chat-check:checked')).map(cb => cb.value);
+      if(selected.length === 0) { alert("Select chats to delete!"); return; }
+      if(confirm(`Delete chats for ${selected.length} selected users?`)) {
+        let chats = JSON.parse(localStorage.getItem('app_chats') || '[]').filter(c => !selected.includes(c.userId));
+        localStorage.setItem('app_chats', JSON.stringify(chats));
+        loadAdminChatList();
+        document.getElementById('adminChatMsgs').innerHTML = "";
+      }
+    }
+
+    function sendAdminReply(fileData = null) {
+      const txt = document.getElementById('adminReplyInput').value.trim();
+      if(!txt && !fileData) return;
+      if(!selectedChatUserId) return;
+
+      let chats = JSON.parse(localStorage.getItem('app_chats') || '[]');
+      let chatObj = {
+        id: 'chat_' + Date.now(),
+        userId: selectedChatUserId,
+        userContact: selectedChatUserContact,
+        sender: 'Admin',
+        text: txt || '',
+        adminRead: true,
+        createdAt: new Date().toISOString()
+      };
+      chats.push(chatObj);
+      localStorage.setItem('app_chats', JSON.stringify(chats));
+      document.getElementById('adminReplyInput').value = '';
+      renderAdminChatMsgs();
+      loadAdminChatList();
+    }
+
+    function handleAdminFileUpload(e) {
+      const file = e.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        sendAdminReply({ url: evt.target.result, name: file.name, type: file.type.includes('image') ? 'image' : 'document' });
+        alert("File sent to user!");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleAnnounceImg(e) {
+      const file = e.target.files[0];
+      if(file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) { announcementImgBase64 = evt.target.result; };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function publishAnnouncement() {
+      const text = document.getElementById('announceText').value.trim();
+      if(!text && !announcementImgBase64) { alert("Please enter text or select an image!"); return; }
+
+      let items = JSON.parse(localStorage.getItem('app_announcements') || '[]');
+      items.push({
+        id: 'ann_' + Date.now(),
+        text: text,
+        imageUrl: announcementImgBase64 || null,
+        createdAt: new Date().toISOString()
+      });
+      localStorage.setItem('app_announcements', JSON.stringify(items));
+
+      document.getElementById('announceText').value = '';
+      announcementImgBase64 = null;
+      alert("Announcement published successfully to all users!");
+    }
+
+    function handleGuideVideoUpload(e) {
+      const file = e.target.files[0];
+      if(file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          document.getElementById('guideVideoUrlInput').value = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function saveGuideVideoUrl() {
+      const url = document.getElementById('guideVideoUrlInput').value.trim();
+      if(!url) { alert("Please provide video URL or file!"); return; }
+
+      localStorage.setItem('app_guide', JSON.stringify({ videoUrl: url, updatedAt: new Date().toISOString() }));
+      alert("User Guide Video updated successfully for all users!");
+    }
+
+    setInterval(() => {
+      loadAdminUsers();
+      loadAdminRequests();
+      loadAdminChatList();
+      if(selectedChatUserId) renderAdminChatMsgs();
+    }, 1500);
+
+    window.onload = function() {
+      loadAdminUsers();
+      loadAdminRequests();
+      loadAdminChatList();
+    };
+  </script>
+</body>
+</html>
