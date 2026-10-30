@@ -337,7 +337,6 @@
 
       <div style="font-size: 18px; font-weight: 900; margin-bottom: 16px; color: var(--accent-cyan);" data-i18n="aiStrategyHeader">⚡ Dollar Investment AI Strategy</div>
 
-      <!-- Today Profit & Daily Breakdown Header -->
       <div class="investment-card" style="border-color: var(--accent-cyan); background: linear-gradient(135deg, rgba(0,210,255,0.08), rgba(17,24,35,1));">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
           <span style="font-weight:900; font-size:14px; color:var(--accent-cyan);">📈 Today Profit Summary</span>
@@ -733,7 +732,6 @@
       }
     });
 
-    // ENHANCED UNIVERSAL REFERRAL LINK DETECTOR (SUPPORTS SEARCH & HASH QUERIES)
     function getIncomingReferral() {
       const searchParams = new URLSearchParams(window.location.search);
       let ref = searchParams.get('ref');
@@ -1473,7 +1471,6 @@
         document.getElementById('withdrawalFeeNotice').innerText = "9% Deduction (Prior to 25 Days)";
       }
 
-      // ACCURATE INVITE LINK GENERATION FOR ALL ENVIRONMENTS
       let repoBaseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
       let refLink = `${repoBaseUrl}?ref=${currentUser.myReferralCode}`;
       document.getElementById('homeReferralLinkText').innerText = refLink;
@@ -1483,7 +1480,6 @@
         signupRefElem.value = incomingRef;
       }
 
-      // DYNAMIC CALCULATED TEAM MEMEBRS & DEPOSITS
       let allUsers = JSON.parse(localStorage.getItem('app_users') || '[]');
       let teamMembers = allUsers.filter(u => u.referredBy === currentUser.myReferralCode || u.referredBy === currentUser.id);
       let teamSize = teamMembers.length;
