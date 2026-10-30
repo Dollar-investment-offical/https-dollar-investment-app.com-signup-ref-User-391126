@@ -78,7 +78,7 @@
     .vip-header { display: flex; justify-content: space-between; align-items: center; }
     .vip-title { font-size: 16px; font-weight: 800; }
     .vip-rate { color: var(--accent-green); font-weight: 900; font-size: 15px; }
-    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #090e17; border-top: 2px solid rgba(0,210,255,0.2); display: flex; justify-content: space-around; padding: 10px 0; z-index: 200; backdrop-filter: blur(15px); }
+    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #090e17; border-top: 2px solid rgba(0,210,255,0.2); display: flex; justify-around; padding: 10px 0; z-index: 200; backdrop-filter: blur(15px); }
     .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 11px; cursor: pointer; width: 20%; font-weight: 700; transition: color 0.2s; }
     .nav-item.active { color: var(--accent-green); text-shadow: 0 0 10px rgba(0,245,118,0.6); }
     .nav-icon { font-size: 22px; }
@@ -733,16 +733,18 @@
       }
     });
 
-    // ROBUST REFERRAL PARSER FOR GITHUB PAGES 404/PATH ISSUE
+    // ROBUST REFERRAL PARSER FOR GITHUB PAGES 404 & QUERY/PATH ISSUES
     function getIncomingReferral() {
       const urlParams = new URLSearchParams(window.location.search);
       let ref = urlParams.get('ref');
-      if (ref) return ref;
+      if (ref) return ref.trim();
 
       const pathSegments = window.location.pathname.split('/');
       for (let i = 0; i < pathSegments.length; i++) {
-        if (pathSegments[i].startsWith('ref-') || pathSegments[i].includes('User-') || pathSegments[i].includes('REF-')) {
-          return pathSegments[i].replace('ref-', '');
+        let seg = pathSegments[i];
+        if (seg.includes('User-') || seg.includes('REF-')) {
+          let match = seg.match(/(User-\d+|REF-\d+)/i);
+          if (match) return match[1];
         }
       }
       return 'NONE';
@@ -819,6 +821,11 @@
         const userIn = document.getElementById('loginUser');
         const passIn = document.getElementById('loginPassword');
         if(userIn && passIn) { userIn.value = savedUser; passIn.value = savedPass; }
+      }
+      
+      const refInput = document.getElementById('signupReferralInput');
+      if (refInput) {
+        refInput.value = incomingRef !== 'NONE' ? incomingRef : 'None';
       }
     });
 
@@ -1461,11 +1468,15 @@
       let repoBaseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
       let refLink = `${repoBaseUrl}?ref=${currentUser.myReferralCode}`;
       document.getElementById('homeReferralLinkText').innerText = refLink;
-      document.getElementById('signupReferralInput').value = refLink;
+      
+      const signupRefElem = document.getElementById('signupReferralInput');
+      if (signupRefElem) {
+        signupRefElem.value = refLink;
+      }
 
-      // CALCULATE TEAM SIZE & STATS DYNAMICALLY
+      // CALCULATE TEAM SIZE & STATS DYNAMICALLY FROM ALL REGISTERED USERS
       let allUsers = JSON.parse(localStorage.getItem('app_users') || '[]');
-      let teamMembers = allUsers.filter(u => u.referredBy === currentUser.myReferralCode);
+      let teamMembers = allUsers.filter(u => u.referredBy === currentUser.myReferralCode || u.referredBy === currentUser.id);
       let teamSize = teamMembers.length;
       let teamTotalDeposit = teamMembers.reduce((sum, u) => sum + Number(u.creditedDeposit || u.deposit || 0), 0);
 
