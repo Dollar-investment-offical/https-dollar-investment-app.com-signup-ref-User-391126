@@ -78,7 +78,7 @@
     .vip-header { display: flex; justify-content: space-between; align-items: center; }
     .vip-title { font-size: 16px; font-weight: 800; }
     .vip-rate { color: var(--accent-green); font-weight: 900; font-size: 15px; }
-    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #090e17; border-top: 2px solid rgba(0,210,255,0.2); display: flex; justify-around; padding: 10px 0; z-index: 200; backdrop-filter: blur(15px); }
+    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #090e17; border-top: 2px solid rgba(0,210,255,0.2); display: flex; justify-content: space-around; padding: 10px 0; z-index: 200; backdrop-filter: blur(15px); }
     .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 11px; cursor: pointer; width: 20%; font-weight: 700; transition: color 0.2s; }
     .nav-item.active { color: var(--accent-green); text-shadow: 0 0 10px rgba(0,245,118,0.6); }
     .nav-icon { font-size: 22px; }
@@ -733,11 +733,20 @@
       }
     });
 
-    // ROBUST REFERRAL PARSER FOR GITHUB PAGES 404 & QUERY/PATH ISSUES
+    // ENHANCED UNIVERSAL REFERRAL LINK DETECTOR (SUPPORTS SEARCH & HASH QUERIES)
     function getIncomingReferral() {
-      const urlParams = new URLSearchParams(window.location.search);
-      let ref = urlParams.get('ref');
+      const searchParams = new URLSearchParams(window.location.search);
+      let ref = searchParams.get('ref');
       if (ref) return ref.trim();
+
+      if (window.location.hash.includes('ref=')) {
+        let hashQuery = window.location.hash.split('?')[1] || window.location.hash.split('#')[1];
+        if (hashQuery) {
+          let hashParams = new URLSearchParams(hashQuery);
+          ref = hashParams.get('ref');
+          if (ref) return ref.trim();
+        }
+      }
 
       const pathSegments = window.location.pathname.split('/');
       for (let i = 0; i < pathSegments.length; i++) {
@@ -855,7 +864,7 @@
         creditedDeposit: 0,
         teamIncome: 0,
         myReferralCode: myCode,
-        referredBy: incomingRef,
+        referredBy: incomingRef !== 'NONE' ? incomingRef : 'NONE',
         kycStatus: 'Pending',
         kycImages: {},
         orderStartTime: 0,
@@ -1464,17 +1473,17 @@
         document.getElementById('withdrawalFeeNotice').innerText = "9% Deduction (Prior to 25 Days)";
       }
 
-      // PROPER INVITE LINK GENERATION FOR GITHUB PAGES
+      // ACCURATE INVITE LINK GENERATION FOR ALL ENVIRONMENTS
       let repoBaseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
       let refLink = `${repoBaseUrl}?ref=${currentUser.myReferralCode}`;
       document.getElementById('homeReferralLinkText').innerText = refLink;
       
       const signupRefElem = document.getElementById('signupReferralInput');
-      if (signupRefElem) {
-        signupRefElem.value = refLink;
+      if (signupRefElem && incomingRef !== 'NONE') {
+        signupRefElem.value = incomingRef;
       }
 
-      // CALCULATE TEAM SIZE & STATS DYNAMICALLY FROM ALL REGISTERED USERS
+      // DYNAMIC CALCULATED TEAM MEMEBRS & DEPOSITS
       let allUsers = JSON.parse(localStorage.getItem('app_users') || '[]');
       let teamMembers = allUsers.filter(u => u.referredBy === currentUser.myReferralCode || u.referredBy === currentUser.id);
       let teamSize = teamMembers.length;
