@@ -733,8 +733,21 @@
       }
     });
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const incomingRef = urlParams.get('ref') || 'NONE';
+    // ROBUST REFERRAL PARSER FOR GITHUB PAGES 404/PATH ISSUE
+    function getIncomingReferral() {
+      const urlParams = new URLSearchParams(window.location.search);
+      let ref = urlParams.get('ref');
+      if (ref) return ref;
+
+      const pathSegments = window.location.pathname.split('/');
+      for (let i = 0; i < pathSegments.length; i++) {
+        if (pathSegments[i].startsWith('ref-') || pathSegments[i].includes('User-') || pathSegments[i].includes('REF-')) {
+          return pathSegments[i].replace('ref-', '');
+        }
+      }
+      return 'NONE';
+    }
+    const incomingRef = getIncomingReferral();
 
     const globalNamesList = [
       { name: "Liam Smith", region: "Europe" }, { name: "Emma Johnson", region: "Europe" },
@@ -1444,10 +1457,42 @@
         document.getElementById('withdrawalFeeNotice').innerText = "9% Deduction (Prior to 25 Days)";
       }
 
-      // CUSTOM INVITE LINK FORMAT REQUIREMENT
-      let refLink = `https://dollar-investment-offical.github.io/https-dollar-investment-app.com-signup-ref-${currentUser.myReferralCode}/`;
+      // PROPER INVITE LINK GENERATION FOR GITHUB PAGES
+      let repoBaseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
+      let refLink = `${repoBaseUrl}?ref=${currentUser.myReferralCode}`;
       document.getElementById('homeReferralLinkText').innerText = refLink;
       document.getElementById('signupReferralInput').value = refLink;
+
+      // CALCULATE TEAM SIZE & STATS DYNAMICALLY
+      let allUsers = JSON.parse(localStorage.getItem('app_users') || '[]');
+      let teamMembers = allUsers.filter(u => u.referredBy === currentUser.myReferralCode);
+      let teamSize = teamMembers.length;
+      let teamTotalDeposit = teamMembers.reduce((sum, u) => sum + Number(u.creditedDeposit || u.deposit || 0), 0);
+
+      document.getElementById('homeTeamSizeText').innerText = `${teamSize} Members`;
+      document.getElementById('homeTeamTotalDepositText').innerText = `$${teamTotalDeposit.toFixed(2)}`;
+      document.getElementById('homeTeamIncomeText').innerText = `$${teamInc.toFixed(2)}`;
+
+      document.getElementById('teamOverviewSize').innerText = teamSize;
+      document.getElementById('teamOverviewAsset').innerText = `$${teamTotalDeposit.toFixed(2)}`;
+      document.getElementById('teamOverviewJoiners').innerText = teamSize;
+      document.getElementById('teamOverviewTodayInc').innerText = `$${teamInc.toFixed(2)}`;
+
+      let teamListHtml = '';
+      teamMembers.forEach(tm => {
+        let tmDep = Number(tm.creditedDeposit || tm.deposit || 0);
+        teamListHtml += `<div class="list-item">
+          <div>
+            <div style="font-weight:800; color:#fff;">${tm.name || tm.contact}</div>
+            <div style="font-size:11px; color:var(--text-muted);">ID: ${tm.myReferralCode}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-weight:900; color:var(--accent-green);">Deposit: $${tmDep.toFixed(2)}</div>
+            <div style="font-size:11px; color:var(--text-muted);">${new Date(tm.createdAt).toLocaleDateString()}</div>
+          </div>
+        </div>`;
+      });
+      document.getElementById('teamMemberList').innerHTML = teamListHtml || '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:12px;" data-i18n="noTeamMembers">No team members registered under your link yet. Share your link to earn 10% deposit commissions!</div>';
 
       const kycBadge = document.getElementById('meKycStatusBadge');
       const kycActionText = document.getElementById('meKycActionText');
@@ -1480,7 +1525,7 @@
                       </div>
                      </div>`;
       });
-      document.getElementById('globalHistoryList').innerHTML = histHtml || '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;">No recent history recorded.</div>';
+      document.getElementById('globalHistoryList').innerHTML = histHtml || '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;" data-i18n="noHistory">No recent history recorded.</div>';
 
       renderUserChats();
       renderCommunityChat();
