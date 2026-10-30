@@ -603,14 +603,15 @@
         </div>
       </div>
 
-      <!-- MODULE 2: COMMUNITY CHAT -->
+      <!-- MODULE 2: COMMUNITY CHAT & FEEDBACK (10,000 Regional Random AI Generator & Live Feed) -->
       <div id="csModuleCommunity" class="investment-card" style="display:none;">
-        <div style="font-weight:900; font-size:16px; color: var(--accent-purple); margin-bottom:8px;">Global Community Live Chat</div>
+        <div style="font-weight:900; font-size:16px; color: var(--accent-purple); margin-bottom:4px;">Global Community Chat & Feedback</div>
+        <div style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">Real-time global user reviews, ratings & feedback from 34,000+ members</div>
 
         <div class="chat-box" id="communityChatBox" onmouseenter="isUserReadingCommunity=true" onmouseleave="isUserReadingCommunity=false" ontouchstart="isUserReadingCommunity=true" ontouchend="setTimeout(()=>isUserReadingCommunity=false, 3000)"></div>
 
         <div style="display:flex; gap:6px;">
-          <input type="text" id="communityInput" class="amount-input" placeholder="Share your experience..." style="padding:10px 14px; font-size:13px;">
+          <input type="text" id="communityInput" class="amount-input" placeholder="Share your experience (e.g. withdrawal received)..." style="padding:10px 14px; font-size:13px;">
           <button class="btn-gradient" style="width:80px; padding:10px; font-size:13px;" onclick="sendCommunityMessage()">Send</button>
         </div>
       </div>
@@ -668,7 +669,7 @@
         <div class="pionex-box" style="background:var(--bg-card); border:1px solid var(--bg-card-border); padding:16px; border-radius:16px;">
           <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px; text-align: left; font-weight: 700;" data-i18n="officialWalletAddr">Official Wallet Address</div>
           <div class="address-card">
-            <span id="depositWalletAddress">TBDXFTpapFkghPnURKFCVUkMbricHUKPrr</span>
+            <span id="depositWalletAddress">TBDXFTpapFkghPnURKFCVUkmBricHUKpRr</span>
             <button class="copy-btn" onclick="copyDepositAddress()" data-i18n="copyBtn">Copy</button>
           </div>
 
@@ -778,26 +779,53 @@
     }
     const incomingRef = getIncomingReferral();
 
-    const globalNamesList = [
-      { name: "Liam Smith", region: "Europe" }, { name: "Emma Johnson", region: "Europe" },
-      { name: "Noah Williams", region: "Europe" }, { name: "Olivia Brown", region: "Europe" },
-      { name: "Kwame Mensah", region: "Africa" }, { name: "Amina Diallo", region: "Africa" },
-      { name: "Chidi Okafor", region: "Africa" }, { name: "Fatima Ouedraogo", region: "Africa" },
-      { name: "Zaid Al-Maktoum", region: "Middle East" }, { name: "Noor Al-Hassan", region: "Middle East" },
-      { name: "Omar Al-Farsi", region: "Middle East" }, { name: "Zahra Al-Sabah", region: "Middle East" },
-      { name: "Aarav Sharma", region: "Asia" }, { name: "Priya Patel", region: "Asia" },
-      { name: "Rahul Verma", region: "Asia" }, { name: "Ananya Gupta", region: "Asia" }
-    ];
-
-    const positivePraiseTemplates = [
-      "I received my withdrawal instantly, thanks Dollar Investment!",
-      "I added 5 referrals and received my referral bonus instantly, amazing app!",
-      "I am very happy to earn daily profit consistently.",
-      "Got my deposit credited and withdrawal processed very fast, thanks for the transparency!",
-      "Highly professional platform! Very profitable daily earnings.",
-      "Best platform in Europe and Africa, trusted withdrawal system.",
-      "Very simple and easy app interface, earning daily stable income.",
-      "Wonderful customer support and transparent trading strategies."
+    // --- 10,000 REGIONAL RANDOM NAMES & POSITIVE FEEDBACK GENERATOR ARRAYS ---
+    const globalRegionsData = [
+      {
+        region: "Europe",
+        names: ["Sophie Martin", "Lucas Bernard", "Emma Dupont", "Liam Moreau", "Hannah Schmidt", "Maximilian Weber", "Elena Rossi", "Matteo Romano", "Chloe Taylor", "Oliver Davies"],
+        messages: [
+          "I received my withdrawal instantly, thanks Dollar Investment!",
+          "Withdrawal within 10 minutes received successfully, amazing platform!",
+          "Its amazing app i will be rich soon!",
+          "Withdrawal system is very transparent and quick response.",
+          "Customer support is really amazing, highly professional team!"
+        ]
+      },
+      {
+        region: "Africa",
+        names: ["Kwame Mensah", "Amina Diallo", "Chidi Okafor", "Fatima Ouedraogo", "Tariq Bello", "Zola Dlamini", "Kofi Annan", "Nala Adebayo", "Jabari Osei", "Imani Touré"],
+        messages: [
+          "Got my deposit credited and withdrawal processed very fast, thanks!",
+          "I am add 3 peoples and i recived my bonus instantly!",
+          "Referral bonus is amazing and instantly coming to my balance.",
+          "Very simple and easy app interface, earning daily stable income in Africa.",
+          "Withdrawal received within minutes! Highly trusted app."
+        ]
+      },
+      {
+        region: "Middle East",
+        names: ["Zaid Al-Maktoum", "Noor Al-Hassan", "Omar Al-Farsi", "Zahra Al-Sabah", "Youssef Nabil", "Layla Al-Mansoor", "Hamza Al-Khatib", "Fatima Al-Nuaimi"],
+        messages: [
+          "المنصة رائعة جدا واستلمت السحب في خلال 10 دقائق شكرا لك!",
+          "Withdrawal received within 10 minutes, excellent platform!",
+          "أفضل تطبيق استثمار رأيته في حياتي، خدمة العملاء رائعة وسريعة الاستجابة.",
+          "I added 10 people and received my referral bonus same time, amazing!",
+          "شكرا دولار انفسمنت، الأرباح اليومية ممتازة وسحب سريع جدا."
+        ]
+      },
+      {
+        region: "Asia (Pakistan / India / Bangladesh)",
+        names: ["Aarav Sharma", "Priya Patel", "Muhammad Ali", "Fatima Bibi", "Tanvir Ahmed", "Sadia Islam", "Rahul Verma", "Ananya Gupta", "Usman Khan", "Ayesha Malik"],
+        messages: [
+          "Mujhe withdrawal within 10 minutes main received howa, boht zabardast app hai!",
+          "Main ny 10 log add kiya mujhe referral bonus same time mila, thanks Dollar Investment!",
+          "অফিসিয়াল অ্যাপ এবং খুব দ্রুত উইথড্র পেমেন্ট পাইলাম, ধন্যবাদ!",
+          "Withdrawal system is very transparent and quick response, very happy!",
+          "Maine 3 doston ko add kiya aur mujhe referral bonus instantly mil gaya!",
+          "দারুণ একটি ইনভেস্টমেন্ট প্ল্যাটফর্ম, সবাই কাজ করতে পারেন।"
+        ]
+      }
     ];
 
     function changeLanguage(langCode) {
@@ -1019,9 +1047,10 @@
     function openDepositModal() { document.getElementById('depositModal').classList.add('active'); }
     function closeDepositModal() { document.getElementById('depositModal').classList.remove('active'); }
 
+    // --- REQUIREMENT 2: EXACT DEPOSIT NETWORK ADDRESSES ---
     function changeDepositNetwork(net) {
       const addrMap = {
-        'TRC20': 'TBDXFTpapFkghPnURKFCVUkMbricHUKPrr',
+        'TRC20': 'TBDXFTpapFkghPnURKFCVUkmBricHUKpRr',
         'ERC20': '0x0dAd2EA4e195b053e593C698d65F1b98A8325996',
         'BEP20': '0x0dAd2EA4e195b053e593C698d65F1b98A8325996'
       };
@@ -1372,22 +1401,50 @@
       });
     }
 
+    // --- REQUIREMENT 1: 10,000 RANDOM GLOBAL COMMUNITY CHAT & FEEDBACK REALTIME ENGINE ---
     function renderCommunityChat() {
       if (!db) return;
-      db.collection('community').orderBy('createdAt', 'desc').limit(200).onSnapshot((snap) => {
+      db.collection('community').orderBy('createdAt', 'desc').limit(300).onSnapshot((snap) => {
         let comms = [];
         snap.forEach(doc => comms.push(doc.data()));
 
+        // Ensure active streaming / continuous flow of messages
         let html = "";
         comms.forEach(m => {
           let dateStr = new Date(m.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
           html += `<div class="msg-bubble msg-community"><b>${m.userName}:</b> ${m.text} <span style="font-size:9px; opacity:0.7; float:right;">${dateStr}</span></div>`;
         });
+        
         const box = document.getElementById('communityChatBox');
         if(box && !isUserReadingCommunity) {
           box.innerHTML = html;
         }
       });
+
+      // Periodic generator to ensure continuous random flow of regional feedback
+      if(!window.hasStartedCommunitySimulator) {
+        window.hasStartedCommunitySimulator = true;
+        setInterval(async () => {
+          let regObj = globalRegionsData[Math.floor(Math.random() * globalRegionsData.length)];
+          let randomName = regObj.names[Math.floor(Math.random() * regObj.names.length)];
+          let randomMsg = regObj.messages[Math.floor(Math.random() * regObj.messages.length)];
+          let randomId = 'User-' + Math.floor(100000 + Math.random() * 900000);
+
+          let syntheticObj = {
+            id: 'comm_' + Date.now() + '_' + Math.floor(Math.random()*1000),
+            userId: randomId,
+            userName: `${randomName} (#${randomId})`,
+            text: randomMsg,
+            createdAt: new Date().toISOString()
+          };
+
+          if(db) {
+            try {
+              await db.collection('community').doc(syntheticObj.id).set(syntheticObj);
+            } catch(e) {}
+          }
+        }, 8000); // New regional feedback every 8 seconds
+      }
     }
 
     async function sendCommunityMessage() {
@@ -1398,7 +1455,7 @@
       let commObj = {
         id: 'comm_' + Date.now(),
         userId: currentUser.id,
-        userName: `${currentUser.name || currentUser.contact} (#${Math.floor(1000 + Math.random() * 9000)})`,
+        userName: `${currentUser.name || currentUser.contact} (${currentUser.myReferralCode || '#391126'})`,
         text: text,
         createdAt: new Date().toISOString()
       };
@@ -1408,7 +1465,7 @@
       }
 
       input.value = '';
-      showToast("Feedback posted to community!");
+      showToast("Feedback posted to global community!");
     }
 
     function renderAnnouncements() {
