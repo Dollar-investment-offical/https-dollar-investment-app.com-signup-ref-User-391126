@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Dollar Investment - Global AI Platform</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Control Board - Dollar Investment</title>
 
   <!-- Firebase Realtime Firestore SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -16,702 +16,165 @@
       --bg-card-border: #1e293b;
       --accent-green: #00f576;
       --accent-cyan: #00d2ff;
-      --accent-purple: #9d4edd;
-      --accent-pink: #ff007f;
-      --accent-yellow: #ffd60a;
       --accent-red: #ff3366;
+      --accent-yellow: #ffd60a;
+      --accent-purple: #9d4edd;
       --text-main: #ffffff;
       --text-muted: #94a3b8;
-      --gradient-btn: linear-gradient(135deg, #00f576 0%, #00d2ff 100%);
-      --gradient-brand: linear-gradient(135deg, #9d4edd 0%, #00d2ff 100%);
-      --gradient-purple: linear-gradient(135deg, #7b2cbf 0%, #3f37c9 100%);
-      --gradient-orange: linear-gradient(135deg, #ff7043 0%, #f4511e 100%);
     }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg-dark); color: var(--text-main); padding: 20px; }
+    h1 { color: var(--accent-green); margin-bottom: 8px; font-size: 24px; }
+    h2 { color: var(--accent-cyan); margin: 24px 0 12px 0; font-size: 18px; display:flex; justify-content:space-between; align-items:center; }
+    .table-container { overflow-x: auto; background: var(--bg-card); border: 1px solid var(--bg-card-border); border-radius: 12px; padding: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); margin-bottom:20px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td { padding: 12px; border-bottom: 1px solid var(--bg-card-border); font-size: 13px; }
+    th { background: rgba(0,210,255,0.1); color: var(--accent-cyan); font-weight: 800; }
+    td { color: #e2e8f0; }
+    .btn-acc { background: var(--accent-green); color: #000; font-weight: 900; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; margin-right: 4px; }
+    .btn-rej { background: var(--accent-red); color: #fff; font-weight: 900; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+    .btn-action { background: rgba(255,255,255,0.1); color: #fff; font-weight: 700; border: 1px solid rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; margin-right: 4px; }
+    .btn-bulk-delete { background: var(--accent-red); color:#fff; border:none; padding:6px 14px; border-radius:6px; font-weight:800; font-size:12px; cursor:pointer; }
+    .badge { padding: 4px 8px; border-radius: 6px; font-weight: 800; font-size: 11px; display: inline-block; }
+    .badge-processing { background: rgba(255, 193, 7, 0.2); color: #ffd166; }
+    .badge-success { background: rgba(0, 245, 118, 0.2); color: var(--accent-green); }
+    .badge-rejected { background: rgba(255, 51, 102, 0.2); color: var(--accent-red); }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background-color: var(--bg-dark); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
-    .app-container { width: 100%; max-width: 480px; background-color: var(--bg-dark); min-height: 100vh; display: flex; flex-direction: column; position: relative; padding-bottom: 85px; box-shadow: 0 0 40px rgba(0,245,118,0.15); }
-    .universal-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: rgba(11, 24, 35, 0.95); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,210,255,0.2); }
-    .nav-back-btn { background: linear-gradient(135deg, rgba(0,210,255,0.2), rgba(0,245,118,0.2)); border: 1px solid var(--accent-cyan); color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px; }
-    .auth-screen { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; height: 100vh; background: var(--bg-dark); z-index: 3000; display: flex; flex-direction: column; justify-content: center; padding: 24px; overflow-y: auto; }
-    .auth-screen.hidden { display: none !important; }
-    .auth-title { font-size: 28px; font-weight: 900; margin-bottom: 8px; background: var(--gradient-btn); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; text-shadow: 0 0 20px rgba(0,245,118,0.4); }
-    .auth-subtitle { font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 24px; }
-    .auth-toggle { text-align: center; margin-top: 16px; font-size: 13px; color: var(--text-muted); }
-    .auth-toggle span { color: var(--accent-green); font-weight: 800; cursor: pointer; }
-    .password-wrapper { position: relative; display: flex; align-items: center; }
-    .password-wrapper input { padding-right: 40px; }
-    .toggle-password { position: absolute; right: 12px; cursor: pointer; font-size: 16px; user-select: none; color: var(--text-muted); }
-    .remember-me-container { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; font-size: 13px; color: var(--text-muted); cursor: pointer; }
-    .remember-me-container input { accent-color: var(--accent-green); cursor: pointer; }
-    .top-bar { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: rgba(11, 24, 35, 0.95); position: sticky; top: 0; z-index: 99; backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,245,118,0.2); }
-    .brand-logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; color: #fff; }
-    .brand-icon { width: 34px; height: 34px; background: var(--gradient-brand); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #fff; box-shadow: 0 0 15px rgba(157,78,221,0.5); }
-    .lang-dropdown-wrapper { position: relative; display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid var(--accent-cyan); border-radius: 20px; padding: 4px 10px; }
-    .lang-select { background: transparent; border: none; color: var(--text-main); font-size: 12px; font-weight: 700; outline: none; cursor: pointer; }
-    .lang-select option { background: #111823; color: #fff; }
-    .tab-content { display: none; padding: 16px; animation: fadeIn 0.25s ease-in-out; }
-    .tab-content.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-    .ticker-banner { background: linear-gradient(90deg, rgba(157,78,221,0.15), rgba(0,210,255,0.15)); border: 1px solid rgba(0,210,255,0.3); border-radius: 10px; padding: 10px 14px; font-size: 12px; color: var(--accent-cyan); margin-bottom: 18px; display: flex; align-items: center; gap: 8px; overflow: hidden; white-space: nowrap; font-weight: 600; }
-    .ticker-text { display: inline-block; animation: marquee 18s linear infinite; }
-    @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-    .quick-grid-8 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
-    .quick-item { background: var(--bg-card); border: 1px solid var(--bg-card-border); border-radius: 14px; padding: 14px 4px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s ease; }
-    .quick-item:hover { border-color: var(--accent-green); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,245,118,0.2); }
-    .quick-icon-wrapper { width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, rgba(0,245,118,0.15), rgba(0,210,255,0.15)); border: 1px solid rgba(0,245,118,0.4); display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--accent-green); }
-    .quick-label { font-size: 11px; color: #e2e8f0; text-align: center; font-weight: 700; }
-    .investment-card { background: var(--bg-card); border: 1px solid var(--bg-card-border); border-radius: 18px; padding: 20px; margin-bottom: 20px; box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
-    .input-group { margin-bottom: 16px; }
-    .input-label { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; display: flex; justify-content: space-between; font-weight: 700; }
-    .amount-input { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(0,210,255,0.3); border-radius: 12px; padding: 14px 16px; color: #fff; font-size: 16px; font-weight: 700; outline: none; transition: border-color 0.2s; }
-    .amount-input:focus { border-color: var(--accent-green); box-shadow: 0 0 10px rgba(0,245,118,0.3); }
-    .btn-gradient { width: 100%; padding: 16px; border: none; border-radius: 14px; background: var(--gradient-btn); color: #000; font-weight: 900; font-size: 16px; cursor: pointer; box-shadow: 0 6px 20px rgba(0,245,118,0.4); transition: transform 0.2s; }
-    .btn-gradient:active { transform: scale(0.98); }
-    .balance-card { background: linear-gradient(135deg, rgba(157,78,221,0.25), rgba(0,210,255,0.25)); border: 2px solid rgba(0,210,255,0.4); border-radius: 20px; padding: 22px; margin-bottom: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
-    .balance-amount { font-size: 34px; font-weight: 900; color: #fff; margin: 6px 0 12px 0; text-shadow: 0 0 15px rgba(255,255,255,0.3); }
-    .referral-box { background: rgba(0,0,0,0.4); border: 1px solid rgba(0,245,118,0.3); border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
-    .balance-actions { display: flex; gap: 12px; }
-    .btn-sub { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); color: #fff; font-size: 13px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
-    .btn-sub.primary { background: var(--gradient-orange); border: none; box-shadow: 0 4px 15px rgba(255,112,67,0.4); }
-    .pct-selector-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
-    .pct-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 10px 0; border-radius: 10px; font-size: 13px; font-weight: 800; cursor: pointer; text-align: center; transition: all 0.2s; }
-    .pct-btn:hover, .pct-btn.active { background: var(--accent-green); color: #000; border-color: var(--accent-green); box-shadow: 0 0 15px rgba(0,245,118,0.5); }
-    .vip-card { background: var(--bg-card); border: 2px solid var(--bg-card-border); border-radius: 16px; padding: 18px; margin-bottom: 14px; transition: all 0.3s ease; }
-    .vip-card.active { border-color: var(--accent-green); box-shadow: 0 0 20px rgba(0,245,118,0.3); background: linear-gradient(135deg, rgba(0,245,118,0.1), rgba(17,24,35,1)); }
-    .vip-header { display: flex; justify-content: space-between; align-items: center; }
-    .vip-title { font-size: 16px; font-weight: 800; }
-    .vip-rate { color: var(--accent-green); font-weight: 900; font-size: 15px; }
-    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #090e17; border-top: 2px solid rgba(0,210,255,0.2); display: flex; justify-around; padding: 10px 0; z-index: 200; backdrop-filter: blur(15px); }
-    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 11px; cursor: pointer; width: 20%; font-weight: 700; transition: color 0.2s; }
-    .nav-item.active { color: var(--accent-green); text-shadow: 0 0 10px rgba(0,245,118,0.6); }
-    .nav-icon { font-size: 22px; }
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 1000; display: none; align-items: flex-end; justify-content: center; }
+    .chat-admin-grid { display: grid; grid-template-columns: 320px 1fr; gap: 14px; }
+    .user-list-box { background: var(--bg-card); border: 1px solid var(--bg-card-border); border-radius: 12px; max-height: 420px; overflow-y: auto; }
+    .user-chat-item { padding: 12px 14px; border-bottom: 1px solid var(--bg-card-border); cursor: pointer; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+    .user-chat-item:hover, .user-chat-item.active { background: rgba(0,245,118,0.1); color: var(--accent-green); }
+    .unread-dot { background: var(--accent-red); color: #fff; font-size: 10px; font-weight: 900; padding: 2px 6px; border-radius: 10px; }
+    
+    .admin-chat-area { background: var(--bg-card); border: 1px solid var(--bg-card-border); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; height: 420px; }
+    .admin-chat-msgs { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+    .chat-in { display: flex; gap: 6px; }
+    .chat-in input[type="text"] { width:70%; padding:10px; border-radius:6px; border:1px solid #333; background: rgba(0,0,0,0.5); color: #fff; } 
+    .chat-in button { padding:10px 16px; background:var(--accent-cyan); border:none; font-weight:800; border-radius:6px; cursor:pointer; color: #000; }
+    .chat-file-img { max-width: 150px; border-radius: 6px; margin-top: 4px; display: block; }
+    .chat-file-link { color: #00d2ff; text-decoration: underline; font-weight: bold; font-size: 12px; }
+    
+    .admin-control-box { background: var(--bg-card); border: 1px solid var(--bg-card-border); border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+    .input-field { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #333; background: rgba(0,0,0,0.5); color: #fff; margin-bottom: 10px; }
+    
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 5000; display: none; align-items: center; justify-content: center; }
     .modal-overlay.active { display: flex; }
-    .modal-sheet { background: #111823; color: #fff; width: 100%; max-width: 480px; border-radius: 28px 28px 0 0; padding: 24px; max-height: 92vh; overflow-y: auto; border-top: 2px solid var(--accent-cyan); }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-    .close-btn { background: rgba(255,255,255,0.1); border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-weight: 900; font-size: 14px; }
-    .address-card { background: rgba(0,0,0,0.6); border: 1px dashed var(--accent-green); border-radius: 12px; padding: 14px; word-break: break-all; font-size: 12px; color: var(--accent-green); margin: 12px 0; position: relative; text-align: left; font-family: monospace; font-weight: 700; }
-    .copy-btn { position: absolute; right: 10px; bottom: 10px; background: var(--accent-orange, #ff7043); color: #fff; border: none; padding: 6px 14px; border-radius: 8px; font-size: 11px; cursor: pointer; font-weight: 800; }
-    .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: rgba(0,245,118,0.95); color: #000; padding: 12px 24px; border-radius: 30px; font-weight: 900; font-size: 13px; z-index: 4000; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 5px 20px rgba(0,245,118,0.5); }
-    .toast.show { transform: translateX(-50%) translateY(0); }
-    .list-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 14px; }
-    .spec-row { display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; color: var(--text-muted); font-weight: 600; }
-    .spec-value { color: #fff; font-weight: 800; }
-    .spec-value.green { color: var(--accent-green); }
-    .team-grid-4 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-    .team-stat-box { background: rgba(0,0,0,0.4); border: 1px solid var(--bg-card-border); border-radius: 14px; padding: 14px; text-align: center; }
-    .team-stat-val { font-size: 18px; font-weight: 900; color: var(--accent-green); margin-top: 6px; }
-    .badge-status { font-size: 11px; padding: 4px 10px; border-radius: 12px; font-weight: 800; }
-    .badge-pending { background: rgba(255, 193, 7, 0.25); color: #ffd166; }
-    .badge-verified { background: rgba(0, 245, 118, 0.25); color: var(--accent-green); box-shadow: 0 0 10px rgba(0,245,118,0.3); }
-    .kyc-upload-box { border: 2px dashed rgba(0,210,255,0.4); border-radius: 14px; padding: 16px; text-align: center; margin-bottom: 14px; cursor: pointer; background: rgba(0,0,0,0.3); transition: all 0.2s; }
-    .kyc-upload-box:hover { border-color: var(--accent-green); background: rgba(0,245,118,0.05); }
-    .danger-btn { background: rgba(255, 51, 102, 0.15); border: 1px solid var(--accent-red); color: var(--accent-red); width: 100%; padding: 14px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 12px; box-shadow: 0 4px 15px rgba(255,51,102,0.2); }
-    .spinning-ring { width: 100px; height: 100px; border: 4px dashed var(--accent-green); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; animation: spin 3s linear infinite; box-shadow: 0 0 20px rgba(0,245,118,0.4); }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .chat-box { height: 280px; overflow-y: auto; border: 1px solid var(--bg-card-border); border-radius: 12px; padding: 12px; background: rgba(0,0,0,0.4); margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px; }
-    .msg-bubble { max-width: 85%; padding: 8px 12px; border-radius: 12px; font-size: 13px; line-height: 1.4; word-break: break-word; }
-    .msg-user { align-self: flex-end; background: var(--accent-green); color: #000; font-weight: 700; }
-    .msg-admin { align-self: flex-start; background: rgba(0,210,255,0.2); border: 1px solid var(--accent-cyan); color: #fff; }
-    .msg-community { align-self: flex-start; background: rgba(157,78,221,0.25); border: 1px solid var(--accent-purple); color: #fff; }
-    .chat-file-img { max-width: 100%; border-radius: 8px; margin-top: 6px; display: block; }
-    .chat-file-link { color: #00d2ff; text-decoration: underline; font-weight: bold; display: inline-block; margin-top: 4px; }
-    .msg-status { font-size: 10px; text-align: right; margin-top: 2px; color: rgba(255,255,255,0.7); }
-    .support-icon-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
-    .support-card { background: rgba(0,0,0,0.4); border: 1px solid var(--bg-card-border); border-radius: 14px; padding: 14px; text-align: center; cursor: pointer; transition: all 0.2s; }
-    .support-card:hover { border-color: var(--accent-green); transform: translateY(-2px); }
+    .modal-card { background: #111823; border: 2px solid var(--accent-cyan); border-radius: 16px; width: 90%; max-width: 500px; padding: 24px; max-height: 85vh; overflow-y: auto; color: #fff; }
+    .close-modal { float: right; background: rgba(255,255,255,0.1); border: none; color: #fff; width: 30px; height: 30px; border-radius: 50%; font-weight: 900; cursor: pointer; }
+    .digital-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 13px; }
+    .digital-val { color: var(--accent-green); font-weight: 800; }
   </style>
 </head>
 <body>
 
-  <!-- SIGN UP SCREEN -->
-  <div id="signupScreen" class="auth-screen">
-    <div class="auth-title" data-i18n="signupTitle">Create Account</div>
-    <div class="auth-subtitle" data-i18n="signupSubtitle">Join Dollar Investment AI Strategy (Canada Regulated)</div>
-    
-    <div class="input-group">
-      <div class="input-label" data-i18n="emailPhoneLabel">Email or Phone</div>
-      <input type="text" id="signupEmailPhone" class="amount-input" placeholder="Enter email or phone number">
-    </div>
+  <h1>Admin Master Control Board (GitHub Sync Ready)</h1>
+  <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">Professional management of users, live requests, interactive chats, total asset balances, and announcements.</p>
 
-    <div class="input-group">
-      <div class="input-label" data-i18n="passwordLabel">Password</div>
-      <div class="password-wrapper">
-        <input type="password" id="signupPassword" class="amount-input" placeholder="Enter password">
-        <span class="toggle-password" onclick="togglePasswordVisibility('signupPassword', this)">👁️</span>
+  <h2>
+    <span>1. Support Live Chat Center (1-on-1 with New Joiners & User IDs)</span>
+    <div>
+      <input type="checkbox" id="selectAllChats" onclick="toggleSelectAll('chat-check', this.checked)">
+      <label for="selectAllChats" style="font-size:12px; color:var(--text-muted); font-weight:600; margin-right:8px;">Select All</label>
+      <button class="btn-bulk-delete" onclick="bulkDeleteSelectedChats()">Delete Selected Chats</button>
+    </div>
+  </h2>
+  <div class="chat-admin-grid">
+    <div class="user-list-box" id="adminUserChatList">
+      <div style="padding:12px; color:var(--text-muted);">Loading active chats...</div>
+    </div>
+    <div class="admin-chat-area">
+      <div style="font-weight:800; color:var(--accent-cyan); margin-bottom:8px;" id="selectedChatTitle">Select a user to chat</div>
+      <div class="admin-chat-msgs" id="adminChatMsgs"></div>
+      
+      <input type="file" id="adminChatFileInput" accept="image/*,.pdf,.doc,.docx,.txt" style="display:none;" onchange="handleAdminFileUpload(event)">
+
+      <div class="chat-in">
+        <button style="background: rgba(255,255,255,0.1); border: 1px solid var(--accent-cyan); color: #fff; font-size:16px;" onclick="document.getElementById('adminChatFileInput').click()">📎</button>
+        <input type="text" id="adminReplyInput" placeholder="Type reply to user...">
+        <button onclick="sendAdminReply()">Reply</button>
       </div>
     </div>
-
-    <div class="input-group">
-      <div class="input-label" data-i18n="confirmPasswordLabel">Confirm Password</div>
-      <div class="password-wrapper">
-        <input type="password" id="signupConfirmPassword" class="amount-input" placeholder="Confirm password">
-        <span class="toggle-password" onclick="togglePasswordVisibility('signupConfirmPassword', this)">👁️</span>
-      </div>
-    </div>
-
-    <div class="input-group">
-      <div class="input-label" data-i18n="referralCodeLabel">Referral Link / Code</div>
-      <input type="text" id="signupReferralInput" class="amount-input" readonly style="background: rgba(0,245,118,0.1); color: var(--accent-green); font-weight: 800; font-size: 11px;">
-    </div>
-
-    <button type="button" class="btn-gradient" onclick="handleSignUp()" data-i18n="signupBtn">Sign Up ($2 Bonus)</button>
-    <div class="auth-toggle"><span data-i18n="alreadyAcc">Already have an account?</span> <span onclick="showLoginScreen()" data-i18n="loginLink">Log In</span></div>
   </div>
 
-  <!-- LOG IN SCREEN -->
-  <div id="loginScreen" class="auth-screen hidden">
-    <div class="auth-title" data-i18n="loginTitle">Welcome Back</div>
-    <div class="auth-subtitle" data-i18n="loginSubtitle">Log in to your account securely</div>
-    
-    <div class="input-group">
-      <div class="input-label" data-i18n="userLoginLabel">User (Email or Phone)</div>
-      <input type="text" id="loginUser" class="amount-input" placeholder="Enter your email or phone">
+  <h2><span>📢 Admin Announcement & 🎥 User Guide Video Upload</span></h2>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px;">
+    <div class="admin-control-box">
+      <h3 style="font-size: 14px; color: var(--accent-yellow); margin-bottom: 10px;">Post Admin Announcement</h3>
+      <input type="text" id="announceText" class="input-field" placeholder="Enter announcement details...">
+      <input type="file" id="announceImageFile" accept="image/*" class="input-field" onchange="handleAnnounceImg(event)">
+      <button class="btn-acc" style="width: 100%; padding: 10px;" onclick="publishAnnouncement()">Publish Announcement</button>
     </div>
 
-    <div class="input-group">
-      <div class="input-label" data-i18n="passwordLabel">Password</div>
-      <div class="password-wrapper">
-        <input type="password" id="loginPassword" class="amount-input" placeholder="Enter your password">
-        <span class="toggle-password" onclick="togglePasswordVisibility('loginPassword', this)">👁️</span>
-      </div>
+    <div class="admin-control-box">
+      <h3 style="font-size: 14px; color: var(--accent-green); margin-bottom: 10px;">Upload User Guide Video</h3>
+      <input type="file" id="guideVideoFileInput" accept="video/mp4,video/*" class="input-field" onchange="handleGuideVideoUpload(event)">
+      <input type="text" id="guideVideoUrlInput" class="input-field" placeholder="Or paste Direct MP4 Video URL...">
+      <button class="btn-acc" style="width: 100%; padding: 10px;" onclick="saveGuideVideoUrl()">Save / Update Video Guide</button>
     </div>
-
-    <div class="remember-me-container">
-      <input type="checkbox" id="rememberMeCheck" checked>
-      <label for="rememberMeCheck" data-i18n="savePassLabel">Save Password & User ID</label>
-    </div>
-
-    <button type="button" class="btn-gradient" onclick="handleLogIn()" data-i18n="loginBtn">Log In</button>
-    <div class="auth-toggle"><span data-i18n="noAcc">Don't have an account?</span> <span onclick="showSignupScreen()" data-i18n="signupLink">Sign Up</span></div>
   </div>
 
-  <div class="app-container">
-    
-    <header class="top-bar" id="mainHeader">
-      <div class="brand-logo">
-        <div class="brand-icon">$</div>
-        <span id="brandTitle" data-i18n="brandTitle">Dollar Investment</span>
-      </div>
-      <div class="top-actions">
-        <div class="lang-dropdown-wrapper">
-          🌐 
-          <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
-            <option value="EN" selected>EN (English)</option>
-            <option value="UR">UR (اردو)</option>
-            <option value="AR">AR (العربية)</option>
-            <option value="BN">BN (বাংলা)</option>
-            <option value="ES">ES (Español)</option>
-            <option value="FR">FR (Français)</option>
-            <option value="DE">DE (Deutsch)</option>
-            <option value="ZH">ZH (中文)</option>
-            <option value="HI">HI (हिन्दी)</option>
-            <option value="PT">PT (Português)</option>
-            <option value="RU">RU (Русский)</option>
-          </select>
-        </div>
-      </div>
-    </header>
-
-    <header class="universal-header" id="universalHeader" style="display: none;">
-      <button class="nav-back-btn" onclick="navigateBack()" data-i18n="backBtn">← Back</button>
-      <div style="font-size: 16px; font-weight: 800; color: #fff;" id="universalHeaderTitle">Subpage</div>
-      <div style="width: 50px;"></div>
-    </header>
-
-    <div id="toast" class="toast">Action completed!</div>
-
-    <!-- TAB 1: HOME -->
-    <div id="tab-home" class="tab-content active">
-      <div class="ticker-banner">
-        <span>📢</span>
-        <div class="ticker-text" data-i18n="tickerText">🔥 Welcome to Dollar Investment! Over 34,000+ Active Members Worldwide. Fully Registered & Certified in Canada. Min Deposit $25, Min Withdrawal $50.</div>
-      </div>
-
-      <div class="balance-card">
-        <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;" data-i18n="totalAssets">Total Assets (USDT)</div>
-        <div class="balance-amount" id="homeTotalAssetsDisplay">2.00</div>
-        
-        <div class="referral-box">
-          <span style="font-size: 12px; color: var(--text-muted); font-weight: 700;" data-i18n="recByRef">Received by Referral:</span>
-          <span style="font-size: 14px; font-weight: 900; color: var(--accent-green);" id="homeReferralEarnedDisplay">$0.00</span>
-        </div>
-
-        <div class="balance-actions">
-          <button class="btn-sub primary" onclick="openDepositModal()" data-i18n="depositBtn">📥 Deposit</button>
-          <button class="btn-sub" onclick="openSubPage('page-withdraw', 'Withdrawal')" data-i18n="withdrawBtn">📤 Withdraw</button>
-        </div>
-      </div>
-
-      <div class="quick-grid-8">
-        <div class="quick-item" onclick="openDepositModal()">
-          <div class="quick-icon-wrapper">📥</div>
-          <div class="quick-label" data-i18n="topupLabel">Top up</div>
-        </div>
-        <div class="quick-item" onclick="openSubPage('page-withdraw', 'Withdrawal')">
-          <div class="quick-icon-wrapper">💸</div>
-          <div class="quick-label" data-i18n="withdrawLabel">Withdraw</div>
-        </div>
-        <div class="quick-item" onclick="switchTab('tab-team')">
-          <div class="quick-icon-wrapper">👥</div>
-          <div class="quick-label" data-i18n="inviteLabel">Invite</div>
-        </div>
-        <div class="quick-item" onclick="openSubPage('page-cs', 'Live Support Hub')">
-          <div class="quick-icon-wrapper">🎧</div>
-          <div class="quick-label">App Support</div>
-        </div>
-        <div class="quick-item" onclick="switchTab('tab-vip')">
-          <div class="quick-icon-wrapper">📊</div>
-          <div class="quick-label" data-i18n="vipLabel">VIP Level</div>
-        </div>
-        <div class="quick-item" onclick="openSubPage('page-intro', 'Platform Introduction')">
-          <div class="quick-icon-wrapper">🎬</div>
-          <div class="quick-label" data-i18n="introLabel">Intro</div>
-        </div>
-        <div class="quick-item" onclick="openSubPage('page-terms', 'Terms of Use')">
-          <div class="quick-icon-wrapper">📖</div>
-          <div class="quick-label" data-i18n="termsLabel">Terms</div>
-        </div>
-        <div class="quick-item" onclick="handleKycMenuClick()">
-          <div class="quick-icon-wrapper">🆔</div>
-          <div class="quick-label" data-i18n="kycLabel">KYC</div>
-        </div>
-      </div>
-
-      <div class="investment-card">
-        <div style="font-weight: 800; margin-bottom: 14px; font-size: 15px; color: var(--accent-cyan);" data-i18n="activityRecords">📋 Activity & History Records</div>
-        <div id="globalHistoryList">
-          <div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;" data-i18n="noHistory">No recent history recorded.</div>
-        </div>
-      </div>
+  <h2>
+    <span>2. User Management & Balance Control / Hold Column</span>
+    <div>
+      <input type="checkbox" id="selectAllUsers" onclick="toggleSelectAll('user-check', this.checked)">
+      <label for="selectAllUsers" style="font-size:12px; color:var(--text-muted); font-weight:600; margin-right:8px;">Select All</label>
+      <button class="btn-bulk-delete" onclick="bulkDeleteSelectedUsers()">Delete Selected Users</button>
     </div>
+  </h2>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th><input type="checkbox" disabled></th>
+          <th>User Info & ID</th>
+          <th>Total Asset / Hold Balance ($)</th>
+          <th>Deposit Stats</th>
+          <th>Withdrawal Stats</th>
+          <th>Team Stats & Earnings</th>
+          <th>Digital Icon</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="adminUsersTable">
+        <tr><td colspan="8" style="text-align: center; color: var(--text-muted);">Loading users data...</td></tr>
+      </tbody>
+    </table>
+  </div>
 
-    <!-- TAB 2: ASSETS -->
-    <div id="tab-assets" class="tab-content">
-      <div class="universal-header" style="padding: 8px 0; background: none; border: none;">
-        <button class="nav-back-btn" onclick="switchTab('tab-home')" data-i18n="backHome">← Back to Home</button>
-      </div>
-
-      <div class="balance-card">
-        <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;" data-i18n="totalAssets">Total Assets (USDT)</div>
-        <div class="balance-amount" id="totalBalanceDisplay">2.00</div>
-        
-        <div class="referral-box">
-          <span style="font-size: 12px; color: var(--text-muted); font-weight: 700;" data-i18n="recByRef">Received by Referral:</span>
-          <span style="font-size: 14px; font-weight: 900; color: var(--accent-green);" id="assetsReferralEarnedDisplay">$0.00</span>
-        </div>
-
-        <div class="balance-actions">
-          <button class="btn-sub primary" onclick="openDepositModal()" data-i18n="depositBtn">📥 Deposit</button>
-          <button class="btn-sub" onclick="openSubPage('page-withdraw', 'Withdrawal')" data-i18n="withdrawBtn">📤 Withdraw</button>
-        </div>
-      </div>
-
-      <div class="investment-card" style="border-color: rgba(0,245,118,0.4); background: linear-gradient(135deg, rgba(0,245,118,0.08), rgba(17,24,35,1));">
-        <div style="font-weight: 900; margin-bottom: 8px; font-size: 16px; color: var(--accent-green);" data-i18n="freeWithdrawTitle">🎁 Free Withdrawal Privilege</div>
-        <div class="spec-row">
-          <span data-i18n="memDays">Membership Days:</span>
-          <span class="spec-value" id="daysJoinedText">0 / 25 Days</span>
-        </div>
-        <div class="spec-row">
-          <span data-i18n="feeStatus">Withdrawal Fee Status:</span>
-          <span class="spec-value green" id="freeWithdrawStatusText">Calculating Fee Rules...</span>
-        </div>
-      </div>
-
-      <div class="investment-card">
-        <div style="font-weight: 800; margin-bottom: 12px; font-size: 15px;" data-i18n="assetBreakdown">💼 Asset Allocation Breakdown</div>
-        <div class="list-item">
-          <span style="color:var(--text-muted); font-weight:700;" data-i18n="flexibleFunds">Flexible Funds</span>
-          <span style="font-weight:900" id="flexibleFundsDisplay">2.00 USDT</span>
-        </div>
-        <div class="list-item">
-          <span style="color:var(--text-muted); font-weight:700;" data-i18n="refRewards">Referral Rewards (10%)</span>
-          <span style="font-weight:900; color:var(--accent-green)" id="assetReferralFundDisplay">0.00 USDT</span>
-        </div>
-      </div>
+  <h2>
+    <span>3. Live Requests (Deposit & Withdrawal Processing with Auto-Refund on Rejection)</span>
+    <div>
+      <input type="checkbox" id="selectAllRequests" onclick="toggleSelectAll('req-check', this.checked)">
+      <label for="selectAllRequests" style="font-size:12px; color:var(--text-muted); font-weight:600; margin-right:8px;">Select All</label>
+      <button class="btn-bulk-delete" onclick="bulkDeleteSelectedRequests()">Delete Selected Requests</button>
     </div>
+  </h2>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th><input type="checkbox" disabled></th>
+          <th>User Name</th>
+          <th>Contact</th>
+          <th>Type</th>
+          <th>Gross / Net Amount ($)</th>
+          <th>Network & Wallet Address</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="adminRequestsTable">
+        <tr><td colspan="8" style="text-align: center; color: var(--text-muted);">Loading requests...</td></tr>
+      </tbody>
+    </table>
+  </div>
 
-    <!-- TAB 3: VIP -->
-    <div id="tab-vip" class="tab-content">
-      <div class="universal-header" style="padding: 8px 0; background: none; border: none;">
-        <button class="nav-back-btn" onclick="switchTab('tab-home')" data-i18n="backHome">← Back to Home</button>
-      </div>
-
-      <div style="font-size: 18px; font-weight: 900; margin-bottom: 16px; color: var(--accent-cyan);" data-i18n="aiStrategyHeader">⚡ Dollar Investment AI Strategy</div>
-
-      <div class="investment-card" style="border-color: var(--accent-cyan); background: linear-gradient(135deg, rgba(0,210,255,0.08), rgba(17,24,35,1));">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-          <span style="font-weight:900; font-size:14px; color:var(--accent-cyan);">📈 Today Profit Summary</span>
-          <span style="font-weight:900; font-size:16px; color:var(--accent-green);" id="todayProfitDisplay">$0.00 USDT</span>
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; font-size:11px; margin-top: 8px;">
-          <div style="background:rgba(0,0,0,0.4); padding:6px; border-radius:8px;">₿ BTC: <span id="distBtc" style="color:#fff; font-weight:800;">$0.00</span></div>
-          <div style="background:rgba(0,0,0,0.4); padding:6px; border-radius:8px;">Ξ ETH: <span id="distEth" style="color:#fff; font-weight:800;">$0.00</span></div>
-          <div style="background:rgba(0,0,0,0.4); padding:6px; border-radius:8px;">🪙 SOL: <span id="distSol" style="color:#fff; font-weight:800;">$0.00</span></div>
-          <div style="background:rgba(0,0,0,0.4); padding:6px; border-radius:8px;">⚡ TRON: <span id="distTron" style="color:#fff; font-weight:800;">$0.00</span></div>
-          <div style="background:rgba(0,0,0,0.4); padding:6px; border-radius:8px;">🟡 BNB: <span id="distBnb" style="color:#fff; font-weight:800;">$0.00</span></div>
-          <div style="background:rgba(0,0,0,0.4); padding:6px; border-radius:8px;">🌐 ETF: <span id="distEtf" style="color:#fff; font-weight:800;">$0.00</span></div>
-        </div>
-      </div>
-
-      <div class="investment-card" style="border-color: var(--accent-green);">
-        <div style="font-weight: 900; margin-bottom: 12px; font-size: 16px; color: var(--accent-green);" data-i18n="smartExecutor">🤖 Smart Strategy Executor</div>
-        
-        <div class="input-group">
-          <div class="input-label">
-            <span data-i18n="investAmount">Investment Amount</span>
-            <span>Min: $20</span>
-          </div>
-          <div class="amount-input-wrapper">
-            <input type="number" id="homeInvestInput" class="amount-input" value="2.00">
-          </div>
-        </div>
-
-        <div class="pct-selector-grid">
-          <div class="pct-btn" onclick="selectInvestmentPct(25)">25%</div>
-          <div class="pct-btn" onclick="selectInvestmentPct(50)">50%</div>
-          <div class="pct-btn" onclick="selectInvestmentPct(75)">75%</div>
-          <div class="pct-btn active" onclick="selectInvestmentPct(100)">100%</div>
-        </div>
-
-        <button class="btn-gradient" id="btnCreateOrder" onclick="startAIOrderProcess()" data-i18n="createOrderBtn">Create Order (1~4 mins)</button>
-        <div id="cooldownNotice" style="display:none; text-align:center; color:var(--accent-yellow); font-size:12px; margin-top:12px; font-weight:800;">
-          <span data-i18n="cooldownText">⏳ Next Order available in:</span> <span id="cooldownTimer">24:00:00</span>
-        </div>
-      </div>
-
-      <div id="tradingSimulationBox" class="investment-card" style="display:none; text-align:center;">
-        <div style="font-size:15px; font-weight:900; color:var(--accent-green); margin-bottom:12px;" data-i18n="aiInProgress">⚡ AI Strategy Arbitrage in Progress...</div>
-        <div class="spinning-ring" style="margin-bottom:14px;">
-          <span style="font-size:26px;">🤖📈</span>
-        </div>
-        <div style="font-size:13px; color:var(--text-muted); margin-bottom:6px; font-weight:700;"><span data-i18n="timeRemaining">Time remaining:</span> <span id="timerDisplay" style="color:#fff; font-weight:900;">03:00</span></div>
-        <div style="font-size:12px; color:var(--accent-cyan); font-weight:800;" id="livePairStatus">Analyzing BTC/USDT Market Trends...</div>
-      </div>
-
-      <div style="font-size: 16px; font-weight: 900; margin: 22px 0 12px 0; color: var(--accent-purple);" data-i18n="gridLevelsHeader">🏆 Grid Levels (Auto-Unlocked by Team Size)</div>
-      <div class="vip-card" id="gridCard1"><div class="vip-header"><div class="vip-title" data-i18n="grid1Title">Grid 1 (4 Members)</div><div class="vip-rate">1.50% - 2.00%</div></div></div>
-      <div class="vip-card" id="gridCard2"><div class="vip-header"><div class="vip-title" data-i18n="grid2Title">Grid 2 (6 Members)</div><div class="vip-rate">2.00% - 4.00%</div></div></div>
-      <div class="vip-card" id="gridCard3"><div class="vip-header"><div class="vip-title" data-i18n="grid3Title">Grid 3 (8 Members)</div><div class="vip-rate">4.00% - 6.00%</div></div></div>
-      <div class="vip-card" id="gridCard4"><div class="vip-header"><div class="vip-title" data-i18n="grid4Title">Grid 4 (10 Members)</div><div class="vip-rate">6.00% - 8.00%</div></div></div>
-      <div class="vip-card" id="gridCard5"><div class="vip-header"><div class="vip-title" data-i18n="grid5Title">Grid 5 (12 Members)</div><div class="vip-rate">8.00% - 10.00%</div></div></div>
-      <div class="vip-card" id="gridCard6"><div class="vip-header"><div class="vip-title" data-i18n="grid6Title">Grid 6 (14 Members)</div><div class="vip-rate">10.00% - 12.00%</div></div></div>
-      <div class="vip-card" id="gridCard7"><div class="vip-header"><div class="vip-title" data-i18n="grid7Title">Grid 7 (16 Members)</div><div class="vip-rate">12.00% - 14.00%</div></div></div>
+  <div id="digitalModal" class="modal-overlay">
+    <div class="modal-card">
+      <button class="close-modal" onclick="closeDigitalModal()">✕</button>
+      <h3 style="color:var(--accent-green); margin-bottom:14px; font-size:16px;">📊 User Digital Record Details</h3>
+      <div id="digitalModalContent"></div>
     </div>
-
-    <!-- TAB 4: TEAM -->
-    <div id="tab-team" class="tab-content">
-      <div class="universal-header" style="padding: 8px 0; background: none; border: none;">
-        <button class="nav-back-btn" onclick="switchTab('tab-home')" data-i18n="backHome">← Back to Home</button>
-      </div>
-
-      <div class="investment-card" style="border-color: rgba(0, 210, 255, 0.4); background: linear-gradient(135deg, rgba(0,210,255,0.1), rgba(157,78,221,0.1));">
-        <div style="font-weight: 900; margin-bottom: 12px; font-size: 16px; color: var(--accent-cyan);" data-i18n="inviteOverview">🤝 Invite Friends Overview (10% Bonus)</div>
-        <div class="spec-row"><span data-i18n="totalTeamMem">Total Team Members:</span> <span class="spec-value green" id="homeTeamSizeText">0 Members</span></div>
-        <div class="spec-row"><span>Total Team Deposit Asset:</span> <span class="spec-value green" id="homeTeamTotalDepositText">$0.00</span></div>
-        <div class="spec-row"><span>Total Team Income & Earnings:</span> <span class="spec-value green" id="homeTeamIncomeText">$0.00</span></div>
-        <div class="address-card" style="margin-top: 12px;">
-          <span id="homeReferralLinkText" style="font-size: 11px;">Generating referral link...</span>
-          <button class="copy-btn" onclick="copyReferralLink()" data-i18n="copyLinkBtn">Copy Link</button>
-        </div>
-      </div>
-
-      <div class="balance-card">
-        <div style="font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 14px;" data-i18n="teamDataOverview">📊 Team Data Overview</div>
-        <div class="team-grid-4">
-          <div class="team-stat-box">
-            <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Team Size</div>
-            <div class="team-stat-val" id="teamOverviewSize">0</div>
-          </div>
-          <div class="team-stat-box">
-            <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Team Asset / Deposit</div>
-            <div class="team-stat-val" id="teamOverviewAsset">$0.00</div>
-          </div>
-          <div class="team-stat-box">
-            <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">New Joiners</div>
-            <div class="team-stat-val" id="teamOverviewJoiners">0</div>
-          </div>
-          <div class="team-stat-box">
-            <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Team Earnings</div>
-            <div class="team-stat-val" id="teamOverviewTodayInc">$0.00</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="investment-card">
-        <div style="font-weight: 900; margin-bottom: 12px; font-size: 15px; color: var(--accent-green);" data-i18n="teamMembersHistory">👥 Team Members & Deposit History</div>
-        <div id="teamMemberList">
-          <div style="color:var(--text-muted); font-size:13px; text-align:center; padding:12px;" data-i18n="noTeamMembers">No team members registered under your link yet. Share your link to earn 10% deposit commissions!</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 5: ME -->
-    <div id="tab-me" class="tab-content">
-      <div class="universal-header" style="padding: 8px 0; background: none; border: none;">
-        <button class="nav-back-btn" onclick="switchTab('tab-home')" data-i18n="backHome">← Back to Home</button>
-      </div>
-
-      <div class="investment-card" style="background: linear-gradient(135deg, rgba(157,78,221,0.2), rgba(0,245,118,0.15)); border: 2px solid rgba(157,78,221,0.4);">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            <div style="font-weight:900; font-size:18px;" id="meUsernameDisplay">Dollar-User</div>
-            <div style="font-size:13px; color: var(--accent-cyan); font-weight:800; margin-top:3px;" id="meUserIdDisplay">ID: Loading...</div>
-          </div>
-          <span class="badge-status badge-pending" id="meKycStatusBadge">KYC: Pending</span>
-        </div>
-      </div>
-
-      <div class="investment-card">
-        <div style="font-weight: 900; margin-bottom: 14px; font-size: 16px; color: var(--accent-yellow);" data-i18n="personalAccDetails">👤 Personal Account Details</div>
-        <div class="list-item" onclick="handleKycMenuClick()">
-          <span style="font-weight: 700;" data-i18n="kycLinkMenu">🆔 Identity Verification (KYC)</span>
-          <span style="color:var(--accent-green); font-weight:900;" id="meKycActionText">Verify Now →</span>
-        </div>
-        <div class="list-item" onclick="openSubPage('page-cs', 'Support Hub')">
-          <span style="font-weight: 700;" data-i18n="csLinkMenu">🎧 App Support (Live Chat)</span>
-          <span style="color:var(--accent-cyan); font-weight:900;" data-i18n="supportHub">Chat Now →</span>
-        </div>
-        <div class="list-item" onclick="openSubPage('page-terms', 'Terms of Use')">
-          <span style="font-weight: 700;" data-i18n="termsLinkMenu">📖 Terms of Use</span>
-          <span style="color:var(--text-muted); font-weight:800;" data-i18n="readMore">Read →</span>
-        </div>
-      </div>
-
-      <div class="investment-card">
-        <button class="btn-sub primary" style="width:100%; padding:14px; margin-bottom:12px; font-weight:900;" onclick="handleLogout()" data-i18n="signOutBtn">Sign Out</button>
-        <button class="danger-btn" onclick="handleDeleteAccount()" data-i18n="deleteAccBtn">Delete Account</button>
-      </div>
-    </div>
-
-    <!-- SUB-PAGE: WITHDRAWAL SCREEN -->
-    <div id="page-withdraw" class="tab-content">
-      <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;" data-i18n="selectCurrency">Select Currency</div>
-      <div class="input-group">
-        <select id="withdrawCurrency" class="amount-input">
-          <option value="USDT" selected>₮ USDT</option>
-        </select>
-      </div>
-
-      <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;" data-i18n="selectNetwork">Select Network</div>
-      <div class="input-group">
-        <select id="withdrawNetwork" class="amount-input">
-          <option value="TRC20" selected>Tron (TRC20)</option>
-          <option value="ERC20">Ethereum (ERC20)</option>
-          <option value="BEP20">BNB Smart Chain (BEP20)</option>
-        </select>
-      </div>
-
-      <div class="input-group">
-        <div class="input-label">
-          <span data-i18n="withdrawAmountLabel">Withdrawal Amount</span>
-          <span>Min: $50 USDT</span>
-        </div>
-        <input type="number" id="withdrawAmountInput" class="amount-input" placeholder="Min 50 USDT">
-      </div>
-
-      <div class="input-group">
-        <div class="input-label" data-i18n="walletAddressLabel">Wallet Address</div>
-        <input type="text" id="withdrawAddressInput" class="amount-input" placeholder="Paste your USDT wallet address">
-      </div>
-
-      <div class="investment-card" style="background: rgba(0,0,0,0.4); padding: 14px; margin-bottom: 18px;">
-        <div class="spec-row"><span data-i18n="standardFee">Standard Fee:</span><span class="spec-value" id="withdrawalFeeNotice">Calculating Fee...</span></div>
-        <div class="spec-row"><span data-i18n="estProcessing">Estimated Processing Time:</span><span class="spec-value green" data-i18n="processingTimeText">10 minutes to 3 business days</span></div>
-      </div>
-
-      <button class="btn-gradient" onclick="handleWithdrawSubmit()" data-i18n="submitWithdrawBtn">Submit Withdrawal</button>
-    </div>
-
-    <!-- SUB-PAGE: PLATFORM INTRO -->
-    <div id="page-intro" class="tab-content">
-      <div class="investment-card" style="line-height:1.7; font-size:13px; color:#e2e8f0;">
-        <div style="font-weight:900; font-size:18px; color: var(--accent-cyan); margin-bottom:14px;" data-i18n="certifiedCanadaHeader">Certified by Canada Dollar Investment AI Plan</div>
-        <p style="margin-bottom:12px;"><strong data-i18n="introP1Bold">Dollar Investment</strong> <span data-i18n="introP1Text">is an internationally recognized, Canada-certified financial technology enterprise (Registration #882941-Canada). Operating at the forefront of automated digital asset management, we leverage advanced AI-driven algorithmic arbitrage to connect over 34,000+ active global investors with stable, high-yield digital returns.</span></p>
-        <p style="margin-bottom:12px;" data-i18n="introP2">Our robust infrastructure operates 24/7 across major global cryptocurrency and commodity markets (including BTC, ETH, and Crude Oil OTC pairs), ensuring maximum liquidity, transparent daily profit distribution, and rigorous security standards.</p>
-        <p style="margin-bottom:12px;" data-i18n="introP3">With certified regulatory compliance, dedicated customer support, and instant peer-to-peer referral bonuses, Dollar Investment provides a trusted gateway into the future of intelligent decentralized finance.</p>
-      </div>
-    </div>
-
-    <!-- SUB-PAGE: KYC VERIFICATION -->
-    <div id="page-kyc" class="tab-content">
-      <div class="investment-card">
-        <div style="font-weight:900; font-size:18px; margin-bottom:6px; color: var(--accent-green);" data-i18n="kycTitle">Identity Verification (KYC)</div>
-        <div style="font-size:13px; color:var(--text-muted); margin-bottom:18px; line-height:1.4;" data-i18n="kycDesc">Please upload original ID Front, ID Back, and Live Selfie. Only authentic images/documents are permitted.</div>
-
-        <input type="file" id="inputKycFront" accept="image/*" style="display:none;" onchange="handleKycCapture('Front', event)">
-        <input type="file" id="inputKycBack" accept="image/*" style="display:none;" onchange="handleKycCapture('Back', event)">
-        <input type="file" id="inputKycSelfie" accept="image/*" style="display:none;" onchange="handleKycCapture('Selfie', event)">
-
-        <div class="kyc-upload-box" onclick="document.getElementById('inputKycFront').click()">
-          <div style="font-size:28px;">🪪</div>
-          <div style="font-size:14px; font-weight:800; margin-top:6px; color:#fff;" id="kycFrontStatus">📷 Upload Original ID Front</div>
-        </div>
-
-        <div class="kyc-upload-box" onclick="document.getElementById('inputKycBack').click()">
-          <div style="font-size:28px;">💳</div>
-          <div style="font-size:14px; font-weight:800; margin-top:6px; color:#fff;" id="kycBackStatus">📷 Upload Original ID Back</div>
-        </div>
-
-        <div class="kyc-upload-box" onclick="document.getElementById('inputKycSelfie').click()">
-          <div style="font-size:28px;">🤳</div>
-          <div style="font-size:14px; font-weight:800; margin-top:6px; color:#fff;" id="kycSelfieStatus">📸 Upload Live Selfie</div>
-        </div>
-
-        <button class="btn-gradient" style="margin-top:14px;" onclick="submitKycVerification()" data-i18n="submitKycBtn">Submit Verification</button>
-      </div>
-    </div>
-
-    <!-- SUB-PAGE: APP SUPPORT HUB -->
-    <div id="page-cs" class="tab-content">
-      <div class="support-icon-grid">
-        <div class="support-card" onclick="openSupportModule('livechat')">
-          <div style="font-size:24px;">🎧</div>
-          <div style="font-size:12px; font-weight:800; margin-top:4px;">1-on-1 Support</div>
-        </div>
-        <div class="support-card" onclick="openSupportModule('community')">
-          <div style="font-size:24px;">💬</div>
-          <div style="font-size:12px; font-weight:800; margin-top:4px;">Community Chat</div>
-        </div>
-        <div class="support-card" onclick="openSupportModule('announcement')">
-          <div style="font-size:24px;">📢</div>
-          <div style="font-size:12px; font-weight:800; margin-top:4px;">Admin Announcement</div>
-        </div>
-        <div class="support-card" onclick="openSupportModule('guide')">
-          <div style="font-size:24px;">🎥</div>
-          <div style="font-size:12px; font-weight:800; margin-top:4px;">User Guide Video</div>
-        </div>
-      </div>
-
-      <!-- MODULE 1: LIVE 1-ON-1 CHAT -->
-      <div id="csModuleLiveChat" class="investment-card">
-        <div style="font-weight:900; font-size:16px; color: var(--accent-cyan); margin-bottom:4px;">Support Live Chat</div>
-        <div style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">Chat directly with admin support</div>
-
-        <div class="chat-box" id="userChatBox">
-          <div style="text-align:center; color:var(--text-muted); font-size:12px;">Loading chat history...</div>
-        </div>
-
-        <input type="file" id="userChatFileInput" accept="image/*,.pdf,.doc,.docx,.txt" style="display:none;" onchange="handleUserFileUpload(event)">
-
-        <div style="display:flex; gap:6px;">
-          <button style="background: rgba(255,255,255,0.1); border: 1px solid var(--accent-cyan); color: #fff; padding: 0 12px; border-radius: 12px; font-size: 18px; cursor: pointer;" onclick="document.getElementById('userChatFileInput').click()">📎</button>
-          <input type="text" id="userChatInput" class="amount-input" placeholder="Type message..." style="padding:10px 14px; font-size:13px;">
-          <button class="btn-gradient" style="width:80px; padding:10px; font-size:13px;" onclick="sendUserChatMessage()">Send</button>
-        </div>
-      </div>
-
-      <!-- MODULE 2: COMMUNITY CHAT -->
-      <div id="csModuleCommunity" class="investment-card" style="display:none;">
-        <div style="font-weight:900; font-size:16px; color: var(--accent-purple); margin-bottom:8px;">Global Community Live Chat</div>
-
-        <div class="chat-box" id="communityChatBox" onmouseenter="isUserReadingCommunity=true" onmouseleave="isUserReadingCommunity=false" ontouchstart="isUserReadingCommunity=true" ontouchend="setTimeout(()=>isUserReadingCommunity=false, 3000)"></div>
-
-        <div style="display:flex; gap:6px;">
-          <input type="text" id="communityInput" class="amount-input" placeholder="Share your experience..." style="padding:10px 14px; font-size:13px;">
-          <button class="btn-gradient" style="width:80px; padding:10px; font-size:13px;" onclick="sendCommunityMessage()">Send</button>
-        </div>
-      </div>
-
-      <!-- MODULE 3: ADMIN ANNOUNCEMENT -->
-      <div id="csModuleAnnouncement" class="investment-card" style="display:none;">
-        <div style="font-weight:900; font-size:16px; color: var(--accent-yellow); margin-bottom:8px;">📢 Official Admin Announcements</div>
-        <div style="font-size:11px; color:var(--text-muted); margin-bottom:14px;">Official broadcast announcements from platform management. Read only.</div>
-
-        <div id="announcementsList">
-          <div style="color:var(--text-muted); font-size:12px; text-align:center;">Loading official announcements...</div>
-        </div>
-      </div>
-
-      <!-- MODULE 4: USER GUIDE VIDEO -->
-      <div id="csModuleGuide" class="investment-card" style="display:none;">
-        <div style="font-weight:900; font-size:16px; color: var(--accent-green); margin-bottom:8px;">🎥 User Video Tutorial & Guide</div>
-        <div style="font-size:11px; color:var(--text-muted); margin-bottom:14px;">Learn how to deposit, trade, earn referral bonuses, and withdraw.</div>
-
-        <div id="userGuideVideoContainer" style="text-align:center;">
-          <div style="color:var(--text-muted); font-size:12px;">Loading official video guide...</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SUB-PAGE: TERMS OF USE -->
-    <div id="page-terms" class="tab-content">
-      <div class="investment-card" style="line-height:1.7; font-size:13px; color:#e2e8f0;">
-        <div style="font-weight:900; font-size:18px; color: var(--accent-yellow); margin-bottom:14px;" data-i18n="termsHeader">Terms of Use & Regulatory Agreement</div>
-        <p style="margin-bottom:12px;" data-i18n="term1">1. Enterprise Background: Dollar Investment is a fully registered and certified financial institution in Canada (Reg #882941-Canada), proudly serving over 34,000+ active global members with robust automated trading strategies.</p>
-        <p style="margin-bottom:12px;" data-i18n="term2">2. Bonus & Deposits: Every new verified user receives an automatic $2 USDT registration bonus. Minimum deposit requirement is $25 USDT with secure network processing.</p>
-        <p style="margin-bottom:12px;" data-i18n="term3">3. Withdrawal Policy: Minimum withdrawal is $50 USDT. Standard transactions carry a 9% processing fee. Members enjoy 100% Free Withdrawals (0% fee) after maintaining active status for 25 days.</p>
-        <p style="margin-bottom:12px;" data-i18n="term4">4. AI Strategy & Cooldown: Automated arbitrage orders execute across major crypto and commodity pairs (BTC, ETH, OIL). Each order requires a strict 24-hour interval before reactivation.</p>
-        <p style="margin-bottom:12px;" data-i18n="term5">5. Identity & Compliance: Mandatory KYC identity verification (Front ID, Back ID, and Live Selfie) ensures platform security and regulatory compliance.</p>
-      </div>
-    </div>
-
-    <!-- DEPOSIT MODAL SHEET -->
-    <div id="depositModal" class="modal-overlay">
-      <div class="modal-sheet">
-        <div class="modal-header">
-          <div style="font-weight: 900; font-size: 18px; color: #fff;" data-i18n="depositModalTitle">Deposit USDT</div>
-          <button class="close-btn" onclick="closeDepositModal()">✕</button>
-        </div>
-
-        <div style="margin-bottom: 16px;">
-          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;" data-i18n="selectNetwork">Deposit Network</div>
-          <select id="depositNetworkSelect" class="amount-input" onchange="changeDepositNetwork(this.value)">
-            <option value="TRC20" selected>Tron (TRC20)</option>
-            <option value="ERC20">Ethereum (ERC20)</option>
-            <option value="BEP20">BNB Smart Chain (BEP20)</option>
-          </select>
-        </div>
-
-        <div class="pionex-box" style="background:var(--bg-card); border:1px solid var(--bg-card-border); padding:16px; border-radius:16px;">
-          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px; text-align: left; font-weight: 700;" data-i18n="officialWalletAddr">Official Wallet Address</div>
-          <div class="address-card">
-            <span id="depositWalletAddress">TBDXFTpapFkghPnURKFCVUkMbricHUKPrr</span>
-            <button class="copy-btn" onclick="copyDepositAddress()" data-i18n="copyBtn">Copy</button>
-          </div>
-
-          <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-top: 10px; font-weight: 700;">
-            <span data-i18n="minDepositLabel">Minimum Deposit:</span>
-            <span style="color: var(--accent-green); font-weight: 900;">$25 USDT</span>
-          </div>
-        </div>
-
-        <div style="margin-top: 16px; margin-bottom: 22px;">
-          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;" data-i18n="enterDepositAmt">Enter Deposit Amount ($)</div>
-          <input type="number" id="depositAmountInput" class="amount-input" placeholder="Min $25 USDT" value="25">
-          <div style="font-size:11px; color:var(--accent-yellow); font-weight:700; margin-top:4px;">* Note: Standard 9% Fee will be deducted on deposit credit.</div>
-        </div>
-
-        <button class="btn-gradient" onclick="submitDepositPayment()" data-i18n="confirmDepositBtn">Confirm & Deposit</button>
-      </div>
-    </div>
-
-    <!-- BOTTOM NAVIGATION -->
-    <nav class="bottom-nav">
-      <div class="nav-item active" id="nav-home" onclick="switchTab('tab-home')">
-        <span class="nav-icon">🏠</span>
-        <span data-i18n="navHome">Home</span>
-      </div>
-      <div class="nav-item" id="nav-assets" onclick="switchTab('tab-assets')">
-        <span class="nav-icon">💼</span>
-        <span data-i18n="navAssets">Assets</span>
-      </div>
-      <div class="nav-item" id="nav-vip" onclick="switchTab('tab-vip')">
-        <span class="nav-icon">⚡</span>
-        <span data-i18n="navVip">VIP</span>
-      </div>
-      <div class="nav-item" id="nav-team" onclick="switchTab('tab-team')">
-        <span class="nav-icon">👥</span>
-        <span data-i18n="navTeam">Team</span>
-      </div>
-      <div class="nav-item" id="nav-me" onclick="switchTab('tab-me')">
-        <span class="nav-icon">👤</span>
-        <span data-i18n="navMe">Me</span>
-      </div>
-    </nav>
-
   </div>
 
   <script>
@@ -732,845 +195,456 @@
       db = firebase.firestore();
     } catch(e) { console.log("Firebase initialized"); }
 
-    const translations = {
-      EN: { brandTitle: "Dollar Investment", signupTitle: "Create Account", signupSubtitle: "Join Dollar Investment AI Strategy (Canada Regulated)", emailPhoneLabel: "Email or Phone", passwordLabel: "Password", confirmPasswordLabel: "Confirm Password", referralCodeLabel: "Referral Link / Code", signupBtn: "Sign Up ($2 Bonus)", alreadyAcc: "Already have an account?", loginLink: "Log In", loginTitle: "Welcome Back", loginSubtitle: "Log in to your account securely", userLoginLabel: "User (Email or Phone)", savePassLabel: "Save Password & User ID", loginBtn: "Log In", noAcc: "Don't have an account?", signupLink: "Sign Up", backBtn: "← Back", tickerText: "🔥 Welcome to Dollar Investment! Over 34,000+ Active Members Worldwide. Fully Registered & Certified in Canada. Min Deposit $25, Min Withdrawal $50.", totalAssets: "Total Assets (USDT)", recByRef: "Received by Referral:", depositBtn: "📥 Deposit", withdrawBtn: "📤 Withdraw", topupLabel: "Top up", withdrawLabel: "Withdraw", inviteLabel: "Invite", tasksLabel: "Tasks", vipLabel: "VIP Level", introLabel: "Intro", termsLabel: "Terms", kycLabel: "KYC", activityRecords: "📋 Activity & History Records", noHistory: "No recent history recorded.", backHome: "← Back to Home", freeWithdrawTitle: "🎁 Free Withdrawal Privilege", memDays: "Membership Days:", feeStatus: "Withdrawal Fee Status:", feeStandard: "Standard 9% Fee (Free after 25 days)", assetBreakdown: "💼 Asset Allocation Breakdown", flexibleFunds: "Flexible Funds", refRewards: "Referral Rewards (10%)", aiStrategyHeader: "⚡ Dollar Investment AI Strategy", smartExecutor: "🤖 Smart Strategy Executor", investAmount: "Investment Amount", createOrderBtn: "Create Order (1~4 mins)", cooldownText: "⏳ Next Order available in:", aiInProgress: "⚡ AI Strategy Arbitrage in Progress...", timeRemaining: "Time remaining:", gridLevelsHeader: "🏆 Grid Levels (Auto-Unlocked by Team Size)", grid1Title: "Grid 1 (4 Members)", grid2Title: "Grid 2 (6 Members)", grid3Title: "Grid 3 (8 Members)", grid4Title: "Grid 4 (10 Members)", grid5Title: "Grid 5 (12 Members)", grid6Title: "Grid 6 (14 Members)", grid7Title: "Grid 7 (16 Members)", inviteOverview: "🤝 Invite Friends Overview (10% Bonus)", totalTeamMem: "Total Team Members:", totalTeamBal: "Total Team Balance:", todayJoiners: "Today New Joiners:", copyLinkBtn: "Copy Link", teamDataOverview: "📊 Team Data Overview", teamSizeLabel: "Team Size", totalIncomeLabel: "Total Income (10%)", teamMembersHistory: "👥 Team Members & Deposit History", noTeamMembers: "No team members registered under your link yet. Share your link to earn 10% deposit commissions!", personalAccDetails: "👤 Personal Account Details", kycLinkMenu: "🆔 Identity Verification (KYC)", verifyNow: "Verify Now →", csLinkMenu: "🎧 Customer Service", supportHub: "Support Hub →", termsLinkMenu: "📖 Terms of Use", readMore: "Read →", signOutBtn: "Sign Out", deleteAccBtn: "Delete Account", selectCurrency: "Select Currency", selectNetwork: "Select Network", withdrawAmountLabel: "Withdrawal Amount", walletAddressLabel: "Wallet Address", standardFee: "Standard Fee:", feeDeduction: "9% Deduction", estProcessing: "Estimated Processing Time:", processingTimeText: "10 minutes to 3 business days", submitWithdrawBtn: "Submit Withdrawal", certifiedCanadaHeader: "Certified by Canada Dollar Investment AI Plan", introP1Bold: "Dollar Investment", introP1Text: "is an internationally recognized, Canada-certified financial technology enterprise (Registration #882941-Canada). Operating at the forefront of automated digital asset management, we leverage advanced AI-driven algorithmic arbitrage to connect over 34,000+ active global investors with stable, high-yield digital returns.", introP2: "Our robust infrastructure operates 24/7 across major global cryptocurrency and commodity markets (including BTC, ETH, and Crude Oil OTC pairs), ensuring maximum liquidity, transparent daily profit distribution, and rigorous security standards.", introP3: "With certified regulatory compliance, dedicated customer support, and instant peer-to-peer referral bonuses, Dollar Investment provides a trusted gateway into the future of intelligent decentralized finance.", kycTitle: "Identity Verification (KYC)", kycDesc: "To comply with international financial regulations and Canada registry standards, please upload or capture clear images of your ID Front, ID Back, and a Live Selfie.All 3 documents are mandatory.", kycFrontBtn: "📷 Capture ID Front Picture", kycBackBtn: "📷 Capture ID Back Picture", kycSelfieBtn: "📸 Capture Live Selfie", submitKycBtn: "Submit Verification", csHeader: "Dollar Investment Support Hub", csDesc: "Our professional support team is available 24/7 via official Telegram and WhatsApp channels.", termsHeader: "Terms of Use & Regulatory Agreement", term1: "1. Enterprise Background: Dollar Investment is a fully registered and certified financial institution in Canada (Reg #882941-Canada), proudly serving over 34,000+ active global members with robust automated trading strategies.", term2: "2. Bonus & Deposits: Every new verified user receives an automatic $2 USDT registration bonus. Minimum deposit requirement is $25 USDT with secure network processing.", term3: "3. Withdrawal Policy: Minimum withdrawal is $50 USDT. Standard transactions carry a 9% processing fee. Members enjoy 100% Free Withdrawals (0% fee) after maintaining active status for 25 days.", term4: "4. AI Strategy & Cooldown: Automated arbitrage orders execute across major crypto and commodity pairs (BTC, ETH, OIL). Each order requires a strict 24-hour interval before reactivation.", term5: "5. Identity & Compliance: Mandatory KYC identity verification (Front ID, Back ID, and Live Selfie) ensures platform security and regulatory compliance.", depositModalTitle: "Deposit USDT", officialWalletAddr: "Official Wallet Address", minDepositLabel: "Minimum Deposit:", enterDepositAmt: "Enter Deposit Amount ($)", confirmDepositBtn: "Confirm & Deposit", navHome: "Home", navAssets: "Assets", navVip: "VIP", navTeam: "Team", navMe: "Me" }
-    };
+    let selectedChatUserId = null;
+    let selectedChatUserContact = null;
+    let announcementImgBase64 = null;
+    let cacheAllUsers = [];
+    let cacheAllReqs = [];
 
-    let currentLang = 'EN';
-    let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
-    let kycFilesData = { front: null, back: null, selfie: null };
-    let isUserReadingCommunity = false;
+    function toggleSelectAll(className, isChecked) {
+      document.querySelectorAll(`.${className}`).forEach(cb => cb.checked = isChecked);
+    }
 
-    // REAL-TIME FIRESTORE LISTENER FOR LOGGED-IN USER DATA
-    if (currentUser && db) {
-      db.collection('users').doc(currentUser.id).onSnapshot((doc) => {
-        if (doc.exists) {
-          currentUser = doc.data();
-          localStorage.setItem('currentUser', JSON.stringify(currentUser));
-          initUserSession();
-        }
+    function loadAdminUsers() {
+      if (!db) return;
+      db.collection('users').onSnapshot((snap) => {
+        let allusers = [];
+        snap.forEach(doc => allusers.push(doc.data()));
+        cacheAllUsers = allusers;
+        allusers.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        let rows = "";
+        allusers.forEach(u => {
+          let userReqs = cacheAllReqs.filter(r => r.userId === u.id);
+          let deposits = userReqs.filter(r => r.type === 'Deposit' && r.status === 'Success');
+          let totalDepAmt = deposits.reduce((sum, r) => sum + Number(r.amount || 0), 0);
+          let withdrawals = userReqs.filter(r => r.type === 'Withdrawal' && r.status === 'Success');
+          let totalWdAmt = withdrawals.reduce((sum, r) => sum + Number(r.grossAmount || r.amount || 0), 0);
+
+          let teamMembers = allusers.filter(x => x.referredBy === u.myReferralCode || x.referredBy === u.id);
+          let teamSize = teamMembers.length;
+          let teamTotalDeposit = teamMembers.reduce((sum, x) => sum + Number(x.creditedDeposit || x.deposit || 0), 0);
+
+          let blockStatusBtn = u.isBlocked ? 
+            `<button class="btn-action" style="background:var(--accent-red); color:#fff;" onclick="toggleBlockUser('${u.id}', false)">Unblock</button>` : 
+            `<button class="btn-action" onclick="toggleBlockUser('${u.id}', true)">Block</button>`;
+
+          rows += `<tr>
+            <td><input type="checkbox" class="user-check" value="${u.id}"/></td>
+            <td><b>${u.name || 'User'}</b><br><span style="font-size:11px; color:var(--text-muted);">${u.contact || 'N/A'}</span><br><span style="font-size:10px; color:var(--accent-cyan);">ID: ${u.myReferralCode || 'N/A'}</span></td>
+            <td>
+              <div style="display:flex; flex-direction:column; gap:4px;">
+                <b style="color:var(--accent-cyan);">$${Number(u.balance || 0).toFixed(2)} USDT</b>
+                <div style="display:flex; gap:4px; align-items:center;">
+                  <input type="number" id="custBal_${u.id}" value="${Number(u.balance || 0).toFixed(2)}" style="width:80px; padding:4px; background:#000; color:#fff; border:1px solid #333; border-radius:4px;">
+                  <button class="btn-action" style="background:var(--accent-green); color:#000;" onclick="saveCustomerBalance('${u.id}')">Set</button>
+                  <button class="btn-action" style="background:var(--accent-yellow); color:#000;" onclick="adjustCustomerBalance('${u.id}', 0)">Hold/Zero</button>
+                </div>
+              </div>
+            </td>
+            <td><b>Total:</b> $${totalDepAmt.toFixed(2)} (${deposits.length} times)</td>
+            <td><b>Total:</b> $${totalWdAmt.toFixed(2)} (${withdrawals.length} times)</td>
+            <td><b>Team Size:</b> ${teamSize}<br><b>Team Asset:</b> $${teamTotalDeposit.toFixed(2)}<br><b>Ref Income:</b> $${Number(u.teamIncome || 0).toFixed(2)}</td>
+            <td>
+              <button class="btn-action" style="background:var(--accent-purple); color:#fff; font-size:16px; padding:6px 10px;" onclick="openDigitalModal('${u.id}')" title="View Digital Record">💠</button>
+            </td>
+            <td>
+              ${blockStatusBtn}
+              <button class="btn-rej" style="padding:4px 8px; font-size:11px;" onclick="deleteUserAccount('${u.id}')">Delete ID</button>
+            </td>
+          </tr>`;
+        });
+        document.getElementById('adminUsersTable').innerHTML = rows || '<tr><td colspan="8" style="text-align:center;">No users registered yet.</td></tr>';
       });
     }
 
-    function getIncomingReferral() {
-      const searchParams = new URLSearchParams(window.location.search);
-      let ref = searchParams.get('ref');
-      if (ref) return ref.trim();
+    function openDigitalModal(userId) {
+      let u = cacheAllUsers.find(x => x.id === userId);
+      if(!u) return;
 
-      if (window.location.hash.includes('ref=')) {
-        let hashQuery = window.location.hash.split('?')[1] || window.location.hash.split('#')[1];
-        if (hashQuery) {
-          let hashParams = new URLSearchParams(hashQuery);
-          ref = hashParams.get('ref');
-          if (ref) return ref.trim();
-        }
-      }
+      let teamMembers = cacheAllUsers.filter(x => x.referredBy === u.myReferralCode || x.referredBy === u.id);
+      let teamSize = teamMembers.length;
+      let teamTotalDeposit = teamMembers.reduce((sum, x) => sum + Number(x.creditedDeposit || x.deposit || 0), 0);
 
-      const pathSegments = window.location.pathname.split('/');
-      for (let i = 0; i < pathSegments.length; i++) {
-        let seg = pathSegments[i];
-        if (seg.includes('User-') || seg.includes('REF-')) {
-          let match = seg.match(/(User-\d+|REF-\d+)/i);
-          if (match) return match[1];
-        }
-      }
-      return 'NONE';
-    }
-    const incomingRef = getIncomingReferral();
-
-    const globalNamesList = [
-      { name: "Liam Smith", region: "Europe" }, { name: "Emma Johnson", region: "Europe" },
-      { name: "Noah Williams", region: "Europe" }, { name: "Olivia Brown", region: "Europe" },
-      { name: "Kwame Mensah", region: "Africa" }, { name: "Amina Diallo", region: "Africa" },
-      { name: "Chidi Okafor", region: "Africa" }, { name: "Fatima Ouedraogo", region: "Africa" },
-      { name: "Zaid Al-Maktoum", region: "Middle East" }, { name: "Noor Al-Hassan", region: "Middle East" },
-      { name: "Omar Al-Farsi", region: "Middle East" }, { name: "Zahra Al-Sabah", region: "Middle East" },
-      { name: "Aarav Sharma", region: "Asia" }, { name: "Priya Patel", region: "Asia" },
-      { name: "Rahul Verma", region: "Asia" }, { name: "Ananya Gupta", region: "Asia" }
-    ];
-
-    const positivePraiseTemplates = [
-      "I received my withdrawal instantly, thanks Dollar Investment!",
-      "I added 5 referrals and received my referral bonus instantly, amazing app!",
-      "I am very happy to earn daily profit consistently.",
-      "Got my deposit credited and withdrawal processed very fast, thanks for the transparency!",
-      "Highly professional platform! Very profitable daily earnings.",
-      "Best platform in Europe and Africa, trusted withdrawal system.",
-      "Very simple and easy app interface, earning daily stable income.",
-      "Wonderful customer support and transparent trading strategies."
-    ];
-
-    function changeLanguage(langCode) {
-      currentLang = langCode;
-      const dict = translations[langCode] || translations['EN'];
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (dict[key]) el.textContent = dict[key];
-      });
-    }
-
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      if (t) {
-        t.textContent = msg;
-        t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 3000);
-      }
-    }
-
-    function togglePasswordVisibility(inputId, iconElem) {
-      const input = document.getElementById(inputId);
-      if (input) {
-        if (input.type === "password") {
-          input.type = "text";
-          iconElem.textContent = "🙈";
-        } else {
-          input.type = "password";
-          iconElem.textContent = "👁️";
-        }
-      }
-    }
-
-    function showLoginScreen() {
-      document.getElementById('signupScreen').classList.add('hidden');
-      document.getElementById('loginScreen').classList.remove('hidden');
-    }
-
-    function showSignupScreen() {
-      document.getElementById('loginScreen').classList.add('hidden');
-      document.getElementById('signupScreen').classList.remove('hidden');
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const savedUser = localStorage.getItem('savedLoginUser');
-      const savedPass = localStorage.getItem('savedLoginPass');
-      if(savedUser && savedPass) {
-        const userIn = document.getElementById('loginUser');
-        const passIn = document.getElementById('loginPassword');
-        if(userIn && passIn) { userIn.value = savedUser; passIn.value = savedPass; }
-      }
-      
-      const refInput = document.getElementById('signupReferralInput');
-      if (refInput) {
-        refInput.value = incomingRef !== 'NONE' ? incomingRef : 'None';
-      }
-    });
-
-    async function handleSignUp() {
-      const contact = document.getElementById('signupEmailPhone').value.trim();
-      const pass = document.getElementById('signupPassword').value;
-      const confirmPass = document.getElementById('signupConfirmPassword').value;
-
-      if (!contact || !pass) { alert("Please fill in email/phone and password."); return; }
-      if (pass !== confirmPass) { alert("Passwords do not match."); return; }
-
-      const randomCodeNum = Math.floor(100000 + Math.random() * 900000);
-      const myCode = 'User-' + randomCodeNum;
-      const now = new Date().toISOString();
-      const userId = 'user_' + Date.now();
-
-      let newUser = {
-        id: userId,
-        name: contact.split('@')[0] || contact,
-        contact: contact,
-        password: pass,
-        balance: 2.00,
-        deposit: 0,
-        creditedDeposit: 0,
-        teamIncome: 0,
-        myReferralCode: myCode,
-        referredBy: incomingRef !== 'NONE' ? incomingRef : 'NONE',
-        kycStatus: 'Pending',
-        kycImages: {},
-        orderStartTime: 0,
-        lastOrderTimestamp: 0,
-        isBlocked: false,
-        createdAt: now
-      };
-
-      // REALTIME FIRESTORE SYNC FOR SIGN UP
-      if (db) {
-        await db.collection('users').doc(userId).set(newUser);
+      let regDate = u.createdAt ? new Date(u.createdAt).toLocaleString() : 'N/A';
+      let html = `
+        <div class="digital-row"><span>New Joiner ID:</span> <span class="digital-val">${u.myReferralCode || u.id}</span></div>
+        <div class="digital-row"><span>Email / Number:</span> <span class="digital-val">${u.contact || 'N/A'}</span></div>
+        <div class="digital-row"><span>Referred By:</span> <span class="digital-val">${u.referredBy || 'Direct'}</span></div>
+        <div class="digital-row"><span>Date & Time Joined:</span> <span class="digital-val">${regDate}</span></div>
+        <div class="digital-row"><span>Team Size:</span> <span class="digital-val">${teamSize} Members</span></div>
+        <div class="digital-row"><span>Team Assets:</span> <span class="digital-val">$${teamTotalDeposit.toFixed(2)} USDT</span></div>
+        <div class="digital-row"><span>User Assets (Total Balance):</span> <span class="digital-val">$${Number(u.balance || 0).toFixed(2)} USDT</span></div>
+        <div class="digital-row"><span>Referral Bonus Earned:</span> <span class="digital-val">$${Number(u.teamIncome || 0).toFixed(2)} USDT</span></div>
+        <div class="digital-row"><span>User Daily Profit:</span> <span class="digital-val">$${Number(u.todayOrderProfit || 0).toFixed(2)} USDT</span></div>
         
-        let initialBonusReq = {
-          id: 'req_' + Date.now(),
-          userId: userId,
-          userName: newUser.name,
-          userContact: contact,
-          type: 'Sign Up Bonus',
-          grossAmount: 2.00,
-          amount: 2.00,
-          status: 'Success',
-          createdAt: now
-        };
-        await db.collection('requests').doc(initialBonusReq.id).set(initialBonusReq);
-
-        let welcomeChat = {
-          id: 'chat_' + Date.now(),
-          userId: userId,
-          userContact: contact,
-          userName: newUser.name,
-          sender: 'Admin',
-          text: `Welcome ${newUser.name}! How can we assist you with your dollar investment today?`,
-          adminRead: true,
-          createdAt: now
-        };
-        await db.collection('chats').doc(welcomeChat.id).set(welcomeChat);
-      }
-
-      currentUser = newUser;
-      localStorage.setItem('currentUser', JSON.stringify(currentUser));
-
-      showToast("Account created successfully! $2 USDT Bonus credited.");
-      initUserSession();
+        <div style="margin-top:16px; border-top:1px solid rgba(255,255,255,0.1); padding-top:12px;">
+          <h4 style="font-size:14px; color:var(--accent-cyan); margin-bottom:8px;">🛠️ Manual Asset Add / Manage Button</h4>
+          <div style="display:flex; gap:8px;">
+            <input type="number" id="manualAddAmt_${u.id}" placeholder="Enter amount ($)" style="flex:1; padding:8px; background:#000; color:#fff; border:1px solid #333; border-radius:6px;">
+            <button class="btn-acc" onclick="manualAddUserAsset('${u.id}')">Add Amount</button>
+          </div>
+        </div>
+      `;
+      document.getElementById('digitalModalContent').innerHTML = html;
+      document.getElementById('digitalModal').classList.add('active');
     }
 
-    async function handleLogIn() {
-      const userVal = document.getElementById('loginUser').value.trim();
-      const passVal = document.getElementById('loginPassword').value;
-      const rememberMe = document.getElementById('rememberMeCheck').checked;
+    function closeDigitalModal() {
+      document.getElementById('digitalModal').classList.remove('active');
+    }
 
-      if (!userVal || !passVal) { alert("Please enter credentials."); return; }
+    async function manualAddUserAsset(userId) {
+      let addVal = parseFloat(document.getElementById(`manualAddAmt_${userId}`).value) || 0;
+      if(addVal <= 0) { alert("Please enter a valid amount to add."); return; }
 
-      let found = null;
+      let targetUser = cacheAllUsers.find(u => u.id === userId);
+      if (targetUser && db) {
+        let newBal = Math.round(((Number(targetUser.balance || 0)) + addVal) * 100) / 100;
+        await db.collection('users').doc(userId).update({ balance: newBal });
+        alert(`Successfully added $${addVal.toFixed(2)} USDT to user's asset balance!`);
+        closeDigitalModal();
+      }
+    }
+
+    async function saveCustomerBalance(userId) {
+      let val = parseFloat(document.getElementById(`custBal_${userId}`).value) || 0;
       if (db) {
-        let snap = await db.collection('users').where('contact', '==', userVal).get();
-        if (!snap.empty) {
-          found = snap.docs[0].data();
+        await db.collection('users').doc(userId).update({ balance: val });
+        alert(`Customer Total Asset Balance updated to $${val.toFixed(2)} USDT!`);
+      }
+    }
+
+    async function adjustCustomerBalance(userId, newAmt) {
+      if (db) {
+        await db.collection('users').doc(userId).update({ balance: newAmt });
+        alert("Customer Total Asset Balance held/set to 0.00 USDT!");
+      }
+    }
+
+    async function toggleBlockUser(userId, blockState) {
+      if (db) {
+        await db.collection('users').doc(userId).update({ isBlocked: blockState });
+      }
+    }
+
+    async function deleteUserAccount(userId) {
+      if(confirm("Are you sure you want to permanently delete this user ID?")) {
+        if (db) {
+          await db.collection('users').doc(userId).delete();
         }
       }
+    }
 
-      if(!found) {
-        let users = JSON.parse(localStorage.getItem('app_users') || '[]');
-        found = users.find(u => u.contact === userVal);
+    function bulkDeleteSelectedUsers() {
+      const selected = Array.from(document.querySelectorAll('.user-check:checked')).map(cb => cb.value);
+      if(selected.length === 0) { alert("Please select users to delete!"); return; }
+      if(confirm(`Delete ${selected.length} selected users?`)) {
+        if (db) {
+          selected.forEach(async (id) => await db.collection('users').doc(id).delete());
+        }
       }
+    }
 
-      if(found) {
-        if(found.isBlocked) { alert("Your account has been blocked by Admin!"); return; }
-        if(found.password === passVal) {
-          currentUser = found;
-          localStorage.setItem('currentUser', JSON.stringify(currentUser));
-          if(rememberMe) {
-            localStorage.setItem('savedLoginUser', userVal);
-            localStorage.setItem('savedLoginPass', passVal);
-          } else {
-            localStorage.removeItem('savedLoginUser');
-            localStorage.removeItem('savedLoginPass');
+    function loadAdminRequests() {
+      if (!db) return;
+      db.collection('requests').onSnapshot((snap) => {
+        let reqs = [];
+        snap.forEach(doc => reqs.push(doc.data()));
+        cacheAllReqs = reqs;
+        reqs.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        let rows = "";
+        reqs.forEach(req => {
+          let badgeClass = req.status === 'Success' ? 'badge-success' : (req.status === 'Rejected' ? 'badge-rejected' : 'badge-processing');
+          let amtDisplay = `$${Number(req.amount || 0).toFixed(2)}`;
+          if(req.grossAmount) {
+            amtDisplay = `Gross: $${Number(req.grossAmount || 0).toFixed(2)} | <b style="color:var(--accent-green)">Net: $${Number(req.amount || 0).toFixed(2)}</b>`;
           }
-          showToast("Logged in successfully!");
-          initUserSession();
-        } else {
-          alert("Incorrect password!");
-        }
-      } else {
-        alert("Account not found!");
-      }
-    }
+          let walletNetHtml = req.walletAddress ? `<b>Network:</b> <span style="color:var(--accent-yellow); font-weight:800;">${req.network || 'TRC20'}</span><br><b>Address:</b> <span style="font-family:monospace; color:var(--accent-green);">${req.walletAddress}</span>` : 'N/A';
 
-    function handleLogout() {
-      localStorage.removeItem('currentUser');
-      currentUser = null;
-      location.reload();
-    }
-
-    async function handleDeleteAccount() {
-      if (confirm("Are you sure you want to delete your account?")) {
-        if(currentUser && db) {
-          await db.collection('users').doc(currentUser.id).delete();
-        }
-        handleLogout();
-      }
-    }
-
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-      const navBtn = document.getElementById(tabId.replace('tab-', 'nav-'));
-      if (navBtn) navBtn.classList.add('active');
-      document.getElementById('universalHeader').style.display = 'none';
-      document.getElementById('mainHeader').style.display = 'flex';
-
-      if (tabId === 'tab-vip' && currentUser) {
-        const investInput = document.getElementById('homeInvestInput');
-        if (investInput) { investInput.value = (currentUser.balance || 0).toFixed(2); }
-        document.querySelectorAll('.pct-btn').forEach(b => b.classList.remove('active'));
-        const btn100 = document.querySelector('.pct-btn:last-child');
-        if (btn100) btn100.classList.add('active');
-      }
-    }
-
-    function openSubPage(pageId, title) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.getElementById(pageId).classList.add('active');
-      document.getElementById('mainHeader').style.display = 'none';
-      document.getElementById('universalHeaderTitle').textContent = title;
-      document.getElementById('universalHeader').style.display = 'flex';
-    }
-
-    function openSupportModule(mod) {
-      document.getElementById('csModuleLiveChat').style.display = mod === 'livechat' ? 'block' : 'none';
-      document.getElementById('csModuleCommunity').style.display = mod === 'community' ? 'block' : 'none';
-      document.getElementById('csModuleAnnouncement').style.display = mod === 'announcement' ? 'block' : 'none';
-      document.getElementById('csModuleGuide').style.display = mod === 'guide' ? 'block' : 'none';
-    }
-
-    function navigateBack() { switchTab('tab-home'); }
-    function openDepositModal() { document.getElementById('depositModal').classList.add('active'); }
-    function closeDepositModal() { document.getElementById('depositModal').classList.remove('active'); }
-
-    function changeDepositNetwork(net) {
-      const addrMap = {
-        'TRC20': 'TBDXFTpapFkghPnURKFCVUkMbricHUKPrr',
-        'ERC20': '0x0dAd2EA4e195b053e593C698d65F1b98A8325996',
-        'BEP20': '0x0dAd2EA4e195b053e593C698d65F1b98A8325996'
-      };
-      document.getElementById('depositWalletAddress').textContent = addrMap[net] || addrMap['TRC20'];
-    }
-
-    function copyDepositAddress() {
-      navigator.clipboard.writeText(document.getElementById('depositWalletAddress').textContent);
-      showToast("Deposit address copied!");
-    }
-
-    async function submitDepositPayment() {
-      const depositAmt = parseFloat(document.getElementById('depositAmountInput').value) || 0;
-      if (depositAmt < 25) { alert("Minimum deposit amount is $25 USDT."); return; }
-      const netDeposit = depositAmt * 0.91;
-
-      let reqObj = {
-        id: 'req_' + Date.now(),
-        userId: currentUser.id,
-        userName: currentUser.name || currentUser.contact,
-        userContact: currentUser.contact,
-        type: 'Deposit',
-        grossAmount: Number(depositAmt),
-        amount: Number(netDeposit),
-        status: 'Processing',
-        createdAt: new Date().toISOString()
-      };
-
-      if (db) {
-        await db.collection('requests').doc(reqObj.id).set(reqObj);
-      }
-
-      closeDepositModal();
-      showToast(`Deposit Request Submitted! Net Amount after 9% fee: $${netDeposit.toFixed(2)} USDT`);
-      switchTab('tab-home');
-    }
-
-    async function handleWithdrawSubmit() {
-      const amt = parseFloat(document.getElementById('withdrawAmountInput').value) || 0;
-      const addr = document.getElementById('withdrawAddressInput').value.trim();
-      const network = document.getElementById('withdrawNetwork').value;
-
-      if (amt < 50) { alert("Minimum withdrawal amount is $50 USDT."); return; }
-      if (!addr) { alert("Please enter a valid wallet address."); return; }
-      if (amt > currentUser.balance) { alert("Insufficient account balance."); return; }
-
-      let createdDate = currentUser.createdAt ? new Date(currentUser.createdAt) : new Date();
-      let diffDays = Math.floor((new Date() - createdDate) / (1000 * 60 * 60 * 24));
-      let isWithin25Days = diffDays < 25;
-      let netWithdrawAmount = isWithin25Days ? (amt * 0.91) : amt;
-
-      let newBalance = Math.max(0, currentUser.balance - amt);
-      currentUser.balance = newBalance;
-      
-      if (db) {
-        await db.collection('users').doc(currentUser.id).update({ balance: newBalance });
-        
-        let reqObj = {
-          id: 'req_' + Date.now(),
-          userId: currentUser.id,
-          userName: currentUser.name || currentUser.contact,
-          userContact: currentUser.contact,
-          type: 'Withdrawal',
-          grossAmount: Number(amt),
-          amount: Number(netWithdrawAmount),
-          network: network,
-          walletAddress: addr,
-          isFeeDeducted: isWithin25Days,
-          status: 'Processing',
-          createdAt: new Date().toISOString()
-        };
-        await db.collection('requests').doc(reqObj.id).set(reqObj);
-      }
-
-      updateOrderDisplays();
-      showToast(`Withdrawal Request Submitted! Balance deducted: $${amt.toFixed(2)} USDT`);
-      switchTab('tab-home');
-    }
-
-    let isPctSelected = true;
-    function selectInvestmentPct(pct) {
-      document.querySelectorAll('.pct-btn').forEach(b => b.classList.remove('active'));
-      const selected = Array.from(document.querySelectorAll('.pct-btn')).find(b => b.getAttribute('onclick') === `selectInvestmentPct(${pct})`);
-      if (selected) selected.classList.add('active');
-      const targetInput = document.getElementById('homeInvestInput');
-      targetInput.value = (((currentUser ? Number(currentUser.balance) : 0) * pct) / 100).toFixed(2);
-      isPctSelected = true;
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const invInput = document.getElementById('homeInvestInput');
-      if(invInput) { invInput.addEventListener('input', () => { isPctSelected = false; }); }
-    });
-
-    function updateOrderDisplays() {
-      if (!currentUser) return;
-      const balance = Number(currentUser.balance || 0);
-      ['homeTotalAssetsDisplay','totalBalanceDisplay'].forEach(id => {
-        const el = document.getElementById(id); if (el) el.textContent = balance.toFixed(2);
+          rows += `<tr>
+            <td><input type="checkbox" class="req-check" value="${req.id}"/></td>
+            <td><b>${req.userName || 'User'}</b></td>
+            <td>${req.userContact || 'N/A'}</td>
+            <td><b>${req.type}</b></td>
+            <td>${amtDisplay}</td>
+            <td>${walletNetHtml}</td>
+            <td><span class="badge ${badgeClass}">${req.status}</span></td>
+            <td>
+              ${req.status === 'Processing' ? `
+                <button class="btn-acc" onclick="updateRequestStatus('${req.id}', 'Success', '${req.userId}', '${req.type}', ${req.amount}, ${req.grossAmount || req.amount})">Accept</button>
+                <button class="btn-rej" onclick="updateRequestStatus('${req.id}', 'Rejected', '${req.userId}', '${req.type}', ${req.amount}, ${req.grossAmount || req.amount})">Reject</button>
+              ` : 'Done'}
+            </td>
+          </tr>`;
+        });
+        document.getElementById('adminRequestsTable').innerHTML = rows || '<tr><td colspan="8" style="text-align:center;">No requests found.</td></tr>';
       });
-      const flexible = document.getElementById('flexibleFundsDisplay');
-      if (flexible) flexible.textContent = balance.toFixed(2) + ' USDT';
-      
-      let todayProfitSum = Number(currentUser.todayOrderProfit || 0);
-      const todayEl = document.getElementById('todayProfitDisplay');
-      if (todayEl) todayEl.textContent = '$' + todayProfitSum.toFixed(2) + ' USDT';
-
-      let pBtc = todayProfitSum * 0.30;
-      let pEth = todayProfitSum * 0.25;
-      let pSol = todayProfitSum * 0.15;
-      let pTron = todayProfitSum * 0.12;
-      let pBnb = todayProfitSum * 0.10;
-      let pEtf = todayProfitSum * 0.08;
-
-      if(document.getElementById('distBtc')) document.getElementById('distBtc').innerText = '$' + pBtc.toFixed(2);
-      if(document.getElementById('distEth')) document.getElementById('distEth').innerText = '$' + pEth.toFixed(2);
-      if(document.getElementById('distSol')) document.getElementById('distSol').innerText = '$' + pSol.toFixed(2);
-      if(document.getElementById('distTron')) document.getElementById('distTron').innerText = '$' + pTron.toFixed(2);
-      if(document.getElementById('distBnb')) document.getElementById('distBnb').innerText = '$' + pBnb.toFixed(2);
-      if(document.getElementById('distEtf')) document.getElementById('distEtf').innerText = '$' + pEtf.toFixed(2);
     }
 
-    function checkCooldown() {
-      if (!currentUser) return;
-      const now = Date.now(), cooldownMs = 24 * 60 * 60 * 1000;
-      const notice = document.getElementById('cooldownNotice');
-      const timer = document.getElementById('cooldownTimer');
-      const btn = document.getElementById('btnCreateOrder');
-      const active = Number(currentUser.orderStartTime || 0);
-      if (active && !currentUser.orderCompletedProcessed) {
-        const elapsedSec = Math.floor((now - active) / 1000);
-        const remainingSec = Math.max(0, 180 - elapsedSec);
-        document.getElementById('tradingSimulationBox').style.display = remainingSec > 0 ? 'block' : 'none';
-        if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
-        const td = document.getElementById('timerDisplay');
-        if (td) td.textContent = `${String(Math.floor(remainingSec/60)).padStart(2,'0')}:${String(remainingSec%60).padStart(2,'0')}`;
-        if (remainingSec === 0) completeActiveOrder();
-        return;
-      }
-      document.getElementById('tradingSimulationBox').style.display = 'none';
-      const elapsed = now - Number(currentUser.lastOrderTimestamp || 0);
-      if (currentUser.lastOrderTimestamp && elapsed < cooldownMs) {
-        const ms = cooldownMs - elapsed;
-        if (notice) notice.style.display = 'block';
-        if (timer) timer.textContent = `${String(Math.floor(ms/3600000)).padStart(2,'0')}:${String(Math.floor(ms%3600000/60000)).padStart(2,'0')}:${String(Math.floor(ms%60000/1000)).padStart(2,'0')}`;
-        if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
-      } else {
-        if (notice) notice.style.display = 'none';
-        if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
-        const input = document.getElementById('homeInvestInput');
-        if (input && !currentUser.orderStartTime && isPctSelected) input.value = Number(currentUser.balance || 0).toFixed(2);
-      }
-      updateOrderDisplays();
-    }
+    async function updateRequestStatus(reqId, newStatus, userId, type, netAmount, grossAmount) {
+      if (!db) return;
+      let targetReq = cacheAllReqs.find(r => r.id === reqId);
+      if(!targetReq) return;
 
-    async function startAIOrderProcess() {
-      if (!currentUser) { alert('Please log in first.'); return; }
-      const balance = Number(currentUser.balance || 0);
-      if (balance < 20) { alert('Create Order Failed: Your Total Assets Balance must be at least $20 USDT!'); return; }
+      await db.collection('requests').doc(reqId).update({ status: newStatus });
 
-      const now = Date.now();
-      if (currentUser.orderStartTime && !currentUser.orderCompletedProcessed) { alert('An order is already running.'); return; }
-      if (currentUser.lastOrderTimestamp && now - currentUser.lastOrderTimestamp < 86400000) { alert('You can only create one order every 24 hours!'); checkCooldown(); return; }
-      
-      const input = document.getElementById('homeInvestInput');
-      let investAmt = input && input.value !== '' ? Number(input.value) : balance;
-      
-      if (!Number.isFinite(investAmt) || investAmt <= 0) { alert('Please enter a valid amount.'); return; }
-      if (investAmt < 20) { alert('Create Order Failed: Minimum investment amount must be at least $20 USDT!'); return; }
-      if (investAmt > balance) { alert('Investment amount exceeds available balance.'); return; }
-      
-      currentUser.orderStartTime = now;
-      currentUser.orderCompletedProcessed = false;
-      currentUser.activeInvestAmount = investAmt;
-      
-      if (db) {
-        await db.collection('users').doc(currentUser.id).update({
-          orderStartTime: now,
-          orderCompletedProcessed: false,
-          activeInvestAmount: investAmt
-        });
-      }
+      let targetUser = cacheAllUsers.find(u => u.id === userId || u.id === targetReq.userId);
 
-      checkCooldown();
-      showToast('Order started. It will finish in 3 minutes.');
-    }
+      if(newStatus === 'Success' && type === 'Deposit') {
+        let netToAdd = Number(netAmount);
+        let grossDep = Number(grossAmount || targetReq.grossAmount || netAmount);
 
-    async function completeActiveOrder() {
-      if (!currentUser || currentUser.orderCompletedProcessed) return;
-      const investAmt = Number(currentUser.activeInvestAmount || currentUser.balance || 0);
-      const profit = Math.round(investAmt * 0.02 * 100) / 100;
-      const newBalance = Math.round((Number(currentUser.balance || 0) + profit) * 100) / 100;
-      const nowTs = Date.now();
+        if(targetUser) {
+          let updatedBal = Math.round(((Number(targetUser.balance || 0)) + netToAdd) * 100) / 100;
+          let updatedDep = Math.round(((Number(targetUser.deposit || 0)) + netToAdd) * 100) / 100;
+          let updatedCredited = Math.round(((Number(targetUser.creditedDeposit || 0)) + netToAdd) * 100) / 100;
 
-      currentUser.balance = newBalance;
-      currentUser.todayOrderProfit = profit;
-      currentUser.lastOrderProfit = profit;
-      currentUser.lastOrderTimestamp = nowTs;
-      currentUser.orderStartTime = 0;
-      currentUser.orderCompletedProcessed = true;
-
-      if (db) {
-        await db.collection('users').doc(currentUser.id).update({
-          balance: newBalance,
-          todayOrderProfit: profit,
-          lastOrderProfit: profit,
-          lastOrderTimestamp: nowTs,
-          orderStartTime: 0,
-          orderCompletedProcessed: true
-        });
-
-        let profitReq = {
-          id: 'req_' + Date.now(),
-          userId: currentUser.id,
-          userName: currentUser.name || currentUser.contact,
-          userContact: currentUser.contact,
-          type: 'today ai profit',
-          amount: profit,
-          walletAddress: 'N/A',
-          status: 'Success',
-          createdAt: new Date().toISOString()
-        };
-        await db.collection('requests').doc(profitReq.id).set(profitReq);
-      }
-
-      updateOrderDisplays();
-      const input = document.getElementById('homeInvestInput');
-      if (input) input.value = newBalance.toFixed(2);
-      document.getElementById('tradingSimulationBox').style.display = 'none';
-      checkCooldown();
-      showToast(`Order finished. Today AI Profit +$${profit.toFixed(2)} USDT added automatically to total assets.`);
-    }
-
-    function handleKycCapture(type, event) {
-      const file = event.target.files[0];
-      if (file) {
-        if (!file.type.startsWith('image/')) { alert("Please upload an authentic original image/document!"); event.target.value = ''; return; }
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          if (type === 'Front') { kycFilesData.front = e.target.result; document.getElementById('kycFrontStatus').textContent = '✅ Original ID Front Loaded'; }
-          if (type === 'Back') { kycFilesData.back = e.target.result; document.getElementById('kycBackStatus').textContent = '✅ Original ID Back Loaded'; }
-          if (type === 'Selfie') { kycFilesData.selfie = e.target.result; document.getElementById('kycSelfieStatus').textContent = '✅ Live Selfie Loaded'; }
-          showToast(`${type} document verified!`);
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-
-    function submitKycVerification() {
-      if(!kycFilesData.front || !kycFilesData.back || !kycFilesData.selfie) {
-        alert("Strict Validation: Please upload valid original ID Front, ID Back, and Live Selfie!");
-        return;
-      }
-      showToast("KYC Verification submitted! Processing...");
-      setTimeout(async () => {
-        if(currentUser && db) {
-          currentUser.kycStatus = 'Verified';
-          currentUser.kycImages = kycFilesData;
-          await db.collection('users').doc(currentUser.id).update({
-            kycStatus: 'Verified',
-            kycImages: kycFilesData
+          await db.collection('users').doc(targetUser.id).update({
+            balance: updatedBal,
+            deposit: updatedDep,
+            creditedDeposit: updatedCredited
           });
+
+          if (targetUser.referredBy && targetUser.referredBy !== 'NONE') {
+            let referrer = cacheAllUsers.find(u => u.myReferralCode === targetUser.referredBy || u.id === targetUser.referredBy);
+            if (referrer) {
+              let bonusAmt = Math.round((grossDep * 0.10) * 100) / 100;
+              let refBal = Math.round(((Number(referrer.balance || 0)) + bonusAmt) * 100) / 100;
+              let refIncome = Math.round(((Number(referrer.teamIncome || 0)) + bonusAmt) * 100) / 100;
+
+              await db.collection('users').doc(referrer.id).update({
+                balance: refBal,
+                teamIncome: refIncome
+              });
+
+              let refReqObj = {
+                id: 'req_ref_' + Date.now(),
+                userId: referrer.id,
+                userName: referrer.name || referrer.contact,
+                userContact: referrer.contact,
+                type: `10% Referral Bonus (${targetUser.name || targetUser.contact})`,
+                grossAmount: bonusAmt,
+                amount: bonusAmt,
+                status: 'Success',
+                createdAt: new Date().toISOString()
+              };
+              await db.collection('requests').doc(refReqObj.id).set(refReqObj);
+            }
+          }
         }
-        showToast("Identity Verified Successfully!");
-        switchTab('tab-me');
-      }, 2000);
-    }
-
-    function handleKycMenuClick() {
-      if(currentUser && currentUser.kycStatus === 'Verified') { alert("Your Identity is already Verified!"); return; }
-      openSubPage('page-kyc', 'Identity Verification');
-    }
-
-    function copyReferralLink() {
-      navigator.clipboard.writeText(document.getElementById('homeReferralLinkText').textContent);
-      showToast("Referral link copied successfully!");
-    }
-
-    async function sendUserChatMessage(fileData = null) {
-      const msg = document.getElementById('userChatInput').value.trim();
-      if(!msg && !fileData) return;
-      if(!currentUser) return;
-
-      let chatObj = {
-        id: 'chat_' + Date.now(),
-        userId: currentUser.id,
-        userContact: currentUser.contact,
-        userName: currentUser.name || currentUser.contact,
-        sender: 'User',
-        text: msg || '',
-        status: 'Delivered',
-        adminRead: false,
-        createdAt: new Date().toISOString()
-      };
-
-      if(fileData) {
-        chatObj.fileUrl = fileData.url;
-        chatObj.fileName = fileData.name;
-        chatObj.fileType = fileData.type;
       }
+
+      if(newStatus === 'Rejected' && type === 'Withdrawal') {
+        let refundAmount = Number(grossAmount || targetReq.grossAmount || targetReq.amount || 0);
+        if(targetUser) {
+          let refundedBal = Math.round(((Number(targetUser.balance || 0)) + refundAmount) * 100) / 100;
+          await db.collection('users').doc(targetUser.id).update({ balance: refundedBal });
+        }
+      }
+
+      alert(`Request marked as ${newStatus}! Realtime User balance and referral bonus updated successfully.`);
+    }
+
+    function bulkDeleteSelectedRequests() {
+      const selected = Array.from(document.querySelectorAll('.req-check:checked')).map(cb => cb.value);
+      if(selected.length === 0) { alert("Please select requests to delete!"); return; }
+      if(confirm(`Delete ${selected.length} selected requests?`)) {
+        if (db) {
+          selected.forEach(async (id) => await db.collection('requests').doc(id).delete());
+        }
+      }
+    }
+
+    function loadAdminChatList() {
+      if (!db) return;
+      db.collection('chats').onSnapshot((snap) => {
+        let chats = [];
+        snap.forEach(doc => chats.push(doc.data()));
+
+        let usersMap = {};
+        cacheAllUsers.forEach(u => {
+          usersMap[u.id] = { name: `${u.name || u.contact} (ID: ${u.myReferralCode || u.id})`, unread: 0 };
+        });
+
+        chats.forEach(c => {
+          if(!usersMap[c.userId]) {
+            usersMap[c.userId] = { name: `${c.userName || c.userContact} (ID: ${c.userId})`, unread: 0 };
+          }
+          if(c.sender === 'User' && !c.adminRead) {
+            usersMap[c.userId].unread += 1;
+          }
+        });
+
+        let html = "";
+        Object.keys(usersMap).forEach(uid => {
+          let unreadBadge = usersMap[uid].unread > 0 ? `<span class="unread-dot">${usersMap[uid].unread} Unread</span>` : '';
+          let activeClass = selectedChatUserId === uid ? 'active' : '';
+          html += `<div class="user-chat-item ${activeClass}">
+            <input type="checkbox" class="chat-check" value="${uid}"/>
+            <span onclick="selectUserChat('${uid}', '${usersMap[uid].name}')" style="cursor:pointer; flex:1; margin-left:6px;">💬 ${usersMap[uid].name}</span>
+            ${unreadBadge}
+          </div>`;
+        });
+        document.getElementById('adminUserChatList').innerHTML = html || '<div style="padding:12px; color:var(--text-muted);">No support chats active.</div>';
+      });
+    }
+
+    async function selectUserChat(uid, contact) {
+      selectedChatUserId = uid;
+      selectedChatUserContact = contact;
+      document.getElementById('selectedChatTitle').innerText = `Chatting with User: ${contact}`;
 
       if (db) {
-        await db.collection('chats').doc(chatObj.id).set(chatObj);
+        let snap = await db.collection('chats').where('userId', '==', uid).where('sender', '==', 'User').get();
+        snap.forEach(async (doc) => {
+          await db.collection('chats').doc(doc.id).update({ adminRead: true });
+        });
       }
 
-      document.getElementById('userChatInput').value = '';
+      renderAdminChatMsgs();
     }
 
-    function handleUserFileUpload(e) {
-      const file = e.target.files[0];
-      if(!file) return;
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        sendUserChatMessage({ url: evt.target.result, name: file.name, type: file.type.includes('image') ? 'image' : 'document' });
-        showToast("File sent to support!");
-      };
-      reader.readAsDataURL(file);
-    }
+    function renderAdminChatMsgs() {
+      if(!selectedChatUserId || !db) return;
 
-    function renderUserChats() {
-      if(!currentUser || !db) return;
-      
-      db.collection('chats').where('userId', '==', currentUser.id).onSnapshot((snap) => {
+      db.collection('chats').where('userId', '==', selectedChatUserId).onSnapshot((snap) => {
         let chats = [];
         snap.forEach(doc => chats.push(doc.data()));
         chats.sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
 
         let chatHtml = "";
         chats.forEach(m => {
-          let sideClass = m.sender === 'User' ? 'msg-user' : 'msg-admin';
-          let label = m.sender === 'User' ? 'You' : 'Admin';
+          let side = m.sender === 'Admin' ? 'color:var(--accent-cyan); text-align:right;' : 'color:var(--accent-green);';
           let fileHtml = "";
           if(m.fileUrl) {
             if(m.fileType === 'image') {
               fileHtml = `<br><a href="${m.fileUrl}" target="_blank"><img src="${m.fileUrl}" class="chat-file-img"/></a>`;
             } else {
-              fileHtml = `<br><a href="${m.fileUrl}" download="${m.fileName || 'document'}" class="chat-file-link">📄 Download Document (${m.fileName || 'file'})</a>`;
+              fileHtml = `<br><a href="${m.fileUrl}" download="${m.fileName || 'file'}" class="chat-file-link">📄 Download Document (${m.fileName || 'file'})</a>`;
             }
           }
-          let statusHtml = m.sender === 'User' ? `<div class="msg-status">✓✓ Delivered</div>` : '';
-          chatHtml += `<div class="msg-bubble ${sideClass}"><b>${label}:</b> ${m.text || ''}${fileHtml}${statusHtml}</div>`;
+          chatHtml += `<div style="${side} margin-bottom:8px;">
+            <b>${m.sender}:</b> ${m.text || ''}${fileHtml}
+            <button class="btn-action" style="background:var(--accent-red); color:#fff; font-size:9px; padding:2px 4px; margin-left:6px;" onclick="deleteChatMessage('${m.id}')">Delete Msg</button>
+          </div>`;
         });
-        const box = document.getElementById('userChatBox');
-        if(box) {
-          box.innerHTML = chatHtml || '<div style="text-align:center; color:var(--text-muted); font-size:12px;">Start conversation with support...</div>';
-          box.scrollTop = box.scrollHeight;
-        }
+        document.getElementById('adminChatMsgs').innerHTML = chatHtml;
       });
     }
 
-    function renderCommunityChat() {
-      if (!db) return;
-      db.collection('community').orderBy('createdAt', 'desc').limit(200).onSnapshot((snap) => {
-        let comms = [];
-        snap.forEach(doc => comms.push(doc.data()));
-
-        let html = "";
-        comms.forEach(m => {
-          let dateStr = new Date(m.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-          html += `<div class="msg-bubble msg-community"><b>${m.userName}:</b> ${m.text} <span style="font-size:9px; opacity:0.7; float:right;">${dateStr}</span></div>`;
-        });
-        const box = document.getElementById('communityChatBox');
-        if(box && !isUserReadingCommunity) {
-          box.innerHTML = html;
+    async function deleteChatMessage(msgId) {
+      if(confirm("Delete this message?")) {
+        if (db) {
+          await db.collection('chats').doc(msgId).delete();
         }
-      });
+      }
     }
 
-    async function sendCommunityMessage() {
-      const input = document.getElementById('communityInput');
-      const text = input.value.trim();
-      if(!text || !currentUser) return;
+    function bulkDeleteSelectedChats() {
+      const selected = Array.from(document.querySelectorAll('.chat-check:checked')).map(cb => cb.value);
+      if(selected.length === 0) { alert("Select chats to delete!"); return; }
+      if(confirm(`Delete chats for ${selected.length} selected users?`)) {
+        if (db) {
+          selected.forEach(async (uid) => {
+            let snap = await db.collection('chats').where('userId', '==', uid).get();
+            snap.forEach(async (doc) => await db.collection('chats').doc(doc.id).delete());
+          });
+        }
+      }
+    }
 
-      let commObj = {
-        id: 'comm_' + Date.now(),
-        userId: currentUser.id,
-        userName: `${currentUser.name || currentUser.contact} (#${Math.floor(1000 + Math.random() * 9000)})`,
-        text: text,
+    async function sendAdminReply(fileData = null) {
+      const txt = document.getElementById('adminReplyInput').value.trim();
+      if(!txt && !fileData) return;
+      if(!selectedChatUserId) return;
+
+      let chatObj = {
+        id: 'chat_' + Date.now(),
+        userId: selectedChatUserId,
+        userContact: selectedChatUserContact,
+        sender: 'Admin',
+        text: txt || '',
+        adminRead: true,
         createdAt: new Date().toISOString()
       };
 
       if (db) {
-        await db.collection('community').doc(commObj.id).set(commObj);
+        await db.collection('chats').doc(chatObj.id).set(chatObj);
       }
 
-      input.value = '';
-      showToast("Feedback posted to community!");
+      document.getElementById('adminReplyInput').value = '';
     }
 
-    function renderAnnouncements() {
-      if (!db) return;
-      db.collection('announcements').orderBy('createdAt', 'desc').onSnapshot((snap) => {
-        let html = "";
-        snap.forEach(doc => {
-          let a = doc.data();
-          let dateStr = new Date(a.createdAt).toLocaleString();
-          let imgHtml = a.imageUrl ? `<br><img src="${a.imageUrl}" style="max-width:100%; border-radius:10px; margin-top:8px;"/>` : '';
-          html += `<div style="background:rgba(0,0,0,0.4); border:1px solid var(--accent-yellow); border-radius:12px; padding:12px; margin-bottom:10px;">
-            <div style="font-size:11px; color:var(--accent-yellow); font-weight:800;">📢 ${dateStr}</div>
-            <div style="font-size:13px; color:#fff; margin-top:6px; font-weight:600;">${a.text || ''}</div>
-            ${imgHtml}
-          </div>`;
-        });
-        const container = document.getElementById('announcementsList');
-        if(container) container.innerHTML = html || '<div style="color:var(--text-muted); font-size:12px; text-align:center;">No announcements published yet.</div>';
-      });
+    function handleAdminFileUpload(e) {
+      const file = e.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        sendAdminReply({ url: evt.target.result, name: file.name, type: file.type.includes('image') ? 'image' : 'document' });
+        alert("File sent to user!");
+      };
+      reader.readAsDataURL(file);
     }
 
-    function renderGuideVideo() {
-      if (!db) return;
-      db.collection('settings').doc('guide').onSnapshot((doc) => {
-        const container = document.getElementById('userGuideVideoContainer');
-        if(doc.exists && doc.data().videoUrl) {
-          container.innerHTML = `<video controls style="width:100%; border-radius:12px; border:1px solid var(--accent-green);"><source src="${doc.data().videoUrl}" type="video/mp4">Your browser does not support HTML5 video.</video>`;
-        } else {
-          container.innerHTML = `<div style="color:var(--text-muted); font-size:12px; padding:20px; border:1px dashed var(--bg-card-border); border-radius:12px;">🎥 Video guide will be available shortly.</div>`;
-        }
-      });
+    function handleAnnounceImg(e) {
+      const file = e.target.files[0];
+      if(file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) { announcementImgBase64 = evt.target.result; };
+        reader.readAsDataURL(file);
+      }
     }
 
-    async function initUserSession() {
-      if(!currentUser) {
-        document.getElementById('signupScreen').classList.remove('hidden');
-        return;
-      }
+    async function publishAnnouncement() {
+      const text = document.getElementById('announceText').value.trim();
+      if(!text && !announcementImgBase64) { alert("Please enter text or select an image!"); return; }
 
-      document.getElementById('signupScreen').classList.add('hidden');
-      document.getElementById('loginScreen').classList.add('hidden');
-
-      const balanceVal = Number(currentUser.balance || 0);
-      const teamInc = Number(currentUser.teamIncome || 0);
-      document.getElementById('homeTotalAssetsDisplay').innerText = balanceVal.toFixed(2);
-      document.getElementById('totalBalanceDisplay').innerText = balanceVal.toFixed(2);
-      document.getElementById('flexibleFundsDisplay').innerText = balanceVal.toFixed(2) + " USDT";
-      document.getElementById('homeReferralEarnedDisplay').innerText = "$" + teamInc.toFixed(2);
-      document.getElementById('assetsReferralEarnedDisplay').innerText = "$" + teamInc.toFixed(2);
-      document.getElementById('assetReferralFundDisplay').innerText = teamInc.toFixed(2) + " USDT";
-
-      document.getElementById('meUsernameDisplay').innerText = currentUser.name || "User";
-      document.getElementById('meUserIdDisplay').innerText = "ID: " + (currentUser.myReferralCode || 'N/A');
-
-      let createdDate = currentUser.createdAt ? new Date(currentUser.createdAt) : new Date();
-      let diffDays = Math.floor((new Date() - createdDate) / (1000 * 60 * 60 * 24));
-      document.getElementById('daysJoinedText').innerText = `${diffDays} / 25 Days`;
-
-      if(diffDays >= 25) {
-        document.getElementById('freeWithdrawStatusText').innerText = "🎉 0% Fee Privilege Active (Free)";
-        document.getElementById('withdrawalFeeNotice').innerText = "0% (Free Withdrawal Active)";
-      } else {
-        document.getElementById('freeWithdrawStatusText').innerText = `Standard 9% Fee (${Math.max(0, 25 - diffDays)} days remaining for Free)`;
-        document.getElementById('withdrawalFeeNotice').innerText = "9% Deduction (Prior to 25 Days)";
-      }
-
-      let repoBaseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
-      let refLink = `${repoBaseUrl}?ref=${currentUser.myReferralCode}`;
-      document.getElementById('homeReferralLinkText').innerText = refLink;
-      
-      const signupRefElem = document.getElementById('signupReferralInput');
-      if (signupRefElem && incomingRef !== 'NONE') {
-        signupRefElem.value = incomingRef;
-      }
+      let annObj = {
+        id: 'ann_' + Date.now(),
+        text: text,
+        imageUrl: announcementImgBase64 || null,
+        createdAt: new Date().toISOString()
+      };
 
       if (db) {
-        // REALTIME TEAM MEMBERS FETCH
-        db.collection('users').where('referredBy', '==', currentUser.myReferralCode).onSnapshot((snap) => {
-          let teamMembers = [];
-          snap.forEach(doc => teamMembers.push(doc.data()));
+        await db.collection('announcements').doc(annObj.id).set(annObj);
+      }
 
-          let teamSize = teamMembers.length;
-          let teamTotalDeposit = teamMembers.reduce((sum, u) => sum + Number(u.creditedDeposit || u.deposit || 0), 0);
+      document.getElementById('announceText').value = '';
+      announcementImgBase64 = null;
+      alert("Announcement published successfully to all users!");
+    }
 
-          document.getElementById('homeTeamSizeText').innerText = `${teamSize} Members`;
-          document.getElementById('homeTeamTotalDepositText').innerText = `$${teamTotalDeposit.toFixed(2)}`;
-          document.getElementById('homeTeamIncomeText').innerText = `$${teamInc.toFixed(2)}`;
+    function handleGuideVideoUpload(e) {
+      const file = e.target.files[0];
+      if(file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          document.getElementById('guideVideoUrlInput').value = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
 
-          document.getElementById('teamOverviewSize').innerText = teamSize;
-          document.getElementById('teamOverviewAsset').innerText = `$${teamTotalDeposit.toFixed(2)}`;
-          document.getElementById('teamOverviewJoiners').innerText = teamSize;
-          document.getElementById('teamOverviewTodayInc').innerText = `$${teamInc.toFixed(2)}`;
+    async function saveGuideVideoUrl() {
+      const url = document.getElementById('guideVideoUrlInput').value.trim();
+      if(!url) { alert("Please provide video URL or file!"); return; }
 
-          let teamListHtml = '';
-          teamMembers.forEach(tm => {
-            let tmDep = Number(tm.creditedDeposit || tm.deposit || 0);
-            teamListHtml += `<div class="list-item">
-              <div>
-                <div style="font-weight:800; color:#fff;">${tm.name || tm.contact}</div>
-                <div style="font-size:11px; color:var(--text-muted);">ID: ${tm.myReferralCode}</div>
-              </div>
-              <div style="text-align:right;">
-                <div style="font-weight:900; color:var(--accent-green);">Deposit: $${tmDep.toFixed(2)}</div>
-                <div style="font-size:11px; color:var(--text-muted);">${new Date(tm.createdAt).toLocaleDateString()}</div>
-              </div>
-            </div>`;
-          });
-          document.getElementById('teamMemberList').innerHTML = teamListHtml || '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:12px;" data-i18n="noTeamMembers">No team members registered under your link yet. Share your link to earn 10% deposit commissions!</div>';
-        });
-
-        // REALTIME REQUESTS HISTORY FETCH
-        db.collection('requests').where('userId', '==', currentUser.id).onSnapshot((snap) => {
-          let reqs = [];
-          snap.forEach(doc => reqs.push(doc.data()));
-          reqs.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-          let histHtml = '';
-          reqs.forEach(req => {
-            let color = req.status === 'Success' ? 'var(--accent-green)' : (req.status === 'Rejected' ? 'var(--accent-red)' : 'orange');
-            let dateStr = new Date(req.createdAt).toLocaleString();
-            let displayType = req.type || 'Transaction';
-
-            let amtVal = req.amount !== undefined ? req.amount : req.grossAmount;
-            histHtml += `<div class="list-item">
-                          <div>
-                            <div style="font-weight:800; color:#fff;">${displayType}</div>
-                            <div style="font-size:11px; color:var(--text-muted);">${dateStr}</div>
-                          </div>
-                          <div style="text-align:right;">
-                            <div style="font-weight:900; color:#fff;">$${Number(amtVal).toFixed(2)} USDT</div>
-                            <div style="font-weight:800; color:${color}; font-size:11px;">${req.status || 'Success'}</div>
-                          </div>
-                         </div>`;
-          });
-          document.getElementById('globalHistoryList').innerHTML = histHtml || '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;" data-i18n="noHistory">No recent history recorded.</div>';
+      if (db) {
+        await db.collection('settings').doc('guide').set({
+          videoUrl: url,
+          updatedAt: new Date().toISOString()
         });
       }
-
-      const kycBadge = document.getElementById('meKycStatusBadge');
-      const kycActionText = document.getElementById('meKycActionText');
-      if (kycBadge) {
-        kycBadge.textContent = `KYC: ${currentUser.kycStatus || 'Pending'}`;
-        kycBadge.className = `badge-status ${currentUser.kycStatus === 'Verified' ? 'badge-verified' : 'badge-pending'}`;
-      }
-      if (kycActionText) {
-        kycActionText.textContent = currentUser.kycStatus === 'Verified' ? 'Verified ✓' : 'Verify Now →';
-      }
-
-      renderUserChats();
-      renderCommunityChat();
-      renderAnnouncements();
-      renderGuideVideo();
-      checkCooldown();
+      alert("User Guide Video updated successfully for all users!");
     }
 
     window.onload = function() {
-      if(currentUser) {
-        initUserSession();
-      } else {
-        document.getElementById('signupScreen').classList.remove('hidden');
-      }
-      setInterval(checkCooldown, 1000);
+      loadAdminUsers();
+      loadAdminRequests();
+      loadAdminChatList();
     };
   </script>
 </body>
